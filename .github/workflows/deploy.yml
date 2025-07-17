@@ -1,0 +1,75 @@
+name: Deploy Frontend to EC2
+
+on:
+  push:
+    branches: [master]   # ✅ Correct branch name
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment: Production
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+          cache: "npm"
+
+      - name: Install Dependencies
+        run: npm ci
+
+      - name: Run Linting
+        run: npm run lint
+
+      - name: Build Application (Optional - for CI validation only)
+        run: npm run build
+
+      - name: Validate SSH Secrets
+        run: |
+          if [ -z "${{ secrets.EC2_HOST }}" ]; then
+            echo "::error::EC2_HOST secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_USERNAME }}" ]; then
+            echo "::error::EC2_USERNAME secret is not set"
+            exit 1
+          fi
+          if [ -z "${{ secrets.EC2_SSH_KEY }}" ]; then
+            echo "::error::EC2_SSH_KEY secret is not set"
+            exit 1
+          fi
+
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            echo "🔐 Setting permissions"
+            sudo git config --global --add safe.directory /var/www/html/frontend
+            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /var/www/html/frontend
+
+            echo "📦 Pulling latest code"
+            cd /var/www/html/frontend
+            git pull origin master   # ✅ use master here
+
+            echo "🧹 Cleaning previous builds and caches"
+            rm -rf node_modules .next .cache
+
+            echo "📥 Installing dependencies"
+            npm ci
+
+            echo "🔨 Building the Next.js application"
+            npm run build
+
+            echo "🚀 Restarting frontend with PM2"
+            pm2 delete frontend || true
+            pm2 start npm --name "frontend" -- run start
+            pm2 save
+
+            echo "✅ Frontend deployment completed"
