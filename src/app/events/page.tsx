@@ -1,3 +1,6 @@
+
+"use client";
+
 import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { useRef, useState } from 'react';
 import { FiPlay, FiX } from 'react-icons/fi';
