@@ -134,7 +134,7 @@ export default function NewsEvents() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ margin: "-100px" }}
           className="max-w-7xl mx-auto"
         >
           
@@ -143,7 +143,7 @@ export default function NewsEvents() {
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+           
           >
             <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center transform transition-transform">
               <svg
@@ -188,7 +188,7 @@ export default function NewsEvents() {
                   initial={{ opacity: 0, y: 50 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.15, type: "spring", stiffness: 100 }}
-                  viewport={{ once: true, margin: "-50px" }}
+                  viewport={{ margin: "-50px" }}
                   className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 hover:shadow-xl transition-shadow"
                 >
                   <div className="flex flex-col h-full">

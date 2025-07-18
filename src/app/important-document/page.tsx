@@ -27,7 +27,8 @@ const documents = [
 ];
 
 export default function ImportantDocuments() {
-    const [ref, inView] = useInView({ threshold: 0.1, triggerOnce: false });
+   const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: false });
+
     const controls = useAnimation();
 
     useEffect(() => {
@@ -132,6 +133,7 @@ export default function ImportantDocuments() {
                     initial="hidden"
                     animate={controls}
                     variants={containerVariants}
+                      viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                 >
                     {documents.map((doc, index) => (
                         <motion.div
@@ -140,6 +142,7 @@ export default function ImportantDocuments() {
                             variants={cardVariants}
                             whileHover="hover"
                             whileTap={{ scale: 0.98 }}
+                               viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                         >
                             <AnimatePresence>
                                 <motion.div
@@ -151,6 +154,7 @@ export default function ImportantDocuments() {
                                         ease: "linear",
                                         repeatType: "loop"
                                     }}
+                                       viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                                 />
                             </AnimatePresence>
 
@@ -163,6 +167,7 @@ export default function ImportantDocuments() {
                                     type: "spring",
                                     stiffness: 250
                                 }}
+                                   viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                             >
                                 {doc.icon}
                             </motion.div>

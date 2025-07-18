@@ -66,7 +66,7 @@ export default function Gallery() {
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          viewport={{ once: true, margin: '-100px' }}
+          viewport={{margin: '-100px' }}
           className="max-w-7xl mx-auto"
         >
 
@@ -75,7 +75,7 @@ export default function Gallery() {
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+           
           >
             <div className=" flex items-center justify-center transform transition-transform">
               <svg
@@ -103,7 +103,7 @@ export default function Gallery() {
             className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+           
             transition={{ delay: 0.1 }}
           >
             Moments captured from WIN CoE events and activities
@@ -120,7 +120,7 @@ export default function Gallery() {
                   type: 'spring',
                   stiffness: 100
                 }}
-                viewport={{ once: true, margin: '-50px' }}
+                viewport={{margin: '-50px' }}
                 className="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer hover:border-4 hover:border-orange-600"
                 whileHover={{
                   scale: 1.03,
@@ -163,7 +163,7 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-            viewport={{ once: true }}
+           
             className="text-center mt-16"
           >
             <motion.button

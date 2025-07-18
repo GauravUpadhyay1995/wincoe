@@ -1,8 +1,9 @@
 "use client";
 
 import EventCard from "@/components/videos/EventCards";
-import { motion } from "framer-motion";
-import { useRef } from "react";
+import { useRef, useEffect } from "react";
+import { motion, useAnimation } from "framer-motion";
+import { useInView } from "react-intersection-observer";
 import Link from 'next/link';
 
 export default function Gallery() {
@@ -60,6 +61,19 @@ export default function Gallery() {
       transition: { type: "spring", stiffness: 300 },
     },
   };
+  const controls = useAnimation();
+  const [ref, inView] = useInView({
+    threshold: 0.2,
+    triggerOnce: false, // 🔁 allow repeat
+  });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start("visible");
+    } else {
+      controls.start("hidden");
+    }
+  }, [inView, controls]);
 
   return (
     <section className="" ref={containerRef}>
@@ -67,16 +81,17 @@ export default function Gallery() {
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
+          viewport={{ margin: "-100px" }}
           variants={containerVariants}
           className="max-w-7xl mx-auto"
         >
           <motion.h2
             className="text-3xl font-bold text-orange-600 flex items-center justify-center gap-4 mb-4"
-            initial={{ opacity: 0, y: -20 }}
+            initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            viewport={{ once: true }}
+            viewport={{ margin: '-100px' }}
+
           >
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" fill="#ec4a0a" viewBox="0 0 24 24">
               <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5A2.5 2.5 0 1 1 12 6a2.5 2.5 0 0 1 0 5.5z" />
@@ -85,15 +100,25 @@ export default function Gallery() {
             Past Events
           </motion.h2>
 
-
           <motion.p
+            ref={ref}
+            initial="hidden"
+            animate={controls}
+            variants={{
+              hidden: { opacity: 0, x: 100 },
+              visible: { opacity: 1, x: 0 },
+            }}
+            transition={{
+              delay: 0.1,
+              duration: 1.0,
+              ease: [0.33, 1, 0.68, 1],
+            }}
             className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto"
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
           >
             Highlights from our recent activities and gatherings
           </motion.p>
+
+
 
           <div className="flex items-center justify-end mb-4">
 
