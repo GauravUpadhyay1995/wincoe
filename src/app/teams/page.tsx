@@ -309,7 +309,7 @@ const UniversityTeams: React.FC<{ teams?: TeamSectionProps[] }> = ({ teams = sam
                                                                 alt={member.name}
                                                                 fill
                                                                 style={{ objectFit: 'cover' }}
-                                                                className="grayscale group-hover:grayscale-0 transition-all duration-700 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]"
+                                                                // className="grayscale group-hover:grayscale-0 transition-all duration-700 ease-[cubic-bezier(0.68,-0.6,0.32,1.6)]"
                                                             />
                                                             <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                                                         </motion.div>

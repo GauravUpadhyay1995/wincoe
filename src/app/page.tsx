@@ -25,43 +25,51 @@ export default function HomePage() {
         document.title = 'Rewards | WIN CoE';
     }, []);
 
-    const images = [
-        {
-            title: "REGISTRATION OPEN FOR SESSION 2025-2026",
-            subtitle: "Limited seats available for all programs",
-            bgImage: "/images/gallery/gallery-1.jpg",
-            cta: "Apply Now",
-            ctaLink: "/admissions"
-        },
-        {
-            title: "EXPLORE OUR WORLD-CLASS INFRASTRUCTURE",
-            subtitle: "State-of-the-art facilities for holistic development",
-            bgImage: "/images/gallery/gallery-2.jpg",
-            cta: "Virtual Tour",
-            ctaLink: "/infrastructure"
-        },
-        {
-            title: "CHAMPIONS IN THE MAKING",
-            subtitle: "Discover our sports excellence programs",
-            bgImage: "/images/gallery/gallery-3.jpg",
-            cta: "View Facilities",
-            ctaLink: "/sports"
-        },
-        {
-            title: "EXPLORE OUR WORLD-CLASS INFRASTRUCTURE",
-            subtitle: "State-of-the-art facilities for holistic development",
-            bgImage: "/images/gallery/gallery-4.jpg",
-            cta: "Virtual Tour",
-            ctaLink: "/infrastructure"
-        },
-        {
-            title: "EXPLORE OUR WORLD-CLASS INFRASTRUCTURE",
-            subtitle: "State-of-the-art facilities for holistic development",
-            bgImage: "/images/gallery/gallery-5.jpg",
-            cta: "Virtual Tour",
-            ctaLink: "/infrastructure"
-        },
-    ];
+  const images = [
+  {
+    title: "Personalized Medicine & Rehabilitation",
+    subtitle: "Empowering recovery with tailored treatments",
+    bgImage: "/images/gallery/gallery-1.jpg",
+    cta: "Learn More",
+    ctaLink: "/programs/rehabilitation"
+  },
+  {
+    title: "EXPLORE OUR WORLD-CLASS INFRASTRUCTURE",
+    subtitle: "Cutting-edge labs, innovation hubs, and smart classrooms",
+    bgImage: "/images/gallery/gallery-2.jpg",
+    cta: "Explore Campus",
+    ctaLink: "/infrastructure"
+  },
+  {
+    title: "Diagnostic Tools",
+    subtitle: "Advanced tools for accurate health assessments",
+    bgImage: "/images/gallery/gallery-3.jpg",
+    cta: "See Our Tech",
+    ctaLink: "/facilities/diagnostics"
+  },
+ 
+  {
+    title: "Bio-Imaging and AI as Diagnostic Tools",
+    subtitle: "Integrating AI with imaging for early detection",
+    bgImage: "/images/gallery/gallery-4.jpg",
+    cta: "See How It Works",
+    ctaLink: "/research/bio-imaging-ai"
+  },
+  {
+    title: "Assistive Technology for Elderly & Disabled",
+    subtitle: "Innovations enhancing mobility and independence",
+    bgImage: "/images/gallery/gallery-5.jpeg",
+    cta: "Explore Solutions",
+    ctaLink: "/research/assistive-tech"
+  },
+  {
+    title: "Low-cost wearables health devices",
+    subtitle: "Affordable tech for real-time health monitoring",
+    bgImage: "/images/gallery/gallery-6.jpg",
+    cta: "Discover Devices",
+    ctaLink: "/projects/wearables"
+  }
+];
 
 
 
