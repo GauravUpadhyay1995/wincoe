@@ -24,6 +24,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const pathname = usePathname();
   const { logout } = useAuth();
   const [isUploading, setIsUploading] = useState(false);
+  
   const handleLogout = () => {
     logout('user');
   };

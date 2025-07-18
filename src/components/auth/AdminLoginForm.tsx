@@ -17,8 +17,8 @@ export default function AdminLoginForm() {
   const { theme } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("rupam+1@example.com");
+  const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -46,13 +46,13 @@ export default function AdminLoginForm() {
         throw new Error(data.message || 'Failed to login');
       }
 
-      console.log('>>>>>>>>>>>>', data);
+      // console.log('>>>>>>>>>>>>', data);
 
       if (data.success) {
         login(data.user, 'admin');
         localStorage.setItem('adminToken', data.token || '');
         toast.success('Admin login successful!');
-        router.push('/admin');
+        // router.push('/admin');
       } else {
         setError(data.message || 'Invalid credentials. Please try again.');
         toast.error(data.message || 'Invalid credentials. Please try again.');
@@ -199,13 +199,13 @@ export default function AdminLoginForm() {
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               {/* You can replace this with an actual admin illustration */}
-                 <Image
-                                         src={theme === "dark" ? "/images/logo/rpk-new.png" : "/images/logo/rpk.png"}
-                                         alt="WIN CoE"
-                                         width={200}
-                                         height={200}
-                                          className="mb-6 opacity-90 ml-16"
-                                       />
+              <Image
+                src={theme == "dark" ? "/images/logo/wincoe.svg" : "/images/logo/wincoe.svg"}
+                alt="WIN CoE"
+                width={150}
+                height={150}
+                className="mb-6 opacity-90 ml-16"
+              />
               <h2 className="font-bold text-3xl sm:text-4xl mb-4 leading-tight">
                 Admin Dashboard Access
               </h2>

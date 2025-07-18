@@ -42,15 +42,6 @@ const AppSidebar: React.FC = () => {
       path: "/admin",
     },
     {
-      icon: <UserCircleIcon />,
-      name: "Customers",
-      path: "/admin/customers-list",
-      subItems: [
-        { name: "Customers List", path: "/admin/customers-list", pro: false },
-        { name: "Upload Customers", path: "/admin/upload-customers", pro: false },
-      ]
-    },
-    {
       name: "Users",
       icon: <UserCircleIcon />,
       path: "/admin/users-list",
@@ -109,16 +100,8 @@ const AppSidebar: React.FC = () => {
         {navItems.map((nav, index) => {
           // Check if user has permission to view this menu item
           if (nav.name === "Users" && !canAccess("User", "read")) return null;
-          if (nav.name === "Customers" && !canAccess("Customer", "read")) return null;
-
           // Filter subItems for Upload Customers permission
           let filteredSubItems = nav.subItems;
-          if (nav.name === "Customers" && nav.subItems) {
-            filteredSubItems = nav.subItems.filter(
-              (item) =>
-                item.name !== "Upload Customers" || canAccess("Customer", "create")
-            );
-          }
 
           return (
             <li key={nav.name}>

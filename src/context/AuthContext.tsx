@@ -207,9 +207,9 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         setIsAuthenticatedAdmin(true);
       } catch (error:unknown) {
         if (error instanceof Error) {
-    console.error('Failed to parse user data:', error.message);
-  }
-  localStorage.removeItem('user');
+        console.error('Failed to parse user data:', error.message);
+        }
+        localStorage.removeItem('user');
         localStorage.removeItem('admin');
       }
     }

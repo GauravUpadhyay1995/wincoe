@@ -49,9 +49,6 @@ export const EcommerceMetrics = () => {
     ) || false;
   };
 
-
-
-
   useEffect(() => {
     const fetchData = async () => {
       try {

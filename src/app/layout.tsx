@@ -10,6 +10,8 @@ import { Suspense } from 'react';
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
+import Header from '@/components/home/Header';
+import Footer from '@/components/home/Footer';
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -18,6 +20,9 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   title: 'The Wadhwani Innovation Network | Centre of Excellence (WIN CoE)',
   description: 'The Wadhwani Innovation Network',
+  icons: {
+    icon: "/favicon.ico", // This sets your favicon!
+  },
 };
 
 export default function RootLayout({

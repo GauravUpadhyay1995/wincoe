@@ -241,7 +241,7 @@ export default function UsersListTable() {
     const fetchAllUsers = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/admin/users/list?perPage=1000`, {
+            const response = await fetch(`/api/admin/users/list?perPage=25`, {
                 credentials: 'include',
             });
             const data = await response.json();
