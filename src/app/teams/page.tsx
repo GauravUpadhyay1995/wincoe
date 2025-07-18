@@ -58,6 +58,17 @@ const sampleData: TeamSectionProps[] = [
                     email: 'amehndiratta@cbme.iitd.ac.in',
                 },
             },
+              {
+                id: 'Neha-Burman',
+                name: 'Ms. Neha Burman',
+                title: 'Senior Project Manager',
+                image: '/images/teams/team-7.jpg',
+                department: 'Centre for Biomedical Engineering',
+                social: {
+                    twitter: 'https://twitter.com/rajeev_physics',
+                    email: 'wincoe@admin.iitd.ac.in',
+                },
+            },
             {
                 id: 'Ankushi-Bansal',
                 name: 'Dr. Ankushi Bansal ',
@@ -70,17 +81,7 @@ const sampleData: TeamSectionProps[] = [
                     email: 'wincoe@admin.iitd.ac.in',
                 },
             },
-            {
-                id: 'Neha-Burman',
-                name: 'Ms. Neha Burman',
-                title: 'Senior Project Manager',
-                image: '/images/teams/team-7.jpg',
-                department: 'Centre for Biomedical Engineering',
-                social: {
-                    twitter: 'https://twitter.com/rajeev_physics',
-                    email: 'wincoe@admin.iitd.ac.in',
-                },
-            },
+          
             {
                 id: 'rajeev-malhotra-3',
                 name: 'Mr. Abhishek Nayak',

@@ -33,73 +33,65 @@ const NewsDisplay = () => {
     const staticNews: NewsItem[] = [
         {
             id: '1',
-            title: 'UQ HDR Student Mobility Program',
-            excerpt: 'Vercel announces major update to Next.js featuring built-in Server Actions and improved performance.',
-            category: 'technology',
-            date: '2023-10-26',
+            title: 'CBME launches online PG Diploma',
+            excerpt: 'CBME launches online PG Diploma',
+            category: 'Admission',
+            date: '2025-06-30 14:55:38',
             imageUrl: 'images/news/news-1.jpg',
             readTime: '4 min',
             featured: true
         },
         {
             id: '2',
-            title: 'The Rise of AI-Powered Development Tools',
+            title: 'M.Tech in Biomedical Engineering Admission 2025',
             excerpt: 'How GitHub Copilot and similar tools are changing the way developers write code.',
-            category: 'technology',
-            date: '2023-10-24',
+            category: 'Admission',
+            date: '2025-05-02 21:52:55',
             imageUrl: 'images/news/news-2.jpg',
             readTime: '6 min'
         },
         {
             id: '3',
-            title: 'Sustainable Web Design Practices',
+            title: 'PhD Admissions Sem 1 2025-26',
             excerpt: 'Learn how optimizing your website can reduce energy consumption and carbon emissions.',
-            category: 'environment',
-            date: '2023-10-22',
+            category: 'Admission',
+            date: '2025-05-02 21:47:37',
             imageUrl: 'images/news/news-3.jpg',
             readTime: '5 min'
         },
         {
             id: '4',
-            title: '2024 UI Design Trends: What to Expect',
+            title: 'CBME organises Colloquium on "AI in Clinical Decision Making"',
             excerpt: 'From glass morphism to kinetic typography, discover the trends shaping digital interfaces.',
-            category: 'design',
-            date: '2023-10-20',
+            category: 'Event',
+            date: '2024-11-14 18:28:56',
             imageUrl: 'images/news/news-4.jpg',
             readTime: '7 min'
         },
         {
             id: '5',
-            title: 'Remote Work: Productivity Tips for Developers',
-            excerpt: 'Expert strategies for maintaining focus and efficiency when working from home.',
-            category: 'business',
+            title: 'Anju wins Research Communication Award 2024 and Ayesha Tooba Khan wins certificate of appreciation',
+            excerpt: 'Research Communication Award 2024',
+            category: 'Achievement',
             date: '2023-10-18',
             imageUrl: 'images/news/news-5.jpg',
             readTime: '5 min'
         },
-        {
-            id: '6',
-            title: 'TypeScript 5.2 Adds New Utility Types',
-            excerpt: 'Latest TypeScript release introduces several quality-of-life improvements for developers.',
-            category: 'technology',
-            date: '2023-10-16',
-            imageUrl: 'images/news/news-6.jpg',
-            readTime: '3 min'
-        },
+      
         {
             id: '7',
-            title: 'The Psychology of Color in Web Design',
-            excerpt: 'How different color schemes affect user behavior and conversion rates.',
-            category: 'design',
+            title: 'CBME Achiever of the Month - June 2024- Ayesha Tooba Khan',
+            excerpt: 'Research Communication Award.',
+            category: 'Achievement',
             date: '2023-10-14',
             imageUrl: 'images/news/news-1.jpg',
             readTime: '8 min'
         },
         {
             id: '8',
-            title: 'CBME launches online PG Diploma',
-            excerpt: 'CBME launches online PG Diploma',
-            category: 'development',
+            title: 'CBME introduces MS (Research) program for doctors and health professionals',
+            excerpt: 'COur Master of Science (Research) program aims to bridge the gap between the pressing demands of the healthcare ecosystem and the field of Biomedical Engineering by nurturing highly skilled human resources equipped with interdisciplinary knowledge and scientific acumen.',
+            category: 'Research',
             date: '2023-10-12',
             imageUrl: 'images/news/news-7.jpg',
             readTime: '10 min'
@@ -108,8 +100,8 @@ const NewsDisplay = () => {
             id: '9',
             title: 'CBME introduces MS (Research) program for doctors and health professionals',
             excerpt: 'Our Master of Science (Research) program aims to bridge the gap between the pressing demands of the healthcare ecosystem and the field of Biomedical Engineering by nurturing highly skilled human resources equipped with interdisciplinary knowledge and scientific acumen.',
-            category: 'technology',
-            date: '2023-10-10',
+            category: 'Research',
+            date: '2024-06-09 16:34:24',
             imageUrl: 'images/news/news-1.jpg',
             readTime: '6 min'
         },
@@ -117,8 +109,8 @@ const NewsDisplay = () => {
             id: '10',
             title: 'CBME Achievers of the Month - July 2024- Raufiya Jafari & Vidit Gaur',
             excerpt: 'We are delighted to invite you all to the next session of the “CBME Achievers’ Talk” series on 23rd July 2024 (Wednesday) from 3PM to 4PM in the CBME committee room. The achievers of July 2024 are:1) Raufiya Jafari2) Vidit Gaur',
-            category: 'environment',
-            date: '2023-10-08',
+            category: 'Achievement',
+            date: '2024-06-09 16:34:24',
             imageUrl: 'images/news/news-1.jpg',
             readTime: '4 min'
         },
@@ -126,17 +118,17 @@ const NewsDisplay = () => {
             id: '11',
             title: 'CBME Achiever of the Month - June 2024- Ayesha Tooba Khan',
             excerpt: 'SWe are delighted to invite you all to the third session of the “CBME Achievers’ Talk” series on 26th June 2024 (Wednesday) from 3PM to 4PM in the CBME committee room. The achiever for the month of June 2024 is Ayesha Tooba Khan.',
-            category: 'design',
-            date: '2023-10-06',
+            category: 'Achievement',
+            date: '2024-06-09 16:34:24',
             imageUrl: 'images/news/news-1.jpg',
             readTime: '7 min'
         },
         {
             id: '12',
-            title: 'Anju wins Research Communication Award 2024 and Ayesha Tooba Khan wins certificate of appreciation',
-            excerpt: 'PhD student Anju (2019BMZ8613) has won the Research Communication Award 2024 for her submission titled "Plants also get sick". The award recognizes her ability to effectively communicate her research and scientific contributions. The award carries a cash prize and a certificate.PhD student Ayesha Tooba Khan (2020BMZ8122) has also received a certificate of appreciation for her excellent submission titled "Learning from slips". Congratulations Anju and Ayesha!!!',
-            category: 'development',
-            date: '2023-10-04',
+            title: 'Himanshu Rikhari is awarded Best Research Paper Awrd at 2024 IEEE InC4',
+            excerpt: 'CBME congratulates Mr. Himashu Rikari 4th, year PhD student at MedImg lab, for being awarded the Best Research Paper Award at the 2024 IEEE International Conference on Contemporary Computing and Communications (InC4) for his work "Lung Nodule Segmentation with CT Imaging use Deep Learning ResNet."',
+            category: 'Research',
+            date: '2024-06-09 16:34:24',
             imageUrl: 'images/news/news-1.jpg',
             readTime: '9 min'
         }

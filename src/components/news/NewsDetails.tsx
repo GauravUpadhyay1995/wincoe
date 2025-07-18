@@ -56,7 +56,7 @@ const NewsDetails: React.FC<NewsDetailsProps> = ({
         </motion.button>
 
         {/* News Image */}
-        {imageUrl && (
+        {/* {imageUrl && (
           <motion.div
             className="mb-8 rounded-2xl overflow-hidden shadow-lg"
             variants={fadeInUp}
@@ -70,7 +70,7 @@ const NewsDetails: React.FC<NewsDetailsProps> = ({
               className="w-full h-auto object-cover"
             />
           </motion.div>
-        )}
+        )} */}
 
         {/* Title */}
         <motion.h1
@@ -78,26 +78,27 @@ const NewsDetails: React.FC<NewsDetailsProps> = ({
           variants={fadeInUp}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
-          {title}
+          {/* {title} */}
+          Under development..... please check back later
         </motion.h1>
 
         {/* Date */}
-        <motion.p
+        {/* <motion.p
           className="text-sm text-gray-500 dark:text-gray-400 mb-6 italic"
           variants={fadeInUp}
           transition={{ duration: 0.5, delay: 0.3 }}
         >
           Published on: {new Date(publishedAt).toLocaleDateString()}
-        </motion.p>
+        </motion.p> */}
 
         {/* Content */}
-        <motion.div
+        {/* <motion.div
           className="prose dark:prose-invert prose-lg max-w-none text-gray-800 dark:text-gray-100"
           variants={fadeInUp}
           transition={{ duration: 0.5, delay: 0.4 }}
         >
           <p>{content}</p>
-        </motion.div>
+        </motion.div> */}
       </motion.div>
     </AnimatePresence>
   );
