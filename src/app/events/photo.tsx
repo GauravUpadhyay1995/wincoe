@@ -2,7 +2,12 @@
 
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRef, useState } from 'react';
-import { XIcon, ChevronLeftIcon, ChevronRightIcon } from '@heroicons/react/outline';
+import {
+  XMarkIcon,
+  ChevronLeftIcon,
+  ChevronRightIcon
+} from '@heroicons/react/24/outline';
+
 
 export default function Gallery() {
   const galleryImages = Array(6)
@@ -206,7 +211,7 @@ export default function Gallery() {
                 className="absolute -top-12 right-0 z-10 w-10 h-10 flex items-center justify-center text-orange-300 hover:text-white bg-orange-900/90 hover:bg-orange-600 rounded-full transition-all duration-300 shadow-lg hover:shadow-orange-500/30 border border-orange-300/30 hover:border-orange-600"
                 aria-label="Close modal"
               >
-                <XIcon className="h-10 w-10" />
+                <XMarkIcon className="h-10 w-10" />
               </button>
 
               {/* Image with rolling transition */}
