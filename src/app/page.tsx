@@ -82,7 +82,7 @@ export default function HomePage() {
     if (!mounted) return null;
     return (
 
-        <div className="min-h-screen flex flex-col">
+        <div className="min-h-screen flex flex-col bg-gradient-to-r from-orange-50 to-cyan-50">
             <Header />
             <main className="flex-grow">
                 <ScrollLinked />

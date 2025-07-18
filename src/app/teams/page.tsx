@@ -223,7 +223,7 @@ const UniversityTeams: React.FC<{ teams?: TeamSectionProps[] }> = ({ teams = sam
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="min-h-screen bg-gradient-to-r from-orange-50 to-cyan-50">
             <Header />
             <main className="overflow-hidden">
                 {/* Hero Section */}

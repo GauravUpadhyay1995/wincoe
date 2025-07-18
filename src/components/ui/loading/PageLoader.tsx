@@ -8,7 +8,7 @@ const PageLoader = () => {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="absolute inset-0 z-50 flex items-center justify-center bg-white/60 dark:bg-black/40 backdrop-blur-sm"
+        className="absolute inset-0 z-50 flex items-center justify-center bg-gradient-to-r from-orange-50 to-cyan-50 backdrop-blur-sm"
       >
         <motion.div
           initial={{ scale: 0.8, opacity: 0 }}

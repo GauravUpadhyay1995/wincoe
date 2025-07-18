@@ -69,7 +69,7 @@ const GrantCard = ({
         <div className="p-6 pb-4">
           <div className="flex justify-between items-start mb-4">
             <motion.h3 
-              className="text-xl md:text-2xl font-bold text-orange-600 dark:text-white"
+              className="text-xl md:text-2xl font-bold text-orange-600 dark:text-white "
               whileHover={{ x: 3 }}
               transition={{ type: 'spring' }}
             >
@@ -88,7 +88,7 @@ const GrantCard = ({
         <div className="px-6 pb-6 flex-grow">
           {/* Funding amount */}
           <motion.div 
-            className="mb-6 p-4 rounded-xl bg-white dark:bg-gray-800 shadow-sm"
+            className="mb-6 p-4 rounded-xl bg-gradient-to-r from-orange-100 to-cyan-50 dark:bg-gray-800 shadow-sm"
             whileHover={{ scale: 1.02 }}
           >
             <div className="flex items-center mb-2">
@@ -100,7 +100,7 @@ const GrantCard = ({
           
           {/* Duration */}
           <motion.div 
-            className="mb-6 p-4 rounded-xl bg-white dark:bg-gray-800 shadow-sm"
+            className="mb-6 p-4 rounded-xl bg-gradient-to-r from-orange-100 to-cyan-50 dark:bg-gray-800 shadow-sm"
             whileHover={{ scale: 1.02 }}
           >
             <div className="flex items-center mb-2">
@@ -112,7 +112,7 @@ const GrantCard = ({
           
           {/* Requirements */}
           <motion.div 
-            className="p-4 rounded-xl bg-white dark:bg-gray-800 shadow-sm"
+            className="p-4 rounded-xl bg-gradient-to-r from-orange-100 to-cyan-50 dark:bg-gray-800 shadow-sm"
             whileHover={{ scale: 1.02 }}
           >
             <div className="flex items-center mb-3">

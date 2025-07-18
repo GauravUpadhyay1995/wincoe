@@ -65,7 +65,7 @@ const Footer = () => {
       initial="hidden"
       animate={isVisible ? "visible" : "hidden"}
       variants={containerVariants}
-      className={`bg-white dark:bg-gray-900 border-t border-orange-100 dark:border-orange-900/20 mt-auto`}
+      className={`bg-gradient-to-r from-orange-50 to-cyan-80 border-t border-orange-100 dark:border-orange-900/20 mt-auto`}
     >
       <div className="container mx-auto px-4 py-12 md:py-16">
         {/* WhatsApp Floating Button */}

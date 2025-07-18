@@ -161,10 +161,10 @@ const NewsDisplay = () => {
     };
 
     return (
-        <div className="min-h-screen bg-white dark:bg-gray-900">
+        <div className="min-h-screen bg-white dark:bg-gray-900 ">
             <Header />
             <main className="overflow-hidden">
-                <section className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
+                <section className="py-24 bg-gradient-to-r from-orange-50 to-cyan-50">
                     <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
                         <ScrollAnimation animation="fade" delay={400}>
                             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ duration: 0.5 }}>
@@ -218,17 +218,17 @@ const NewsDisplay = () => {
                                         transition={{ duration: 0.5 }}
                                         className="mb-12"
                                     >
-                                        <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300">
+                                        <div className="bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-shadow duration-300 ">
                                             <div className="md:flex">
-                                                <div className="md:w-1/2">
+                                                <div className="md:w-1/2 ">
                                                     <motion.img
                                                         whileHover={{ scale: 1.03 }}
-                                                        className="h-48 sm:h-64 w-full object-cover md:h-full"
+                                                        className="h-48 sm:h-64 w-full object-cover md:h-full "
                                                         src={featuredNews.imageUrl}
                                                         alt={featuredNews.title}
                                                     />
                                                 </div>
-                                                <div className="p-6 md:w-1/2">
+                                                <div className="p-6 md:w-1/2 bg-gradient-to-r from-orange-50 to-cyan-50">
                                                     <div className="uppercase tracking-wide text-sm text-indigo-600 font-semibold mb-1">
                                                         Featured • {featuredNews.category}
                                                     </div>
@@ -270,7 +270,7 @@ const NewsDisplay = () => {
                                                     whileTap={isMobile ? 'tap' : undefined}
                                                     variants={isMobile ? mobileCardVariants : cardVariants}
                                                     transition={{ duration: 0.3 }}
-                                                    className="bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl"
+                                                    className="bg-gradient-to-r from-orange-50 to-cyan-50 rounded-xl overflow-hidden shadow-lg hover:shadow-xl "
                                                 >
                                                     <div className="h-40 sm:h-48 overflow-hidden">
                                                         <motion.img

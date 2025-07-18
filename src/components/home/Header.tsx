@@ -28,8 +28,8 @@ const Header = () => {
 
   // Loading state UI
   const LoadingHeader = () => (
-    <header className={`fixed top-0 left-0 w-full transition-all duration-300 z-50 ${'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-xl rounded-b-2xl'}`}>
-      <div className="container mx-auto px-4">
+    <header className={`fixed top-0 left-0 w-full transition-all duration-300 z-50 ${' dark:bg-gray-900/90 backdrop-blur-md shadow-xl rounded-b-2xl'}`}>
+      <div className="container mx-auto px-4 ">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex-shrink-0 transform hover:scale-105 transition-transform duration-300">
@@ -46,7 +46,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-6">
+          <div className="hidden md:flex items-center space-x-6 ">
             {/* <ThemeToggleButton /> */}
             <div className="flex items-center space-x-3">
               <div className="w-8 h-8 rounded-full bg-orange-200 dark:bg-orange-700 animate-pulse"></div>
@@ -55,7 +55,7 @@ const Header = () => {
           </div>
 
           {/* Mobile Menu Button */}
-          <div className="md:hidden flex items-center space-x-4">
+          <div className="md:hidden flex items-center space-x-4 ">
             {/* <ThemeToggleButton /> */}
             <div className="w-8 h-8 rounded-full bg-orange-200 dark:bg-orange-700 animate-pulse"></div>
           </div>
@@ -71,7 +71,7 @@ const Header = () => {
 
 
   return (
-    <header className={` fixed top-0 left-0 w-full transition-all duration-300 z-50 ${isScrolled ? 'bg-white/90 dark:bg-gray-900/90 backdrop-blur-md shadow-xl rounded-b-2xl' : 'bg-transparent'}`}>
+    <header className={`bg-gradient-to-r from-orange-50 to-cyan-50 fixed top-0 left-0 w-full transition-all duration-300 z-50 ${isScrolled ? ' backdrop-blur-md shadow-xl rounded-b-2xl' : 'bg-transparent'}`}>
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-between h-20">
           {/* Logo */}

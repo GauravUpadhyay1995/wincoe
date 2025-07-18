@@ -31,7 +31,7 @@ const LoadingScreen = () => {
                         duration: 0.8,
                         ease: "easeInOut"
                     }}
-                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-white dark:bg-gray-900"
+                    className="fixed inset-0 z-[9999] flex items-center justify-center bg-gradient-to-r from-orange-50 to-cyan-50"
                 >
                     <div className="relative flex flex-col items-center">
                         {/* Loading Text */}
