@@ -14,7 +14,7 @@ export default function Gallery() {
     .fill(0)
     .map((_, i) => ({
       id: i + 1,
-      src: `/images/grid-image/image-0${i + 1}.png`,
+      src: `/images/grid-image/image-0${i + 1}.jpg`,
       alt: `Event photo ${i + 1}`
     }));
 

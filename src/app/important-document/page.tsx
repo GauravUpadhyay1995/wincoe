@@ -10,24 +10,24 @@ import Link from 'next/link';
 
 const documents = [
     {
-        title: "UGC Affiliation Certificate",
+        title: "CDSCO MEDICAL DEVICES RULES",
         icon: <FaFilePdf className="text-red-500 w-6 h-6" />,
-        url: "/docs/ugc-affiliation.pdf",
+        url: "/images/documents/doc-1.pdf",
     },
     {
-        title: "AICTE Approval Letter",
+        title: "IIT Delhi, Institute Ethics Committee",
         icon: <BsFillFileEarmarkTextFill className="text-blue-500 w-6 h-6" />,
-        url: "/docs/aicte-approval.pdf",
+        url: "/images/documents/doc-2.pdf",
     },
     {
-        title: "Institution Registration Certificate",
+        title: "Medical device Testing laboratory, 2023",
         icon: <FaFileAlt className="text-green-500 w-6 h-6" />,
-        url: "/docs/registration.pdf",
+        url: "/images/documents/doc-3.pdf",
     },
 ];
 
 export default function ImportantDocuments() {
-   const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: false });
+    const [ref, inView] = useInView({ threshold: 0.3, triggerOnce: false });
 
     const controls = useAnimation();
 
@@ -57,8 +57,8 @@ export default function ImportantDocuments() {
             y: 0,
             rotate: 0,
             scale: 1,
-            transition: { 
-                duration: 0.7, 
+            transition: {
+                duration: 0.7,
                 ease: [0.33, 1, 0.68, 1],
             },
         },
@@ -66,8 +66,8 @@ export default function ImportantDocuments() {
             scale: 1.05,
             y: -10,
             rotate: 1,
-            transition: { 
-                type: "spring", 
+            transition: {
+                type: "spring",
                 stiffness: 300,
                 damping: 10
             },
@@ -77,15 +77,15 @@ export default function ImportantDocuments() {
     return (
         <section className="py-10" ref={ref}>
             <div className="container mx-auto px-4 text-center">
-                 <div className="flex items-center justify-end mb-4">
-              
-                <Link
-                    href="/events"
-                    className="text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
-                >
-                    View All →
-                </Link>
-            </div>
+                <div className="flex items-center justify-end mb-4">
+
+                    <Link
+                        href="/events"
+                        className="text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
+                    >
+                        View All →
+                    </Link>
+                </div>
 
                 <motion.h2
                     className="text-4xl font-bold mb-10 text-orange-600 flex items-center justify-center gap-4 text-center"
@@ -93,10 +93,10 @@ export default function ImportantDocuments() {
                     animate={controls}
                     variants={{
                         hidden: { opacity: 0, y: -30 },
-                        visible: { 
-                            opacity: 1, 
+                        visible: {
+                            opacity: 1,
                             y: 0,
-                            transition: { 
+                            transition: {
                                 duration: 0.8,
                                 ease: "easeOut"
                             }
@@ -113,9 +113,9 @@ export default function ImportantDocuments() {
                         animate={controls}
                         variants={{
                             hidden: { scale: 0 },
-                            visible: { 
+                            visible: {
                                 scale: 1,
-                                transition: { 
+                                transition: {
                                     delay: 0.3,
                                     type: "spring",
                                     stiffness: 200
@@ -133,7 +133,7 @@ export default function ImportantDocuments() {
                     initial="hidden"
                     animate={controls}
                     variants={containerVariants}
-                      viewport={{ amount: 0.3 }} // ✅ Fix for mobile
+                    viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                 >
                     {documents.map((doc, index) => (
                         <motion.div
@@ -142,19 +142,19 @@ export default function ImportantDocuments() {
                             variants={cardVariants}
                             whileHover="hover"
                             whileTap={{ scale: 0.98 }}
-                               viewport={{ amount: 0.3 }} // ✅ Fix for mobile
+                            viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                         >
                             <AnimatePresence>
                                 <motion.div
                                     className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-orange-100 dark:bg-orange-900 opacity-10 group-hover:opacity-20"
                                     animate={{ rotate: 360 }}
-                                    transition={{ 
-                                        repeat: Infinity, 
-                                        duration: 20, 
+                                    transition={{
+                                        repeat: Infinity,
+                                        duration: 20,
                                         ease: "linear",
                                         repeatType: "loop"
                                     }}
-                                       viewport={{ amount: 0.3 }} // ✅ Fix for mobile
+                                    viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                                 />
                             </AnimatePresence>
 
@@ -162,17 +162,17 @@ export default function ImportantDocuments() {
                                 className="flex items-center justify-center mb-4"
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                transition={{ 
+                                transition={{
                                     delay: 0.3 + index * 0.1,
                                     type: "spring",
                                     stiffness: 250
                                 }}
-                                   viewport={{ amount: 0.3 }} // ✅ Fix for mobile
+                                viewport={{ amount: 0.3 }} // ✅ Fix for mobile
                             >
                                 {doc.icon}
                             </motion.div>
 
-                            <motion.h3 
+                            <motion.h3
                                 className="text-lg font-semibold text-gray-700 dark:text-gray-100 mb-3"
                                 initial={{ opacity: 0 }}
                                 animate={{ opacity: 1 }}
@@ -183,8 +183,10 @@ export default function ImportantDocuments() {
 
                             <motion.a
                                 href={doc.url}
+                                download 
                                 target="_blank"
                                 rel="noopener noreferrer"
+
                                 className="inline-flex items-center gap-2 text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-300 text-sm font-medium transition-colors"
                                 initial={{ opacity: 0, y: 10 }}
                                 animate={{ opacity: 1, y: 0 }}
