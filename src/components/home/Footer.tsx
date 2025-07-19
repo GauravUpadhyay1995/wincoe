@@ -176,7 +176,7 @@ const Footer = () => {
                 <Image src="/images/twitter.svg" alt="Twitter" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on LinkedIn" variants={iconLinkVariants} initial="rest" whileHover="hover">
-                <Image src="/images/linkedin.svg" alt="LinkedIn" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
+                <Image src="/images/linkedIn.svg" alt="LinkedIn" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Instagram" variants={iconLinkVariants} initial="rest" whileHover="hover">
                 <Image src="/images/instagram.svg" alt="Instagram" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
@@ -194,21 +194,22 @@ const Footer = () => {
             </motion.h3>
             <ul className="space-y-3 text-base">
               {[
-                { path: '/', text: 'Home' },
-                { path: '/about', text: 'About Us' },
-                { path: '/events', text: 'Upcoming Events' }, // More specific for event site
-                { path: '/news', text: 'Latest News' },
-                { path: '/gallery', text: 'Event Gallery' }, // New link for photos
-                { path: '/contact', text: 'Contact Us' },
+                { href: '/', label: 'Home' },
+                { href: '/about', label: 'About Us' },
+                { href: '/teams', label: 'Teams' },
+                { href: '/events', label: 'Events' },
+                { href: '/news', label: 'News' },
+                { href: '/gallery', label: 'Gallery' },
+                { href: '/contact', label: 'Contact' },
               ].map((link) => (
                 <motion.li
-                  key={link.path}
+                  key={link.href}
                   variants={itemVariants}
-                  onHoverStart={() => setHoveredLink(link.path)}
+                  onHoverStart={() => setHoveredLink(link.href)}
                   onHoverEnd={() => setHoveredLink(null)}
                 >
                   <Link
-                    href={link.path}
+                    href={link.href}
                     className="text-gray-700 dark:text-gray-300 hover:text-orange-600 dark:hover:text-orange-400
                                transition-colors duration-300 py-1 block relative group" // Added group for hover effect
                   >
@@ -218,10 +219,10 @@ const Footer = () => {
                       whileHover="hover"
                       className="inline-block"
                     >
-                      {link.text}
+                      {link.label}
                     </motion.span>
                     <AnimatePresence>
-                      {hoveredLink === link.path && (
+                      {hoveredLink === link.href && (
                         <motion.span
                           initial={{ width: 0 }}
                           animate={{ width: '100%' }}

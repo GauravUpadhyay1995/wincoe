@@ -8,11 +8,11 @@ import Carousel from '@/components/carousel/carousel';
 import UpcomingEvent from './(frontend)/events/upcomming';
 import ScrollLinked from '@/components/wave/scrollLinked';
 import WhatWeDo from '@/components/what-we-do/page';
-import NewsEvents from './(frontend)/events/page';
-import Gallery from './(frontend)/events/gallery';
+import PastEvents from './(frontend)/events/pastEvent';
 import Photo from './(frontend)/events/photo';
 import ImportantDocuments from './important-document/page';
 import { motion } from "framer-motion";
+import NewsDisplay from './(frontend)/news/page';
 
 export default function HomePage() {
     const [mounted, setMounted] = useState(false);
@@ -67,6 +67,60 @@ export default function HomePage() {
             ctaLink: "/projects/wearables"
         }
     ];
+    const Pastevents = [
+
+        {
+            title: "WIN CoE Inauguration",
+            date: "December 2024",
+            description:
+                "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+            image: "/images/grid-image/image-01.png",
+        },
+        {
+            title: "First Grant Recipients Announcement",
+            date: "March 2025",
+            description: "Celebrating the first round of grant recipients",
+            image: "/images/grid-image/image-01.png",
+        },
+        {
+            title: "HealthTech Symposium",
+            date: "June 2025",
+            description: "Annual symposium on healthcare technology innovations",
+            image: "/images/grid-image/image-01.png",
+        },
+    ];
+    const newsData = [
+
+        {
+            id: '7',
+            title: 'CBME Achiever of the Month - June 2024- Ayesha Tooba Khan',
+            excerpt: 'Research Communication Award.',
+            category: 'Achievement',
+            date: '2023-10-14',
+            imageUrl: 'images/news/news-6.png',
+            readTime: '8 min'
+        },
+        {
+            id: '8',
+            title: 'CBME introduces MS (Research) program for doctors and health professionals',
+            excerpt: 'Our Master of Science (Research) program aims to bridge the gap between the pressing demands of the healthcare ecosystem and the field of Biomedical Engineering by nurturing highly skilled human resources equipped with interdisciplinary knowledge and scientific acumen.',
+            category: 'Research',
+            date: '2023-10-12',
+            imageUrl: 'images/news/news-8.png',
+            readTime: '10 min'
+        },
+
+        {
+            id: '10',
+            title: 'CBME Achievers of the Month - July 2024- Raufiya Jafari & Vidit Gaur',
+            excerpt: 'We are delighted to invite you all to the next session of the “CBME Achievers’ Talk” series on 23rd July 2024 (Wednesday) from 3PM to 4PM in the CBME committee room. The achievers of July 2024 are:1) Raufiya Jafari2) Vidit Gaur',
+            category: 'Achievement',
+            date: '2024-06-09 16:34:24',
+            imageUrl: 'images/news/news-7.jpg',
+            readTime: '4 min'
+        },
+
+    ];
 
     return (
         <div className="min-h-screen flex flex-col bg-gradient-to-r from-orange-50 to-cyan-50 text-gray-800 dark:text-white dark:from-gray-900 dark:to-gray-800">
@@ -119,7 +173,8 @@ export default function HomePage() {
                 <section className="py-12">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
-                            <Gallery />
+
+                            <PastEvents events={Pastevents} />
                         </ScrollAnimation>
                     </div>
                 </section>
@@ -128,7 +183,7 @@ export default function HomePage() {
                 <section className="py-12 bg-gray-50 dark:bg-gray-900">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
-                            <Photo />
+                            <Photo number={3} />
                         </ScrollAnimation>
                     </div>
                 </section>
@@ -137,7 +192,7 @@ export default function HomePage() {
                 <section className="py-12">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
-                            <NewsEvents />
+                            <NewsDisplay newsItems={newsData} />
                         </ScrollAnimation>
                     </div>
                 </section>

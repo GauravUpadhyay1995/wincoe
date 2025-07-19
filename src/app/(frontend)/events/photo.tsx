@@ -9,8 +9,8 @@ import {
 } from '@heroicons/react/24/outline';
 
 
-export default function Gallery() {
-  const galleryImages = Array(6)
+export default function Gallery({ number = 6 }: { number: number }) {
+  const galleryImages = Array(number)
     .fill(0)
     .map((_, i) => ({
       id: i + 1,
@@ -66,12 +66,12 @@ export default function Gallery() {
   return (
     <div className="relative" ref={containerRef}>
       {/* Photo Gallery Section */}
-      <section className="container mx-auto px-4">
+      <section className="container mx-auto px-4 mb-4">
         <motion.div
           initial={{ opacity: 0, y: 40 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
-          viewport={{margin: '-100px' }}
+          viewport={{ margin: '-100px' }}
           className="max-w-7xl mx-auto"
         >
 
@@ -80,7 +80,7 @@ export default function Gallery() {
             initial={{ opacity: 0, y: -20 }}
             whileInView={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-           
+
           >
             <div className=" flex items-center justify-center transform transition-transform">
               <svg
@@ -102,13 +102,13 @@ export default function Gallery() {
               </svg>
 
             </div>
-            Photo Gallery
+            Gallery
           </motion.h2>
           <motion.p
             className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-           
+
             transition={{ delay: 0.1 }}
           >
             Moments captured from WIN CoE events and activities
@@ -125,7 +125,7 @@ export default function Gallery() {
                   type: 'spring',
                   stiffness: 100
                 }}
-                viewport={{margin: '-50px' }}
+                viewport={{ margin: '-50px' }}
                 className="overflow-hidden rounded-xl shadow-lg hover:shadow-2xl transition-all duration-300 cursor-pointer hover:border-4 hover:border-orange-600"
                 whileHover={{
                   scale: 1.03,
@@ -168,20 +168,23 @@ export default function Gallery() {
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             transition={{ delay: 0.6 }}
-           
+
             className="text-center mt-16"
           >
-            <motion.button
-              whileHover={{
-                scale: 1.05,
-                backgroundColor: '#e87638ff',
-                boxShadow: '0 10px 25px -5px rgba(78, 33, 3, 0.4)'
-              }}
-              whileTap={{ scale: 0.95 }}
-              className="px-8 py-3 bg-orange-600 text-white font-medium rounded-full shadow-lg transition-all"
-            >
-              View More Photos
-            </motion.button>
+            {galleryImages.length <= 3 && (
+              <motion.button
+                whileHover={{
+                  scale: 1.05,
+                  backgroundColor: '#e87638ff',
+                  boxShadow: '0 10px 25px -5px rgba(78, 33, 3, 0.4)',
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="px-8 py-3 bg-orange-600 text-white font-medium rounded-full shadow-lg transition-all"
+              >
+                View More Photos
+              </motion.button>
+            )}
+
           </motion.div>
         </motion.div>
       </section>

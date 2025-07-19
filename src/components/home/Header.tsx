@@ -37,6 +37,7 @@ const Header = () => {
   const navLinks = [
     { href: '/', label: 'Home' },
     { href: '/about', label: 'About Us' },
+     { href: '/teams', label: 'Teams' },
     { href: '/events', label: 'Events' },
     { href: '/news', label: 'News' },
     { href: '/gallery', label: 'Gallery' },
@@ -117,7 +118,7 @@ const Header = () => {
           <div className="flex items-center space-x-2 sm:space-x-4 ml-auto md:ml-0 z-20">
 
             {/* Theme Toggle Button with Smooth Icon Change (Original Outlined Icons) */}
-            <button
+            {/* <button
               onClick={toggleTheme}
               className={`p-2 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110
                 ${theme === 'dark'
@@ -136,7 +137,7 @@ const Header = () => {
                     exit="exit"
                     className="absolute" // Position absolute to allow smooth transition
                   >
-                    {/* Original Outlined Moon Icon */}
+                   
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
                     </svg>
@@ -150,27 +151,22 @@ const Header = () => {
                     exit="exit"
                     className="absolute" // Position absolute to allow smooth transition
                   >
-                    {/* Original Outlined Sun Icon */}
+                   
                     <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h1M3 12H2m15.325-4.575l.707-.707M6.707 17.293l-.707.707M18.66 18.66l-.707-.707M5.34 5.34l-.707-.707M12 17a5 5 0 100-10 5 5 0 000 10z" />
                     </svg>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </button>
-            {/* Auth Button (Login/Dashboard) - No Page Call for Login */}
-            {/* {user ? (
-              <Link href="/dashboard" className="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200">
-                Dashboard
-              </Link>
-            ) : ( */}
-            <button
+            </button> */}
+          
+            {/* <button
               onClick={handleLoginClick}
               className="hidden sm:inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-full shadow-sm text-white bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors duration-200 cursor-pointer"
               aria-label="Login to your account"
             >
               Login
-            </button>
+            </button> */}
             {/* )} */}
 
             {/* Mobile Menu Toggle Button */}
