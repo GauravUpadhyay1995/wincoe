@@ -237,7 +237,7 @@ export default function NewsDisplay({ newsItems = [] }: { newsItems: NewsItem[] 
                                         <p className={`text-base mb-4 line-clamp-3 ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>{featuredNews.excerpt}</p>
                                         <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
                                             <span className={`text-sm ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
-                                                {featuredNews.date} • {featuredNews.readTime} read
+                                                {featuredNews.date} • {featuredNews.readTime} read1
                                             </span>
                                             <ReadMoreButton itemId={featuredNews.id} />
                                         </div>
@@ -277,7 +277,7 @@ export default function NewsDisplay({ newsItems = [] }: { newsItems: NewsItem[] 
                                                 alt={item.title}
                                             />
                                         </div>
-                                        <div className="p-5 flex flex-col h-[calc(100%-12rem)]"> {/* Added flex-col and height calculation */}
+                                        <div className="p-5 flex flex-col h-[calc(100%-15rem)]"> {/* Added flex-col and height calculation */}
                                             <div className="flex justify-between items-center mb-3">
                                                 <span className={`text-xs font-semibold px-3 py-1 rounded-full ${theme === 'dark' ? 'bg-purple-700 text-purple-200' : 'bg-purple-100 text-purple-800'}`}>
                                                     {item.category}

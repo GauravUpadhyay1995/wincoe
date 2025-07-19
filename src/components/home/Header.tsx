@@ -86,9 +86,8 @@ const Header = () => {
             <Link
               href="/"
               className={`block p-2 rounded-lg transition-all duration-300 transform
-                          ${isScrolled ? 'scale-95' : 'scale-100'}
-                          focus:outline-none focus:ring-2 focus:ring-orange-500
-                          ${theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100'}`}
+                         
+                         `}
               aria-label="Go to Home page"
             >
               <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={120} height={40} priority />

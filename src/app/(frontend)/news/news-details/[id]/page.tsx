@@ -6,6 +6,7 @@ import React from 'react';
 import ScrollAnimation from '@/components/common/ScrollAnimation';
 import Header from '@/components/home/Header';
 import Footer from '@/components/home/Footer';
+import UnderDevelopment from '@/components/common/UnderDev';
 
 type Props = {
     params: {
@@ -29,33 +30,7 @@ export default async function NewsDetailsPage({ params }: Props) {
 
     return (
         <div className="min-h-screen bg-white dark:bg-gray-900">
-            <Header />
-            <main className="overflow-hidden">
-                {/* Hero Section */}
-                <section className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
-                    <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
-                        <div className="flex flex-col items-center">
-                            <div className="w-full">
-                                <ScrollAnimation animation="fade" className="mb-16" delay={400}>
-
-                                    <NewsDetails
-                                        title={news.title}
-                                        content={news.content}
-                                        imageUrl={news.imageUrl}
-                                        publishedAt={news.publishedAt}
-                                    />
-                                </ScrollAnimation>
-
-
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </main>
-
-
-
-            <Footer />
+           <UnderDevelopment />
         </div>
     );
 };

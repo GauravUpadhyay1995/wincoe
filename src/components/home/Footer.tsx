@@ -170,16 +170,17 @@ const Footer = () => {
             {/* Social Media Icons */}
             <div className="flex space-x-4 mt-6">
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Facebook" variants={iconLinkVariants} initial="rest" whileHover="hover">
-                <Image src="/images/facebook.svg" alt="Facebook" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
+                <Image src="/images/facebook.svg" alt="Facebook" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Twitter" variants={iconLinkVariants} initial="rest" whileHover="hover">
-                <Image src="/images/twitter.svg" alt="Twitter" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
+                
+                <Image src="/images/twitter.svg" alt="Twitter" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
-              <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on LinkedIn" variants={iconLinkVariants} initial="rest" whileHover="hover">
-                <Image src="/images/linkedIn.svg" alt="LinkedIn" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
+              <motion.a href="https://www.linkedin.com/company/cbme-iitdelhi/?originalSubdomain=in" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on LinkedIn" variants={iconLinkVariants} initial="rest" whileHover="hover">
+                <Image src="/images/linkedIn.svg" alt="LinkedIn" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Instagram" variants={iconLinkVariants} initial="rest" whileHover="hover">
-                <Image src="/images/instagram.svg" alt="Instagram" width={24} height={24} className="filter grayscale hover:grayscale-0 transition-all duration-300" />
+                <Image src="/images/instagram.svg" alt="Instagram" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
             </div>
           </motion.div>
@@ -260,8 +261,8 @@ const Footer = () => {
                 },
                 {
                   icon: 'M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z',
-                  text: 'info@wincoe.ac.in', // Changed to a more generic info email
-                  href: 'mailto:info@wincoe.ac.in',
+                  text: 'info@wincoe.in', // Changed to a more generic info email
+                  href: 'mailto:info@wincoe.in',
                 },
               ].map((item, index) => (
                 <motion.li key={index} variants={itemVariants} whileHover={{ x: 5 }}>
