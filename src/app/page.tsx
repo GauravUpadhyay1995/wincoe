@@ -13,6 +13,7 @@ import Photo from './(frontend)/events/photo';
 import ImportantDocuments from './important-document/page';
 import { motion } from "framer-motion";
 import NewsDisplay from './(frontend)/news/page';
+import ThematicAreas from '@/components/common/ThematicArea';
 
 export default function HomePage() {
     const [mounted, setMounted] = useState(false);
@@ -74,19 +75,20 @@ export default function HomePage() {
             date: "December 2024",
             description:
                 "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-            image: "/images/grid-image/image-01.png",
+            image: "/images/past-events/image-01.jpg",
         },
+
         {
             title: "First Grant Recipients Announcement",
             date: "March 2025",
             description: "Celebrating the first round of grant recipients",
-            image: "/images/grid-image/image-01.png",
+            image: "/images/past-events/image-02.jpg",
         },
         {
             title: "HealthTech Symposium",
             date: "June 2025",
             description: "Annual symposium on healthcare technology innovations",
-            image: "/images/grid-image/image-01.png",
+            image: "/images/past-events/image-03.jpg",
         },
     ];
     const newsData = [
@@ -132,7 +134,7 @@ export default function HomePage() {
                 <section className="relative min-h-screen pt-24 overflow-hidden shadow-xl">
                     <Carousel images={images} />
                 </section>
-
+               
                 {/* What We Do */}
                 <section className="py-12 px-4">
                     <WhatWeDo />
@@ -204,6 +206,9 @@ export default function HomePage() {
                             <ImportantDocuments />
                         </ScrollAnimation>
                     </div>
+                </section>
+                 <section className="py-12 px-4">
+                    <ThematicAreas />
                 </section>
             </main>
             <Footer />

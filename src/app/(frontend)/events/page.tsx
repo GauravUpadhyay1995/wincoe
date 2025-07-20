@@ -10,28 +10,85 @@ import UpcomingEvent from './upcomming';
 import PastEvents from './pastEvent';
 
 
-  const events = [
-    
-    {
-      title: "WIN CoE Inauguration",
-      date: "December 2024",
-      description:
-        "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-      image: "/images/grid-image/image-01.png",
-    },
-    {
-      title: "First Grant Recipients Announcement",
-      date: "March 2025",
-      description: "Celebrating the first round of grant recipients",
-      image: "/images/grid-image/image-01.png",
-    },
-    {
-      title: "HealthTech Symposium",
-      date: "June 2025",
-      description: "Annual symposium on healthcare technology innovations",
-      image: "/images/grid-image/image-01.png",
-    },
-  ];
+const events = [
+
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-01.jpg",
+  },
+ 
+  {
+    title: "First Grant Recipients Announcement",
+    date: "March 2025",
+    description: "Celebrating the first round of grant recipients",
+    image: "/images/past-events/image-02.jpg",
+  },
+  {
+    title: "HealthTech Symposium",
+    date: "June 2025",
+    description: "Annual symposium on healthcare technology innovations",
+    image: "/images/past-events/image-03.jpg",
+  },
+   {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-04.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-05.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-06.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-07.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-08.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-09.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-10.jpg",
+  },
+  {
+    title: "WIN CoE Inauguration",
+    date: "December 2024",
+    description:
+      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    image: "/images/past-events/image-11.jpg",
+  },
+];
 
 // --- Animation Variants ---
 const sectionVariants = {
@@ -197,7 +254,7 @@ export default function NewsEvents() {
           >
             Don't miss out on our upcoming seminars, workshops, and conferences.
           </motion.p>
-          
+
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {upcomingEvents.map((event, index) => (
@@ -255,7 +312,7 @@ export default function NewsEvents() {
           variants={sectionVariants}
           className="max-w-7xl mx-auto"
         >
-          <PastEvents events={events}/>
+          <PastEvents events={events} />
 
         </motion.div>
       </section>

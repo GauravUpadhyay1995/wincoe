@@ -8,8 +8,9 @@ import {
   ChevronRightIcon
 } from '@heroicons/react/24/outline';
 
-
+import { useRouter } from 'next/navigation';
 export default function Gallery({ number = 6 }: { number: number }) {
+    const router = useRouter();
   const galleryImages = Array(number)
     .fill(0)
     .map((_, i) => ({
@@ -171,19 +172,20 @@ export default function Gallery({ number = 6 }: { number: number }) {
 
             className="text-center mt-16"
           >
-            {galleryImages.length <= 3 && (
-              <motion.button
-                whileHover={{
-                  scale: 1.05,
-                  backgroundColor: '#e87638ff',
-                  boxShadow: '0 10px 25px -5px rgba(78, 33, 3, 0.4)',
-                }}
-                whileTap={{ scale: 0.95 }}
-                className="px-8 py-3 bg-orange-600 text-white font-medium rounded-full shadow-lg transition-all"
-              >
-                View More Photos
-              </motion.button>
-            )}
+              {galleryImages.length <= 3 && (
+        <motion.button
+          whileHover={{
+            scale: 1.05,
+            backgroundColor: '#e87638ff',
+            boxShadow: '0 10px 25px -5px rgba(78, 33, 3, 0.4)',
+          }}
+          whileTap={{ scale: 0.95 }}
+          className="px-8 py-3 bg-orange-600 text-white font-medium rounded-full shadow-lg transition-all"
+          onClick={() => router.push('/gallery')}
+        >
+          View More Photos
+        </motion.button>
+      )}
 
           </motion.div>
         </motion.div>

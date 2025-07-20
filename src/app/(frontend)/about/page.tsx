@@ -164,7 +164,7 @@ export default function About() {
             }}
           >
             <svg
-              className="w-8 h-8 text-white"
+              className="w-8 h-8 text-orange-600"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

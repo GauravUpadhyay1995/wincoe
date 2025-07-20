@@ -77,7 +77,7 @@ export default function ImportantDocuments() {
     return (
         <section className="py-10" ref={ref}>
             <div className="container mx-auto px-4 text-center">
-                <div className="flex items-center justify-end mb-4">
+                {/* <div className="flex items-center justify-end mb-4">
 
                     <Link
                         href="/events"
@@ -85,7 +85,7 @@ export default function ImportantDocuments() {
                     >
                         View All →
                     </Link>
-                </div>
+                </div> */}
 
                 <motion.h2
                     className="text-4xl font-bold mb-10 text-orange-600 flex items-center justify-center gap-4 text-center"
