@@ -220,7 +220,7 @@ const Header = () => {
                 ))}
                 {/* Mobile specific login/dashboard button */}
                 <hr className={`my-2 ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`} />
-                {user ? (
+                {/* {user ? (
                   <Link
                     href="/dashboard"
                     className={`block px-4 py-2 text-base font-medium rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-orange-500
@@ -241,7 +241,7 @@ const Header = () => {
                   >
                     Login
                   </button>
-                )}
+                )} */}
               </div>
             </motion.nav>
           )}

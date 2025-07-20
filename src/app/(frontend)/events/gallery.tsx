@@ -99,20 +99,8 @@ export default function Gallery() {
 
             Past Events
           </motion.h2>
-
-          <motion.p
-            ref={ref}
-            initial="hidden"
-            animate={controls}
-            variants={{
-              hidden: { opacity: 0, x: 100 },
-              visible: { opacity: 1, x: 0 },
-            }}
-            transition={{
-              delay: 0.1,
-              duration: 1.0,
-              ease: [0.33, 1, 0.68, 1],
-            }}
+<motion.p
+           
             className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto"
           >
             Highlights from our recent activities and gatherings
