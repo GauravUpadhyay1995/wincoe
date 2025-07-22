@@ -306,7 +306,7 @@ const AppSidebar: React.FC = () => {
               <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-400 bg-clip-text text-transparent">
 
                 <Image
-                  src={theme === "dark" ? "/images/logo/rpk-new.png" : "/images/logo/rpk.png"}
+                  src={theme === "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.png"}
                   alt="WIN CoE"
                   width={250}
                   height={10}

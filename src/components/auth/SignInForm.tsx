@@ -52,7 +52,7 @@ export default function SignInForm() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/login`, {
+      const response = await fetch(`/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -98,7 +98,7 @@ export default function SignInForm() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/login`, {
+      const response = await fetch(`/api/v1/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -309,7 +309,7 @@ export default function SignInForm() {
           >
             {/* You can replace this with an actual illustration */}
            <Image
-                           src={theme === "dark" ? "/images/logo/rpk-new.png" : "/images/logo/rpk.png"}
+                           src={theme === "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.png"}
                            alt="WIN CoE"
                            width={200}
                            height={200}

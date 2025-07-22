@@ -17,7 +17,7 @@ export default function AdminLoginForm() {
   const { theme } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("rupam+1@example.com");
+  const [email, setEmail] = useState("rupam@example.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -28,7 +28,7 @@ export default function AdminLoginForm() {
     setError(null);
 
     try {
-      const response = await fetch(`/api/admin/login`, {
+      const response = await fetch(`/api/v1/admin/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

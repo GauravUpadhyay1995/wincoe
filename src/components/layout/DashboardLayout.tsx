@@ -3,7 +3,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import UploadModal from '../dashboard/UploadModal';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'react-hot-toast';
 // import { TrashIcon } from '@heroicons/react/24/outline';
@@ -20,41 +19,14 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const { theme } = useTheme();
 
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isUploadModalOpen, setIsUploadModalOpen] = useState(false);
   const pathname = usePathname();
   const { logout } = useAuth();
-  const [isUploading, setIsUploading] = useState(false);
   
   const handleLogout = () => {
     logout('user');
   };
 
-  const handleUpload = async (file: File) => {
-    setIsUploading(true);
-    try {
-      const formData = new FormData();
-      formData.append('screenshot', file);
 
-      const response = await fetch('/api/screenshots', {
-        method: 'POST',
-        body: formData,
-        credentials: 'include'
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        toast.success('Screenshot uploaded successfully!');
-        setIsUploadModalOpen(false);
-      } else {
-        toast.error(data.message || 'Failed to upload screenshot');
-      }
-    } catch (error) {
-      console.error('Upload error:', error);
-      toast.error('Failed to upload screenshot');
-    } finally {
-      setIsUploading(false);
-    }
-  };
 
 
   const menuItems = [
@@ -75,15 +47,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
       ),
       label: 'Rewards',
       href: '/user/rewards',
-    },
-    {
-      icon: (
-        <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4 4m0 0l4-4m-4 4V4" />
-        </svg>
-      ),
-      label: 'Upload Screenshot',
-      onClick: () => setIsUploadModalOpen(true),
     },
     {
       icon: (
@@ -116,7 +79,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <Link href="/" className="inline-block">
               <span className="font-bold text-3xl gradient-text text-purple-600 dark:text-purple-400 transition-colors duration-300">
                 <Image
-                  src={theme === "dark" ? "/images/logo/rpk-new.png" : "/images/logo/rpk.png"}
+                  src={theme === "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.png"}
                   alt="WIN CoE"
                   width={200}
                   height={200}
@@ -179,7 +142,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
             <Link href="/" className="inline-block">
               <span className="font-bold text-xl text-purple-600 dark:text-purple-400">
                 <Image
-                  src={theme === "dark" ? "/images/logo/rpk-new.png" : "/images/logo/rpk.png"}
+                  src={theme === "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.png"}
                   alt="WIN CoE"
                   width={150}
                   height={200}
@@ -203,14 +166,6 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
-
-      {/* Upload Modal */}
-      <UploadModal
-        isOpen={isUploadModalOpen}
-        onClose={() => setIsUploadModalOpen(false)}
-        onUpload={handleUpload}
-        isUploading={isUploading}
-      />
 
       {/* Theme Toggle Button */}
       <div className="fixed bottom-4 right-4 z-[100]">

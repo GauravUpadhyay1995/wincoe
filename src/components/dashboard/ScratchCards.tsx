@@ -53,7 +53,7 @@ export default function ScratchCards() {
 
   const fetchCards = async () => {
     try {
-      const response = await fetch('/api/scratch-cards', {
+      const response = await fetch('/api/v1/scratch-cards', {
         credentials: 'include',
       });
       const data = await response.json();
@@ -146,7 +146,7 @@ export default function ScratchCards() {
     try {
       // Simulate 5 second loading
       await new Promise(resolve => setTimeout(resolve, 5000));
-      const response = await fetch(`/api/scratch-cards/${cardId}/scratch`, {
+      const response = await fetch(`/api/v1/scratch-cards/${cardId}/scratch`, {
         method: 'POST',
         credentials: 'include',
       });

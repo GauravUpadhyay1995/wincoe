@@ -49,7 +49,7 @@ export default function Home() {
 
     const fetchTimeline = async () => {
         try {
-            const response = await fetch('/api/timeline', {
+            const response = await fetch('/api/v1/timeline', {
                 credentials: 'include',
             });
             const data = await response.json();

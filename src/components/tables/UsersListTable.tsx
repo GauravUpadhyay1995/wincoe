@@ -241,7 +241,7 @@ export default function UsersListTable() {
     const fetchAllUsers = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/admin/users/list?perPage=25`, {
+            const response = await fetch(`/api/v1/admin/users/list?perPage=25`, {
                 credentials: 'include',
             });
             const data = await response.json();
@@ -325,7 +325,7 @@ export default function UsersListTable() {
         }
 
         setIsSubmitting(true);
-        const promise = fetch(`/api/admin/users/create`, {
+        const promise = fetch(`/api/v1/admin/users/create`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
@@ -373,7 +373,7 @@ export default function UsersListTable() {
             onlyStatus: true
         };
 
-        const promise = fetch(`/api/admin/users/update/${userId}`, {
+        const promise = fetch(`/api/v1/admin/users/update/${userId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -427,7 +427,7 @@ export default function UsersListTable() {
             updateData.password = formData.password.trim();
         }
 
-        const promise = fetch(`/api/admin/users/update/${editUserId}`, {
+        const promise = fetch(`/api/v1/admin/users/update/${editUserId}`, {
             method: 'PUT',
             headers: {
                 'Content-Type': 'application/json',
@@ -556,8 +556,8 @@ export default function UsersListTable() {
                                     }}
                                     className="w-full py-2 pl-3 pr-8 text-sm text-gray-800 bg-transparent border border-gray-300 rounded-lg appearance-none dark:bg-dark-900 h-9 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 cursor-pointer"
                                 >
-                                    {pageSizeOptions.map((size) => (
-                                        <option key={size} value={size}>
+                                    {pageSizeOptions.map((size,index) => (
+                                        <option key={index*size} value={size}>
                                             {size}
                                         </option>
                                     ))}

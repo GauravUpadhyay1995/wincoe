@@ -112,7 +112,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logout = useCallback(async (type: 'user' | 'admin') => {
     try {
-      const response = await fetch(`/api/${type === 'admin' ? 'admin/' : ''}logout`, {
+      const response = await fetch(`/api/v1/${type === 'admin' ? 'admin/' : ''}logout`, {
         method: 'POST',
         credentials: 'include',
       });
@@ -137,7 +137,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsLoading(true);
     try {
       // Check user auth
-      const userResponse = await fetch('/api/login', {
+      const userResponse = await fetch('/api/v1/login', {
         method: 'GET',
         credentials: 'include',
       });
@@ -153,7 +153,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       clearAuthData('user');
 
       // Check admin auth
-      const adminResponse = await fetch('/api/admin/login', {
+      const adminResponse = await fetch('/api/v1/admin/login', {
         method: 'GET',
         credentials: 'include',
       });
@@ -247,14 +247,6 @@ export function useAuth() {
 
 
 
-
-
-
-
-
-
-
-
 // 'use client';
 
 // import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -330,7 +322,7 @@ export function useAuth() {
 //   const logout = async (type: 'user' | 'admin') => {
 //     try {
 //       // Call logout API endpoint
-//       const response = await fetch(`/api/${type === 'admin' ? 'admin/' : ''}logout`, {
+//       const response = await fetch(`/api/v1/${type === 'admin' ? 'admin/' : ''}logout`, {
 //         method: 'POST',
 //         credentials: 'include',
 //       });
@@ -424,7 +416,7 @@ export function useAuth() {
 //     setIsLoading(true);
 //     try {
 //       // ==== Check USER Auth ====
-//       const userResponse = await fetch('/api/login', {
+//       const userResponse = await fetch('/api/v1/login', {
 //         method: 'GET',
 //         credentials: 'include',
 //       });
@@ -438,7 +430,7 @@ export function useAuth() {
 //       }
 
 //       // ==== Check ADMIN Auth ====
-//       const adminResponse = await fetch('/api/admin/login', {
+//       const adminResponse = await fetch('/api/v1/admin/login', {
 //         method: 'GET',
 //         credentials: 'include',
 //       });

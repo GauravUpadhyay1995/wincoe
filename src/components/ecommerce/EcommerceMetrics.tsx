@@ -42,7 +42,7 @@ export const EcommerceMetrics = () => {
   const { admin } = useAuth();
   const permissions = admin?.permissions;
   // console.log(permissions);
-  
+
   const hasPermission = (module: string, action: string) => {
     return permissions?.some(
       (perm) => perm.module === module && perm.actions.includes(action)
@@ -52,7 +52,7 @@ export const EcommerceMetrics = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch("/api/admin/dashboard");
+        const res = await fetch("/api/v1/admin/dashboard");
         const json = await res.json();
         if (json.success) {
           setData(json.data);
@@ -63,8 +63,9 @@ export const EcommerceMetrics = () => {
         setLoading(false);
       }
     };
+    setLoading(false);
 
-    fetchData();
+    // fetchData();
   }, []);
 
   if (loading) {
@@ -122,12 +123,12 @@ export const EcommerceMetrics = () => {
               parseFloat(payments.paidSettlementSum) +
               parseFloat(payments.paidPartialSum)
             )}
-           
+
             icon={<BoxIconLine className="text-yellow-600 size-6 dark:text-yellow-400" />}
             subValues={[
-              { label: "Foreclosure", value: `₹${formatNumber(parseFloat(payments.paidForeClosureSum))}`,color: "white" },
-              { label: "Settlement", value: `₹${formatNumber(parseFloat(payments.paidSettlementSum))}`,color: "white" },
-              { label: "Partial", value:`₹${formatNumber(parseFloat(payments.paidPartialSum))}` ,color: "white"},
+              { label: "Foreclosure", value: `₹${formatNumber(parseFloat(payments.paidForeClosureSum))}`, color: "white" },
+              { label: "Settlement", value: `₹${formatNumber(parseFloat(payments.paidSettlementSum))}`, color: "white" },
+              { label: "Partial", value: `₹${formatNumber(parseFloat(payments.paidPartialSum))}`, color: "white" },
             ]}
           />
 
@@ -140,14 +141,14 @@ export const EcommerceMetrics = () => {
             subValues={[
               {
                 label: "Paid",
-                value:`₹${formatNumber(parseFloat(payments.paidForeClosureSum))}`,
+                value: `₹${formatNumber(parseFloat(payments.paidForeClosureSum))}`,
                 color: "white",
               },
               {
                 label: "Pending",
-                value:`₹${formatNumber(
+                value: `₹${formatNumber(
                   parseFloat(payments.foreClosureSum) - parseFloat(payments.paidForeClosureSum)
-                )}` ,
+                )}`,
                 color: "white",
               },
             ]}
@@ -169,7 +170,7 @@ export const EcommerceMetrics = () => {
                 label: "Pending",
                 value: `₹${formatNumber(
                   parseFloat(payments.settlementSum) - parseFloat(payments.paidSettlementSum)
-                )}`, 
+                )}`,
                 color: "white",
               },
             ]}
@@ -189,10 +190,10 @@ export const EcommerceMetrics = () => {
               },
               {
                 label: "Pending",
-              
-                value:`₹${formatNumber(
+
+                value: `₹${formatNumber(
                   parseFloat(payments.partialSum) - parseFloat(payments.paidPartialSum)
-                )}`, 
+                )}`,
                 color: "white",
               },
             ]}

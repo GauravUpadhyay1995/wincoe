@@ -91,7 +91,7 @@ const AppHeader: React.FC = () => {
               <div className="flex items-center">
                 <span className="text-2xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-blue-400 bg-clip-text text-transparent">
                   <Image
-                    src={theme === "dark" ? "/images/logo/rpk-new.png" : "/images/logo/rpk.png"}
+                    src={theme == "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.svg"}
                     alt="WIN CoE"
                     width={200}
                     height={200}

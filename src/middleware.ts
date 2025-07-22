@@ -16,7 +16,7 @@ export async function middleware(request: NextRequest) {
   const isAdminRoute = pathname.startsWith('/admin');
   
   // Check if it's a public route
-  // const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith('/api/'));
+  // const isPublicRoute = publicRoutes.some(route => pathname === route || pathname.startsWith('/api/v1/'));
   
   // If already logged in and trying to access login pages, redirect to respective dashboards
   if (isUserLoginPage && token) {

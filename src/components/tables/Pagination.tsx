@@ -48,8 +48,11 @@ const Pagination: React.FC<PaginationProps> = ({
         </span>
         <span>to</span>
         <span className="font-medium text-gray-900 dark:text-white">
-          {Math.min(currentPage * 10, totalItems)}
+          {isNaN(currentPage) || isNaN(totalItems)
+            ? '0'
+            : Math.min(currentPage * 10, totalItems)}
         </span>
+
         <span>of</span>
         <span className="font-medium text-gray-900 dark:text-white">{totalItems}</span>
         <span>entries</span>
@@ -83,11 +86,10 @@ const Pagination: React.FC<PaginationProps> = ({
             <button
               key={page}
               onClick={() => onPageChange(page)}
-              className={`inline-flex items-center justify-center w-8 h-8 rounded-md text-sm font-medium transition-all duration-200 ${
-                page === currentPage
+              className={`inline-flex items-center justify-center w-8 h-8 rounded-md text-sm font-medium transition-all duration-200 ${page === currentPage
                   ? "bg-purple-600 text-white shadow-sm hover:bg-purple-700"
                   : "text-gray-700 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-700"
-              }`}
+                }`}
               aria-current={page === currentPage ? "page" : undefined}
             >
               {page}
