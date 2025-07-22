@@ -134,7 +134,7 @@ export default function HomePage() {
                 <section className="relative min-h-screen pt-24 overflow-hidden shadow-xl">
                     <Carousel images={images} />
                 </section>
-               
+
                 {/* What We Do */}
                 <section className="py-12 px-4">
                     <WhatWeDo />
@@ -207,7 +207,7 @@ export default function HomePage() {
                         </ScrollAnimation>
                     </div>
                 </section>
-                 <section className="py-12 px-4">
+                <section className="py-12 px-4">
                     <ThematicAreas />
                 </section>
             </main>
@@ -215,3 +215,9 @@ export default function HomePage() {
         </div>
     );
 }
+
+// environment variables
+// JWT_SECRET=your_super_secret_key_here
+// NEXT_PUBLIC_API_URL=http://localhost:3000/api
+// MONGODB_URI="mongodb://localhost:27017"
+// MONGODB_DB="db_wincoe"
