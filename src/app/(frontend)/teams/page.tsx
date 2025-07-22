@@ -225,7 +225,6 @@ const UniversityTeams: React.FC<{ teams?: TeamSectionProps[] }> = ({ teams = sam
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-orange-50 to-cyan-50">
-            <Header />
             <main className="overflow-hidden">
                 {/* Hero Section */}
                 <section className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
@@ -529,7 +528,7 @@ const UniversityTeams: React.FC<{ teams?: TeamSectionProps[] }> = ({ teams = sam
                 )}
             </AnimatePresence>
 
-            <Footer />
+           
         </div>
     );
 };

@@ -89,7 +89,7 @@ const SteeringCommittee = () => {
                 />
               </div>
               <p className="text-sm font-semibold">{person.name}</p>
-              <p className="text-xs text-red-500">{person.role}</p>
+              <p className="text-xs text-orange-500">{person.role}</p>
             </motion.div>
           ))}
         </div>
@@ -102,7 +102,7 @@ const SteeringCommittee = () => {
           transition={{ delay: 0.3 }}
           className="mb-12"
         >
-          <h2 className="text-red-600 text-4xl font-semibold mb-4">
+          <h2 className="text-orange-600 text-4xl font-semibold mb-4">
             Scientific Advisory Committee
           </h2>
     
@@ -142,7 +142,7 @@ const SteeringCommittee = () => {
 
       {/* Operations Team */}
       <motion.div initial="hidden" whileInView="visible" className="mx-auto mt-10">
-        <h2 className="text-red-600 text-4xl font-semibold mb-6">Operations Team</h2>
+        <h2 className="text-orange-600 text-4xl font-semibold mb-6">Operations Team</h2>
         <div className="flex flex-wrap justify-center gap-10">
           {people.operations.map((person, i) => (
             <motion.div
@@ -183,7 +183,7 @@ const SteeringCommittee = () => {
   variants={listContainer}
   className="text-sm leading-relaxed max-w-2xl mx-auto mt-10"
 >
-  <h2 className="text-red-600 text-4xl font-semibold mb-4">
+  <h2 className="text-orange-600 text-4xl font-semibold mb-4">
     Core Objectives and Mission
   </h2>
 

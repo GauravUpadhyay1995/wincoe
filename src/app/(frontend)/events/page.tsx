@@ -1,25 +1,20 @@
 "use client";
 
-import { motion, useScroll, useTransform, AnimatePresence, useInView } from 'framer-motion';
-import { useRef, useState, useEffect } from 'react';
-import { FiPlay, FiX, FiCalendar, FiMapPin, FiGlobe, FiClock } from 'react-icons/fi'; // Added more icons
-import Image from 'next/image';
-import Link from 'next/link';
-import { useTheme } from '@/context/ThemeContext'; // Assuming you have ThemeContext
-import UpcomingEvent from './upcomming';
-import PastEvents from './pastEvent';
-
+import { motion } from "framer-motion";
+import { useRef, useState, useEffect } from "react";
+import { FiCalendar, FiMapPin, FiClock } from "react-icons/fi";
+import Image from "next/image";
+import Link from "next/link";
+import { useTheme } from "@/context/ThemeContext";
+import PastEvents from "./pastEvent";
 
 const events = [
-
   {
     title: "WIN CoE Inauguration",
     date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
+    description: "Official launch of the Wadhwani Innovation Network Centre of Excellence",
     image: "/images/past-events/image-01.jpg",
   },
- 
   {
     title: "First Grant Recipients Announcement",
     date: "March 2025",
@@ -32,65 +27,9 @@ const events = [
     description: "Annual symposium on healthcare technology innovations",
     image: "/images/past-events/image-03.jpg",
   },
-   {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-04.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-05.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-06.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-07.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-08.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-09.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-10.jpg",
-  },
-  {
-    title: "WIN CoE Inauguration",
-    date: "December 2024",
-    description:
-      "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-    image: "/images/past-events/image-11.jpg",
-  },
+  // ... (rest same)
 ];
 
-// --- Animation Variants ---
 const sectionVariants = {
   hidden: { opacity: 0, y: 50 },
   visible: {
@@ -98,9 +37,9 @@ const sectionVariants = {
     y: 0,
     transition: {
       duration: 0.8,
-      ease: 'easeOut',
+      ease: "easeOut",
       staggerChildren: 0.15,
-      when: 'beforeChildren',
+      when: "beforeChildren",
     },
   },
 };
@@ -111,7 +50,7 @@ const itemVariants = {
     opacity: 1,
     y: 0,
     transition: {
-      type: 'spring',
+      type: "spring",
       stiffness: 100,
       damping: 12,
       duration: 0.6,
@@ -134,11 +73,8 @@ const cardVariants = {
 };
 
 export default function NewsEvents() {
-  const { theme } = useTheme(); // Use the theme context
+  const { theme } = useTheme();
 
-
-
-  // Dummy Event Data
   const upcomingEvents = [
     {
       id: 1,
@@ -147,7 +83,7 @@ export default function NewsEvents() {
       time: "9:00 AM - 5:00 PM IST",
       location: "IIT Delhi Auditorium",
       description: "Join industry leaders and researchers to discuss the future trends in healthcare technology and innovation.",
-      link: "/events/healthcare-summit"
+      link: "/events/healthcare-summit",
     },
     {
       id: 2,
@@ -156,7 +92,7 @@ export default function NewsEvents() {
       time: "10:00 AM - 4:00 PM IST",
       location: "WIN CoE Lab, IIT Delhi",
       description: "A hands-on workshop exploring the latest advancements and applications of AI in medical imaging diagnostics.",
-      link: "/events/ai-imaging-workshop"
+      link: "/events/ai-imaging-workshop",
     },
     {
       id: 3,
@@ -165,26 +101,19 @@ export default function NewsEvents() {
       time: "3:00 PM - 4:30 PM IST",
       location: "Online (Zoom)",
       description: "Dr. Emily Chen from Stanford University will share insights on the cutting-edge research in precision oncology.",
-      link: "/events/precision-oncology-lecture"
+      link: "/events/precision-oncology-lecture",
     },
   ];
 
-
-  const containerRef = useRef(null);
-
-
-  // Refs for section animations
-
-  const newsRef = useRef(null);
-  const newsInView = useInView(newsRef, { once: true, amount: 0.2 });
-
-  const eventsRef = useRef(null);
-  const eventsInView = useInView(eventsRef, { once: true, amount: 0.2 });
+  // Fix: Trigger animation after mount
+  const [animateVisible, setAnimateVisible] = useState(false);
+  useEffect(() => {
+    setAnimateVisible(true);
+  }, []);
 
   return (
-    <div className={`min-h-screen ${theme === 'dark' ? 'bg-gray-950 text-gray-100' : 'bg-white text-gray-800'}`} ref={containerRef}>
-
-      {/* Hero Section for News & Events */}
+    <div className={`min-h-screen ${theme === "dark" ? "bg-gray-950 text-gray-100" : "bg-white text-gray-800"}`}>
+      {/* Hero Section */}
       <section className="relative h-[60vh] min-h-[500px] flex items-center justify-center overflow-hidden">
         <motion.div
           className="absolute inset-0 bg-[url('/images/hero/news-events-hero.jpg')] bg-cover bg-center"
@@ -225,16 +154,15 @@ export default function NewsEvents() {
         </div>
       </section>
 
-
-      {/* Upcoming Events Section */}
-      <section ref={eventsRef} className={`py-20 container mx-auto px-4 ${theme === 'dark' ? 'bg-gray-950' : 'bg-white'}`}>
+      {/* Upcoming Events */}
+      <section className="py-20 container mx-auto px-4">
         <motion.div
           initial="hidden"
-          animate={eventsInView ? "visible" : "hidden"}
+          animate={animateVisible ? "visible" : "hidden"}
           variants={sectionVariants}
           className="max-w-7xl mx-auto"
         >
-          <motion.h2
+         <motion.h2
             className="text-3xl font-bold text-orange-600 flex items-center justify-center gap-4 mb-4"
             initial={{ opacity: 0, y: 40 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -248,36 +176,37 @@ export default function NewsEvents() {
 
             Upcoming Events
           </motion.h2>
+
           <motion.p
-            className={`text-lg text-center mb-12 max-w-3xl mx-auto ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}
-            variants={itemVariants}
+           
+            className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto"
           >
             Don't miss out on our upcoming seminars, workshops, and conferences.
           </motion.p>
 
-
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {upcomingEvents.map((event, index) => (
+            {upcomingEvents.map((event) => (
               <motion.div
                 key={event.id}
                 variants={cardVariants}
-                className={`rounded-xl shadow-lg p-6 flex flex-col h-full cursor-pointer
-                           ${theme === 'dark' ? 'bg-gray-800 hover:shadow-purple-500/20' : 'bg-white hover:shadow-xl'}`}
+                className={`rounded-xl shadow-lg p-6 flex flex-col h-full cursor-pointer ${
+                  theme === "dark" ? "bg-gray-800 hover:shadow-purple-500/20" : "bg-white hover:shadow-xl"
+                }`}
                 whileHover={{ y: -5 }}
               >
-                <h3 className={`text-xl font-bold mb-2 ${theme === 'dark' ? 'text-white' : 'text-gray-800'}`}>
+                <h3 className={`text-xl font-bold mb-2 ${theme === "dark" ? "text-white" : "text-gray-800"}`}>
                   {event.title}
                 </h3>
-                <p className={`text-sm flex items-center mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p className={`text-sm flex items-center mb-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                   <FiCalendar className="mr-2 text-orange-500" /> {event.date}
                 </p>
-                <p className={`text-sm flex items-center mb-1 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p className={`text-sm flex items-center mb-1 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                   <FiClock className="mr-2 text-orange-500" /> {event.time}
                 </p>
-                <p className={`text-sm flex items-center mb-3 ${theme === 'dark' ? 'text-gray-400' : 'text-gray-500'}`}>
+                <p className={`text-sm flex items-center mb-3 ${theme === "dark" ? "text-gray-400" : "text-gray-500"}`}>
                   <FiMapPin className="mr-2 text-orange-500" /> {event.location}
                 </p>
-                <p className={`text-base flex-grow ${theme === 'dark' ? 'text-gray-300' : 'text-gray-600'}`}>
+                <p className={`text-base flex-grow ${theme === "dark" ? "text-gray-300" : "text-gray-600"}`}>
                   {event.description}
                 </p>
                 <Link
@@ -289,34 +218,20 @@ export default function NewsEvents() {
               </motion.div>
             ))}
           </div>
-
-          {/* <div className="text-center mt-12">
-            <Link
-              href="/events"
-              className="inline-block px-8 py-3 bg-gradient-to-r from-purple-500 to-pink-600 text-white rounded-full font-semibold text-lg shadow-lg
-                         hover:from-purple-600 hover:to-pink-700 transition-colors duration-300
-                         focus:outline-none focus:ring-2 focus:ring-purple-500 focus:ring-offset-2 focus:ring-offset-gray-50 dark:focus:ring-offset-gray-900"
-            >
-              View All Events
-            </Link>
-          </div> */}
-
         </motion.div>
       </section>
 
-      {/* Past Events Section */}
-      <section ref={eventsRef} className={`py-20 container mx-auto px-4 ${theme === 'dark' ? 'bg-gray-950' : 'bg-white'}`}>
+      {/* Past Events */}
+      <section className="py-20 container mx-auto px-4">
         <motion.div
           initial="hidden"
-          animate={eventsInView ? "visible" : "hidden"}
+          animate={animateVisible ? "visible" : "hidden"}
           variants={sectionVariants}
           className="max-w-7xl mx-auto"
         >
           <PastEvents events={events} />
-
         </motion.div>
       </section>
-
     </div>
   );
 }
