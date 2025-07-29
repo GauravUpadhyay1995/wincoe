@@ -8,6 +8,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const adminToken = request.cookies.get('admin_token')?.value;
   const { pathname } = request.nextUrl;
+  console.log("test")
 
   // Define public routes
   const isAdminLoginPage = pathname === '/login';
