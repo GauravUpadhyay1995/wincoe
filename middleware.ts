@@ -8,13 +8,6 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const adminToken = request.cookies.get('admin_token')?.value;
   const { pathname } = request.nextUrl;
-  console.log("testrupam tetst") //commented
-console.log('>>>>>>>>>>>>');
-  console.log('Middleware triggered for:', pathname);
-  console.log('>>>>>>>>>>>>');
-
-
-  // Define public routes
   const isAdminLoginPage = pathname === '/login';
   const isUserLoginPage = pathname === '/signin';
   const isUserRoute = pathname.startsWith('/user');
