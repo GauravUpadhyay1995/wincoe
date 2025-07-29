@@ -8,7 +8,7 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const adminToken = request.cookies.get('admin_token')?.value;
   const { pathname } = request.nextUrl;
-  console.log("testrupam") //commented
+  console.log("testrupam tetst") //commented
 console.log('>>>>>>>>>>>>');
   console.log('Middleware triggered for:', pathname);
   console.log('>>>>>>>>>>>>');
