@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/server';
+import type { NextRequest } from 'next/server'; 
 
 // List of public routes that don't require authentication
 // const publicRoutes = ['/', '/signin', '/auth/signin', '/auth/signup'];
@@ -8,6 +8,9 @@ export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const adminToken = request.cookies.get('admin_token')?.value;
   const { pathname } = request.nextUrl;
+
+  console.log('>>>>>>>>>>>>');
+  
 
   // Define public routes
   const isAdminLoginPage = pathname === '/login';
