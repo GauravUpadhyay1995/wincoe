@@ -318,7 +318,7 @@ export default function UsersListTable() {
         setIsCreateModalOpen(true);
     };
 
-    const handleCreateSubmit = async () => {
+    const handleCreateSubmit = async () => { 
         if (!createformData.name || !createformData.email || !createformData.password) {
             toast.error('Please fill in all fields');
             return;

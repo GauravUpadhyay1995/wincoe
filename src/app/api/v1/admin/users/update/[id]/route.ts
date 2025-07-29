@@ -1,65 +1,65 @@
+// /src/app/api/v1/users/[id]/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { connectToDB } from '@/config/mongo';
+import { User } from '@/models/User';
+import { withAuth } from '@/lib/withAuth';
+import { asyncHandler } from '@/lib/asyncHandler';
+import bcrypt from 'bcryptjs';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+export const PATCH = withAuth(asyncHandler(async (req: NextRequest, { params }: any) => {
+  await connectToDB();
 
-export async function PUT(request: NextRequest, { params }: { params: { id: string } }) {
-  try {
-    const adminToken = (await cookies()).get('admin_token')?.value;
+  const userId = params.id;
+  const updates = await req.json();
 
-    if (!adminToken) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized: Admin token missing.' },
-        { status: 401 }
-      );
+  // 🧼 Remove unallowed fields
+  const allowedFields = ['name', 'email', 'mobile', 'role', 'password'];
+  Object.keys(updates).forEach(key => {
+    if (!allowedFields.includes(key)) {
+      delete updates[key];
     }
+  });
 
-    const body = await request.json();
-    const userId = params.id;
-
-    if (!body?.onlyStatus && (!body.name || !body.email || !userId)) {
-      return NextResponse.json(
-        { success: false, message: 'Missing required fields: name, email, or user ID.' },
-        { status: 400 }
-      );
-    }
-    delete body.onlyStatus;
-
-
-    const response = await fetch(`${API_BASE_URL}/users/update`, {
-      method: 'PUT',
-      headers: {
-        Authorization: `Bearer ${adminToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        _id: userId,
-        ...body,
-      }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: result?.message || 'Failed to update user.',
-        },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(result, { status: 200 });
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    console.error('Update user error:', errorMessage);
-    return NextResponse.json(
-      {
+  // 🛡️ Email uniqueness check
+  if (updates.email) {
+    const existingEmail = await User.findOne({ email: updates.email, _id: { $ne: userId } });
+    if (existingEmail) {
+      return NextResponse.json({
         success: false,
-        message: 'Something went wrong while updating user. Please try again.',
-      },
-      { status: 500 }
-    );
+        message: 'Email already in use by another user',
+      }, { status: 400 });
+    }
   }
-}
+
+  // 📵 Mobile uniqueness check
+  if (updates.mobile) {
+    const existingMobile = await User.findOne({ mobile: updates.mobile, _id: { $ne: userId } });
+    if (existingMobile) {
+      return NextResponse.json({
+        success: false,
+        message: 'Mobile number already in use by another user',
+      }, { status: 400 });
+    }
+  }
+
+  // 🔐 If password is being updated, hash it
+  if (updates.password) {
+    updates.password = await bcrypt.hash(updates.password, 10);
+  }
+
+  // ✏️ Update user
+  const updatedUser = await User.findByIdAndUpdate(userId, updates, { new: true }).select('-password');
+
+  if (!updatedUser) {
+    return NextResponse.json({
+      success: false,
+      message: 'User not found',
+    }, { status: 404 });
+  }
+
+  return NextResponse.json({
+    success: true,
+    message: 'User updated successfully',
+    data: updatedUser
+  });
+}));

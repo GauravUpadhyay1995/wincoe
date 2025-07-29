@@ -1,60 +1,98 @@
+
 import { NextRequest, NextResponse } from 'next/server';
-import { cookies } from 'next/headers';
+import { createUserSchema } from '@/lib/validations/user.schema';
+import { asyncHandler } from '@/lib/asyncHandler';
+import { withAuth } from '@/lib/withAuth';
+import { connectToDB } from '@/config/mongo';
+import { User } from '@/models/User';
+import bcrypt from 'bcryptjs';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+type CreateUserBody = {
+  name: string;
+  email: string;
+  role: string;
+  password: string;
+  mobile?: string;
+};
 
-export async function POST(request: NextRequest) {
-  try {
-    const adminToken = (await cookies()).get('admin_token')?.value;
 
-    if (!adminToken) {
-      return NextResponse.json(
-        { success: false, message: 'Unauthorized: Admin token missing.' },
-        { status: 401 }
-      );
-    }
+export const POST = withAuth(asyncHandler(async (req: NextRequest) => {
+  await connectToDB();
 
-    const body = await request.json();
-    const { name, email, password ,permissions} = body;
+  const user = (req as any).user; // token payload
 
-    if (!name || !email || !password) {
-      return NextResponse.json(
-        { success: false, message: 'Missing required fields: name, email, password.' },
-        { status: 400 }
-      );
-    }
+  const body = await req.json();
+  const { error, value } = createUserSchema.validate(body, { abortEarly: false });
+  console.log(error, value)
+  if (error) {
+    const errorMessages = error.details.reduce((acc, curr) => {
+      acc[curr.path[0] as string] = curr.message;
+      return acc;
+    }, {} as Record<string, string>);
 
-    const response = await fetch(`${API_BASE_URL}/users/create`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${adminToken}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ name, email, password,permissions }),
-    });
-
-    const result = await response.json();
-
-    if (!response.ok) {
-      return NextResponse.json(
-        {
-          success: false,
-          message: result?.message || 'Failed to create user.',
-        },
-        { status: response.status }
-      );
-    }
-
-    return NextResponse.json(result, { status: 200 });
-  } catch (error: unknown) {
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error occurred';
-    console.error('Create user error:', errorMessage);
     return NextResponse.json(
       {
         success: false,
-        message: 'Something went wrong while creating user. Please try again.',
+        message: 'Validation failed',
+        errors: errorMessages,
+        data: null,
       },
-      { status: 500 }
+      { status: 400 }
     );
   }
+  const creationResult = await createUser(body);
+  console.log("Creation result:", creationResult);
+
+
+  return NextResponse.json({ success: true, creationResult });
+}));
+
+export const createUser = async (body: CreateUserBody) => {
+  try {
+    const { name, email, role, password, mobile } = body;
+    await connectToDB();
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return {
+        success: false,
+        message: 'User already exists',
+        data: null
+      };
+    }
+
+    const rawPassword = password || generateSecurePassword();
+    const hashedPassword = await bcrypt.hash(rawPassword, 10);
+
+    const user = new User({
+      name,
+      email,
+      password: hashedPassword,
+      role,
+      mobile,
+    });
+
+    const result = await user.save();
+    const userObj = result.toObject();
+    delete userObj.password;
+    return userObj;
+  } catch (error: any) {
+    console.error("User creation failed:", error);
+    const formatted = formatMongooseError(error);
+    return {
+      success: false,
+      message: formatted.message,
+      errors: formatted.errors,
+      data: null
+    };
+  }
+};
+
+function generateSecurePassword(length = 12) {
+  const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+  const specialChars = '!@#$%^&*';
+  const password = Array.from({ length: length - 2 }, () =>
+    chars[Math.floor(Math.random() * chars.length)]).join('');
+  return password +
+    specialChars[Math.floor(Math.random() * specialChars.length)] +
+    chars[Math.floor(Math.random() * chars.length)];
 }

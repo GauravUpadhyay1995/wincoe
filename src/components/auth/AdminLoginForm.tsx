@@ -17,7 +17,7 @@ export default function AdminLoginForm() {
   const { theme } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("rupam@example.com");
+  const [email, setEmail] = useState("gaurav1@gmail.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,7 +46,7 @@ export default function AdminLoginForm() {
         throw new Error(data.message || 'Failed to login');
       }
 
-      // console.log('>>>>>>>>>>>>', data);
+      console.log('>>>>>>>>>>>>', data);
 
       if (data.success) {
         login(data.user, 'admin');
@@ -69,7 +69,7 @@ export default function AdminLoginForm() {
 
   return (
     <>
-      <Header />
+
       <div className="mt-4 flex items-center justify-center min-h-screen  dark:bg-gray-900 p-4 sm:p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}

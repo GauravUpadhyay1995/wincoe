@@ -1,55 +1,96 @@
-import { NextRequest, NextResponse } from 'next/server'
-import clientPromise, { dbName } from "@/lib/mongo"
-import { verifyAdmin } from '@/lib/verifyAdmin'
+import { NextRequest } from 'next/server';
+import { connectToDB } from '@/config/mongo';
+import { withAuth } from '@/lib/withAuth';
+import { asyncHandler } from '@/lib/asyncHandler';
+import { sendResponse } from '@/lib/sendResponse';
+import { User } from '@/models/User';
 
-export async function GET(request: NextRequest) {
-  try {
-    // ✅ Authenticate admin
-    const { user } = await verifyAdmin()
+export const GET = withAuth(asyncHandler(async (req: NextRequest) => {
+  await connectToDB();
 
-    // ✅ Query parameters
-    const searchParams = request.nextUrl.searchParams
-    const page = parseInt(searchParams.get('page') || '1', 10)
-    const perPage = parseInt(searchParams.get('perPage') || '10', 10)
-    const email = searchParams.get('email') || ''
+  const searchParams = req.nextUrl.searchParams;
+  const customer = searchParams.get('customer');
+  const mobile = searchParams.get('mobile');
+  const page = parseInt(searchParams.get('page') || '1');
+  const perPage = searchParams.get('perPage') || '10';
 
-    // ✅ DB connection
-    const client = await clientPromise
-    const db = client.db(dbName)
-    const usersCollection = db.collection('users')
+  const showAll = perPage === 'All';
+  const limit = showAll ? 0 : parseInt(perPage);
+  const skip = showAll ? 0 : (page - 1) * limit;
 
-    // ✅ Filtering
-    const filter: any = {}
-    if (email) {
-      filter.email = { $regex: email, $options: 'i' }
-    }
+  const match: any = {};
+  if (mobile) match.mobile = mobile;
 
-    // ✅ Count and fetch
-    const total = await usersCollection.countDocuments(filter)
-    const users = await usersCollection
-      .find(filter)
-      .skip((page - 1) * perPage)
-      .limit(perPage)
-      .project({ password: 0 }) // 🔐 Never expose password
-      .toArray()
-
-    // ✅ Success
-    return NextResponse.json({
-      success: true,
-      message: 'User list fetched successfully',
-      total,
-      currentPage: page,
-      perPage,
-      data: users,
-    })
-
-  } catch (error: unknown) {
-    const errorMessage =
-      error instanceof Error ? error.message : 'Internal server error'
-
-    return NextResponse.json(
-      { success: false, message: errorMessage },
-      { status: errorMessage.includes('Unauthorized') ? 401 : 500 }
-    )
+  const searchConditions: any[] = [];
+  if (customer) {
+    searchConditions.push({ text: { query: customer, path: 'customer' } });
   }
-}
+
+  const pipeline: any[] = [];
+
+  // 🔍 Full-text search if provided
+  if (searchConditions.length > 0) {
+    pipeline.push({
+      $search: {
+        index: 'default',
+        compound: { must: searchConditions },
+      },
+    });
+  }
+
+  // 🧾 Apply mobile match if present
+  if (Object.keys(match).length > 0) pipeline.push({ $match: match });
+
+  // 👤 Join verified user name
+  pipeline.push(
+    {
+      $lookup: {
+        from: 'users',
+        localField: 'verified_by',
+        foreignField: '_id',
+        as: 'verified_user'
+      }
+    },
+    {
+      $addFields: {
+        verified_by: { $arrayElemAt: ['$verified_user.name', 0] }
+      }
+    },
+    {
+      $project: {
+        otp: 0,
+        __v: 0,
+        verified_user: 0,
+        password: 0
+      }
+    },
+    { $sort: { updatedAt: -1 } }
+  );
+
+  // ⏬ Pagination
+  if (!showAll) {
+    pipeline.push({ $skip: skip }, { $limit: limit });
+  }
+
+  const [customers, totalCountResult] = await Promise.all([
+    User.aggregate(pipeline),
+    User.aggregate([
+      ...pipeline.filter(stage => !('$skip' in stage || '$limit' in stage)),
+      { $count: 'count' }
+    ])
+  ]);
+
+  const totalRecords = totalCountResult[0]?.count || 0;
+
+  return sendResponse({
+    success: true,
+    message: customers.length ? 'Customers fetched successfully' : 'No customers found',
+    data: {
+      totalRecords,
+      currentPage: page,
+      perPage: showAll ? totalRecords : limit,
+      customers,
+    
+    }
+  });
+}));
