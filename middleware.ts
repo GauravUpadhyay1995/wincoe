@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
 // List of public routes that don't require authentication
-// const publicRoutes = ['/', '/signin', '/auth/signin', '/auth/signup'];
+// const publicRoutes = ['/', '/signin', '/auth/signin', '/auth/signupsahdkjhsakdhsadkahskdhkahk'];
 console.log('Middleware is running...');
 
 export async function middleware(request: NextRequest) {
