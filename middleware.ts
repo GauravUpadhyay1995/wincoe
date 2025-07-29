@@ -3,10 +3,12 @@ import type { NextRequest } from 'next/server';
 
 // List of public routes that don't require authentication
 // const publicRoutes = ['/', '/signin', '/auth/signin', '/auth/signup'];
+console.log('Middleware is running...');
 
 export async function middleware(request: NextRequest) {
   const token = request.cookies.get('token')?.value;
   const adminToken = request.cookies.get('admin_token')?.value;
+  console.log('Middleware is running...');
   const { pathname } = request.nextUrl;
   const isAdminLoginPage = pathname === '/login';
   const isUserLoginPage = pathname === '/signin';
@@ -20,7 +22,7 @@ export async function middleware(request: NextRequest) {
   if (isUserLoginPage && token) {
     return NextResponse.redirect(new URL('/user/dashboard', request.url));
   }
-
+console.log('Middleware is running...');
   if (isAdminLoginPage && adminToken) {
     return NextResponse.redirect(new URL('/admin', request.url));
   }
