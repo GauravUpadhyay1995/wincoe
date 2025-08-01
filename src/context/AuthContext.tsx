@@ -102,11 +102,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       router.push('/');
     } else {
       const adminData = data as Admin;
+      // console.log('Admin login data:', adminData);
       const { email, name, permissions } = adminData;
       setAdmin({ email, name, permissions });
       localStorage.setItem('admin', JSON.stringify({ email, name, permissions }));
       setIsAuthenticatedAdmin(true);
-      router.push('/admin');
+      // router.push('/admin');
     }
   }, [router]);
 
@@ -159,8 +160,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       });
       if (adminResponse.ok) {
         const adminData = await adminResponse.json();
-        if (adminData.success && adminData.user) {
-          const { email, name, permissions } = adminData.user;
+        if (adminData.success && adminData.data) {
+          const { email, name, permissions } = adminData.data;
           setAdmin({ email, name, permissions });
           setIsAuthenticatedAdmin(true);
           localStorage.setItem('admin', JSON.stringify({ email, name, permissions }));

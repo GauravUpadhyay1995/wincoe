@@ -3,17 +3,20 @@ import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/config/mongo';
 import { User } from '@/models/User';
 import { withAuth } from '@/lib/withAuth';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 import { asyncHandler } from '@/lib/asyncHandler';
 import bcrypt from 'bcryptjs';
+import { allow } from 'joi';
 
-export const PATCH = withAuth(asyncHandler(async (req: NextRequest, { params }: any) => {
+export const PATCH = verifyAdmin(asyncHandler(async (req: NextRequest, { params }: any) => {
   await connectToDB();
 
-  const userId = params.id;
+    const { id:userId } = await params; // Await params before destructuring
+
   const updates = await req.json();
 
   // 🧼 Remove unallowed fields
-  const allowedFields = ['name', 'email', 'mobile', 'role', 'password'];
+  const allowedFields = ['name', 'email', 'mobile', 'role', 'password','isActive'];
   Object.keys(updates).forEach(key => {
     if (!allowedFields.includes(key)) {
       delete updates[key];
@@ -63,3 +66,34 @@ export const PATCH = withAuth(asyncHandler(async (req: NextRequest, { params }: 
     data: updatedUser
   });
 }));
+
+export function GET() {
+  return NextResponse.json({
+    success: false,
+    message: 'Method GET not allowed',
+  }, { status: 405 });
+}
+
+export function POST() {
+  return NextResponse.json({
+    success: false,
+    message: 'Method POST not allowed',
+  }, { status: 405 });
+}
+
+export function PUT() {
+  return NextResponse.json({
+    success: false,
+    message: 'Method PUT not allowed',
+  }, { status: 405 });
+}
+
+export function DELETE() {
+  return NextResponse.json({
+    success: false,
+    message: 'Method DELETE not allowed',
+  }, { status: 405 });
+}
+
+
+

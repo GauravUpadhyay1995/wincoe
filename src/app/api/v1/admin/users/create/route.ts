@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { createUserSchema } from '@/lib/validations/user.schema';
 import { asyncHandler } from '@/lib/asyncHandler';
 import { withAuth } from '@/lib/withAuth';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 import { connectToDB } from '@/config/mongo';
 import { User } from '@/models/User';
 import bcrypt from 'bcryptjs';
@@ -13,17 +14,22 @@ type CreateUserBody = {
   role: string;
   password: string;
   mobile?: string;
+  permissions?: {
+    module: string;
+    actions: string[];
+  }[];
 };
 
 
-export const POST = withAuth(asyncHandler(async (req: NextRequest) => {
+
+export const POST = verifyAdmin(asyncHandler(async (req: NextRequest) => {
   await connectToDB();
 
   const user = (req as any).user; // token payload
 
   const body = await req.json();
   const { error, value } = createUserSchema.validate(body, { abortEarly: false });
-  console.log(error, value)
+  // console.log('>>>>>>>>>>>>>>>',error, value)
   if (error) {
     const errorMessages = error.details.reduce((acc, curr) => {
       acc[curr.path[0] as string] = curr.message;
@@ -95,4 +101,12 @@ function generateSecurePassword(length = 12) {
   return password +
     specialChars[Math.floor(Math.random() * specialChars.length)] +
     chars[Math.floor(Math.random() * chars.length)];
+}
+
+function formatMongooseError(error: any) {
+  // Basic implementation: extract message and errors from Mongoose error object
+  return {
+    message: error.message || 'An error occurred',
+    errors: error.errors || {},
+  };
 }

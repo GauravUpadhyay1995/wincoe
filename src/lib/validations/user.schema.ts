@@ -26,6 +26,15 @@ export const createUserSchema = Joi.object({
         'any.only': 'Role must be either admin or user',
         'any.required': 'Role is required'
     }),
+     isActive: Joi.boolean().optional().messages({
+    'boolean.base': 'isActive must be a boolean value'
+    }),
+    permissions: Joi.array().items(
+        Joi.object({
+        module: Joi.string().required(),
+        actions: Joi.array().items(Joi.string().valid('create', 'read', 'update', 'delete')).required(),
+        })
+    ).optional()
 });
 
 export const loginUserSchema = Joi.object({
