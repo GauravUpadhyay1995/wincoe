@@ -138,7 +138,7 @@ const Footer = () => {
         </motion.div>
 
         <motion.div
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 text-center md:text-left" // Increased gap-y for mobile
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-x-8 gap-y-12 text-center md:text-left" // Increased gap-y for mobile
           variants={containerVariants}
         >
           {/* Column 1: College/Org Info */}
@@ -149,13 +149,11 @@ const Footer = () => {
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.97 }}
               >
-                <Image
-                  src={theme === "dark" ? "/images/logo/wincoe.svg" : "/images/logo/wincoe.svg"} // Consider different logos for light/dark theme if designed
-                  alt="WIN CoE Logo"
-                  width={140} // Slightly larger logo
-                  height={45} // Adjusted height for aspect ratio
-                  priority // Good for core elements
-                />
+                <div className="flex items-center gap-2 sm:gap-3">
+                  <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={100} height={10} priority />
+                  <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={120} height={10} priority />
+                  <Image src="/images/logo/Wadhwani-Foundation.webp" alt="WIN CoE Logo" width={80} height={10} priority />
+                </div>
               </motion.span>
             </Link>
             <motion.p
@@ -173,7 +171,7 @@ const Footer = () => {
                 <Image src="/images/facebook.svg" alt="Facebook" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Twitter" variants={iconLinkVariants} initial="rest" whileHover="hover">
-                
+
                 <Image src="/images/twitter.svg" alt="Twitter" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="https://www.linkedin.com/company/cbme-iitdelhi/?originalSubdomain=in" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on LinkedIn" variants={iconLinkVariants} initial="rest" whileHover="hover">
@@ -184,7 +182,7 @@ const Footer = () => {
               </motion.a>
             </div>
           </motion.div>
-
+          <motion.div variants={itemVariants} className="hidden lg:block" />
           {/* Column 2: Quick Links */}
           <motion.div variants={itemVariants}>
             <motion.h3

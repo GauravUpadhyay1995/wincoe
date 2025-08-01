@@ -185,7 +185,7 @@ export default function HomePage() {
                 <section className="py-12 bg-gray-50 dark:bg-gray-900">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
-                            <Photo number={3} />
+                            <Photo customLimit={3} />
                         </ScrollAnimation>
                     </div>
                 </section>
@@ -194,7 +194,7 @@ export default function HomePage() {
                 <section className="py-12">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
-                            <NewsDisplay newsItems={newsData} />
+                            <NewsDisplay customLimit={3} />
                         </ScrollAnimation>
                     </div>
                 </section>

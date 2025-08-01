@@ -6,8 +6,7 @@ import { Team } from '@/models/Team';
 import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
 
-export const GET = withAuth(
-  asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const GET = asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
 
     const teamId = params?.id;
@@ -32,4 +31,3 @@ export const GET = withAuth(
       data: team,
     });
   })
-);

@@ -75,7 +75,7 @@ export const POST = asyncHandler(async (req: NextRequest) => {
 // 🔐 Generate JWT
 const generateToken = (payload: object) => {
   return jwt.sign(payload, process.env.JWT_SECRET!, {
-    expiresIn: '30d',
+    expiresIn: '1d',
   });
 };
 

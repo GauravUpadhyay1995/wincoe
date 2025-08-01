@@ -61,17 +61,17 @@ const Header = () => {
     return () => clearTimeout(timer);
   }, []);
 
-const toggleSubmenu = (menuKey: string) => {
-  setOpenSubmenus(prev => ({
-    ...prev,
-    [menuKey]: !prev[menuKey], // Toggle the clicked submenu
-    // Close all other submenus
-    ...Object.keys(prev).reduce((acc, key) => {
-      if (key !== menuKey) acc[key] = false;
-      return acc;
-    }, {} as Record<string, boolean>)
-  }));
-};
+  const toggleSubmenu = (menuKey: string) => {
+    setOpenSubmenus(prev => ({
+      ...prev,
+      [menuKey]: !prev[menuKey], // Toggle the clicked submenu
+      // Close all other submenus
+      ...Object.keys(prev).reduce((acc, key) => {
+        if (key !== menuKey) acc[key] = false;
+        return acc;
+      }, {} as Record<string, boolean>)
+    }));
+  };
 
 
   const closeAllSubmenus = () => {
@@ -85,10 +85,10 @@ const toggleSubmenu = (menuKey: string) => {
   // Animation variants
   const menuItemVariants = {
     hidden: { opacity: 0, x: 50 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       x: 0,
-      transition: { 
+      transition: {
         duration: 0.5,
         ease: "easeOut"
       }
@@ -122,11 +122,15 @@ const toggleSubmenu = (menuKey: string) => {
           <div className="flex-shrink-0 z-20">
             <Link
               href="/"
-              className={`block p-2 rounded-lg transition-all duration-300 transform`}
+              className="block p-2 rounded-lg transition-all duration-300 transform"
               aria-label="Go to Home page"
               onClick={closeAllSubmenus}
             >
-              <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={120} height={40} priority />
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={100} height={10} priority />
+                <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={120} height={10} priority />
+                <Image src="/images/logo/Wadhwani-Foundation.webp" alt="WIN CoE Logo" width={80} height={10} priority />
+              </div>
             </Link>
           </div>
 
@@ -162,7 +166,7 @@ const toggleSubmenu = (menuKey: string) => {
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                         </svg>
                       </button>
-                      
+
                       <AnimatePresence>
                         {openSubmenus[item.label] && (
                           <motion.div
@@ -328,7 +332,7 @@ const toggleSubmenu = (menuKey: string) => {
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                           </svg>
                         </button>
-                        
+
                         <AnimatePresence>
                           {openSubmenus[item.label] && (
                             <motion.div
@@ -377,7 +381,7 @@ const toggleSubmenu = (menuKey: string) => {
                     )}
                   </motion.div>
                 ))}
-{/*                 
+                {/*                 
                 <motion.div
                   initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}

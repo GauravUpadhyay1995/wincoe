@@ -7,8 +7,7 @@ import { asyncHandler } from '@/lib/asyncHandler';
 import { sendResponse } from '@/lib/sendResponse';
 import { News } from '@/models/News';
 
-export const GET = withAuth(
-  asyncHandler(async (req: NextRequest) => {
+export const GET =  asyncHandler(async (req: NextRequest) => {
     await connectToDB();
 
     const params = req.nextUrl.searchParams;
@@ -90,4 +89,3 @@ export const GET = withAuth(
       },
     });
   })
-);

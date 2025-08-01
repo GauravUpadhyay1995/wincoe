@@ -5,8 +5,7 @@ import { asyncHandler } from '@/lib/asyncHandler';
 import { sendResponse } from '@/lib/sendResponse';
 import { Team } from '@/models/Team';
 
-export const GET = withAuth(
-  asyncHandler(async (req: NextRequest) => {
+export const GET = asyncHandler(async (req: NextRequest) => {
     await connectToDB();
 
     const searchParams = req.nextUrl.searchParams;
@@ -88,4 +87,3 @@ export const GET = withAuth(
       },
     });
   })
-);

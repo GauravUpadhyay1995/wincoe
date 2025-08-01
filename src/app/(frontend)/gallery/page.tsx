@@ -2,15 +2,16 @@
 
 
 import Photo from '../events/photo';
-import Videos from '../videos/page';
+// import Videos from '../videos/page';
 
 export default function Gallery() {
 
 
     return (
         <>
+          {/* <Videos /> */}
             <Photo number={6} />
-            <Videos />
+          
         </>
 
 
