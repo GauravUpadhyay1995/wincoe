@@ -20,17 +20,20 @@
       }
 
       .cls-5 {
-        font-size: 54px;
+        font-size: 67px;
         font-weight: 500;
+        
       }
 
-      .cls-5, .cls-6 {
+       .cls-6 {
         font-family: Gotham;
+        
       }
 
       .cls-6 {
-        font-size: 80px;
+        font-size: 100px;
         font-weight: 700;
+        
       }
     </style>
   </defs>
@@ -39,7 +42,11 @@
   <rect class="cls-3" x="576" y="222" width="59" height="288"/>
   <path id="Rectangle_1_copy" data-name="Rectangle 1 copy" class="cls-1" d="M546,223l-65-1L366,450l36,61Z"/>
   <path class="cls-1" d="M740,508H681V222h70L875,413V222h59V508H869L740,309V508Z"/>
-  <path class="cls-4" d="M94,647H931"/>
-  <text id="Wadhwani_Innovation_Network" data-name="Wadhwani Innovation Network" class="cls-5" x="94.522" y="598.977">Wadhwani Innovation Network</text>
-  <text id="Center_of_Excellence" data-name="Center of Excellence" class="cls-6" x="94.522" y="738.977">Center of Excellence</text>
+  <line x1="74" y1="647" x2="931" y2="647" class="cls-4"/>
+  <text id="Wadhwani_Innovation_Network" data-name="Wadhwani Innovation Network" class="cls-5" x="100.522" y="598.977">Wadhwani Innovation Network</text>
+  <text id="Center_of_Excellence" data-name="Center of Excellence" class="cls-6" x="70.522" y="748.977">Center of Excellence</text>
+<line x1="74" y1="790" x2="931" y2="790" class="cls-4"/>
+  
+  
+
 </svg>
