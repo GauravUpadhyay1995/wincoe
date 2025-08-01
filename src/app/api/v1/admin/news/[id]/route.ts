@@ -7,8 +7,7 @@ import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
 import mongoose from 'mongoose';
 
-export const GET = withAuth(
-  asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
+export const GET =  asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
 
     const newsId = params.id;
@@ -37,4 +36,3 @@ export const GET = withAuth(
       data: newsProfile,
     });
   })
-);

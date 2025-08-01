@@ -6,6 +6,7 @@ import { Team } from '@/models/Team';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { createTeamSchema } from '@/lib/validations/team.schema';
 import { Types } from 'mongoose';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
 type CreateTeamBody = {
   name: string;
@@ -22,7 +23,7 @@ type CreateTeamBody = {
   updatedBy: Types.ObjectId;
 };
 
-export const POST = withAuth(
+export const POST = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
     const user = (req as any).user;

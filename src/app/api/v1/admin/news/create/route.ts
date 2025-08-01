@@ -5,6 +5,7 @@ import { connectToDB } from '@/config/mongo';
 import { News } from '@/models/News';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { createNewsSchema } from '@/lib/validations/news.schema';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
 type CreateNewsBody = {
   title: string;
@@ -15,7 +16,7 @@ type CreateNewsBody = {
   updatedBy?: string;
 };
 
-export const POST = withAuth(
+export const POST = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
     const user = (req as any).user;

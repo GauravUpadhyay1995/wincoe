@@ -5,8 +5,9 @@ import { connectToDB } from '@/config/mongo';
 import { Trl } from '@/models/Trl';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { updateTrlSchema } from '@/lib/validations/updateTrl.schema';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const PATCH = withAuth(
+export const PATCH = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
     const user = (req as any).user;
