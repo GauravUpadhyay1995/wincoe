@@ -17,7 +17,7 @@ export default function AdminLoginForm() {
   const { theme } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("gaurav1@gmail.com");
+  const [email, setEmail] = useState("rupam@example.com");
   const [password, setPassword] = useState("123456");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,22 +40,22 @@ export default function AdminLoginForm() {
         credentials: 'include'
       });
 
-      const data = await response.json();
-
+      const responce = await response.json();
+      // console.log('Response from admin login:', response.ok, responce);
       if (!response.ok) {
-        throw new Error(data.message || 'Failed to login');
+        throw new Error(responce.message || 'Failed to login');
       }
 
-      console.log('>>>>>>>>>>>>', data);
+      // console.log('>>>>>>>>>>>>', responce);
 
-      if (data.success) {
-        login(data.user, 'admin');
-        localStorage.setItem('adminToken', data.token || '');
+      if (responce.success) {
+        login(responce.data, 'admin');
+        localStorage.setItem('adminToken', responce.token || '');
         toast.success('Admin login successful!');
-        // router.push('/admin');
+        router.push('/admin');
       } else {
-        setError(data.message || 'Invalid credentials. Please try again.');
-        toast.error(data.message || 'Invalid credentials. Please try again.');
+        setError(responce.message || 'Invalid credentials. Please try again.');
+        toast.error(responce.message || 'Invalid credentials. Please try again.');
       }
     } catch (error: unknown) {
       const message = error instanceof Error ? error.message : 'Login failed. Please try again.';

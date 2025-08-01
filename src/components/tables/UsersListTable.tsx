@@ -25,6 +25,18 @@ import UnauthorizedComponent from '@/components/common/UnauthorizedComponent';
 import * as XLSX from 'xlsx';
 import { motion, AnimatePresence } from 'framer-motion';
 import { FiFilter, FiChevronDown, FiChevronUp, FiX } from 'react-icons/fi';
+import { stat } from 'fs';
+
+interface UsersApiResponse {
+    success: boolean;
+    message?: string;
+    isAuthorized?: boolean;
+    data?: {
+        customers?: User[];
+        totalRecords?: number;
+        perPage?: number;
+    };
+}
 
 interface Permission {
     module: string;
@@ -35,6 +47,8 @@ interface Permission {
 interface UpdateUserData {
     name: string;
     email: string;
+    mobile: string;
+    role?: string;
     isActive: boolean;
     permissions: Omit<Permission, '_id'>[];
     password?: string;
@@ -44,12 +58,14 @@ interface User {
     _id: string;
     name: string;
     email: string;
-    password: string;
-    isActive: boolean;
-    permissions: Permission[];
-    __v: number;
-    createdAt: Date;
-    updatedAt: Date;
+    mobile?: string;
+    password?: string;
+    role?: string;
+    isActive?: boolean;
+    permissions?: Permission[];
+    __v?: number;
+    createdAt?: string | Date;
+    updatedAt?: string | Date;
 }
 
 interface Filters {
@@ -67,7 +83,7 @@ const PermissionToggle = ({
     setPermissions: (permissions: Permission[]) => void;
 }) => {
     const availableActions = ['create', 'read', 'update', 'delete'];
-    const modulePermissions = permissions.find(p => p.module === module) || { module, actions: [] };
+    const modulePermissions = permissions.find(p => p.module == module) || { module, actions: [] };
 
     const toggleAction = (action: string) => {
         const newPermissions = permissions.map(perm =>
@@ -196,7 +212,9 @@ export default function UsersListTable() {
         name: '',
         email: '',
         password: '',
+        mobile: '',
         isActive: true,
+        role: '', // or 'admin'
         permissions: [] as Permission[]
     });
 
@@ -204,6 +222,8 @@ export default function UsersListTable() {
         name: '',
         email: '',
         password: '',
+        mobile: '',
+        role: 'user', // or 'admin'
         permissions: [] as Permission[]
     });
 
@@ -241,27 +261,34 @@ export default function UsersListTable() {
     const fetchAllUsers = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/v1/admin/users/list?perPage=25`, {
+            const response = await fetch(`/api/v1/admin/users/list?perPage=${pageSize}`, {
                 credentials: 'include',
             });
-            const data = await response.json();
-            if (data.success) {
-                setAllUsers(data.data);
-                setTotalRecords(data.totalRecords);
-                setTotalPages(Math.ceil(data.totalRecords / 1000));
+            const result: UsersApiResponse = await response.json();
+
+            if (result.success && result.data) {
+                setAllUsers(result.data.customers || []);
+                setTotalRecords(result.data.totalRecords || 0);
+                setTotalPages(Math.max(1, Math.ceil((result.data.totalRecords || 0) / (result.data.perPage || pageSize))));
                 setIsAuthorized(true);
-            } else if (data.isAuthorized === false) {
+            } else if (result.isAuthorized === false) {
                 setIsAuthorized(false);
             } else {
-                toast.error(data.message || 'Failed to load users');
+                toast.error(result.message || 'Failed to load users');
+                setAllUsers([]);
+                setTotalRecords(0);
+                setTotalPages(1);
             }
         } catch (error) {
             console.error('Error fetching users:', error);
             toast.error('Error fetching user list');
+            setAllUsers([]);
+            setTotalRecords(0);
+            setTotalPages(1);
         } finally {
             setLoading(false);
         }
-    }, []);
+    }, [pageSize]);
 
     // Filter users client-side based on filters and pagination
     const filteredUsers = useMemo(() => {
@@ -297,12 +324,16 @@ export default function UsersListTable() {
     }, [fetchAllUsers]);
 
     const handleEditClick = (user: User) => {
+        // console.log('>>>>>',user);
+
         setEditUserId(user._id);
         setFormData({
             name: user.name,
             email: user.email,
+            mobile: user.mobile ?? '',
             password: '',
-            isActive: user.isActive,
+            role: user.role ?? '',
+            isActive: user.isActive ?? true,
             permissions: user.permissions || []
         });
         openModal();
@@ -313,12 +344,14 @@ export default function UsersListTable() {
             name: '',
             email: '',
             password: '',
+            mobile: '',
+            role: 'user',
             permissions: []
         });
         setIsCreateModalOpen(true);
     };
 
-    const handleCreateSubmit = async () => { 
+    const handleCreateSubmit = async () => {
         if (!createformData.name || !createformData.email || !createformData.password) {
             toast.error('Please fill in all fields');
             return;
@@ -353,7 +386,7 @@ export default function UsersListTable() {
             const result = await promise;
             if (result.success) {
                 fetchAllUsers();
-                setCreateFormData({ name: '', email: '', password: '', permissions: [] });
+                setCreateFormData({ name: '', email: '', password: '', mobile: '', role: 'user', permissions: [] });
                 setIsCreateModalOpen(false);
             }
         } catch (error) {
@@ -363,28 +396,36 @@ export default function UsersListTable() {
         }
     };
 
-    const changeStatus = async (userId: string, status: boolean, email: string) => {
+    const changeStatus = async (userId: string, isActive: boolean, email: string) => {
         if (!userId) return;
         setIsSubmitting(true);
 
         const toUpdateData = {
-            email: email,
-            isActive: !status,
-            onlyStatus: true
+            email,
+            isActive: !isActive,
         };
 
         const promise = fetch(`/api/v1/admin/users/update/${userId}`, {
-            method: 'PUT',
+            method: 'PATCH', // ✅ Changed from PUT to PATCH
             headers: {
                 'Content-Type': 'application/json',
             },
             body: JSON.stringify(toUpdateData),
         }).then(async (res) => {
-            const result = await res.json();
-            if (!res.ok || !result.success) {
-                toast.error(result.message);
+            try {
+                const text = await res.text();
+                const result = text ? JSON.parse(text) : {};
+
+                if (!res.ok || !result.success) {
+                    toast.error(result.message || 'Update failed');
+                }
+
+                return result;
+            } catch (error) {
+                console.error('Failed to parse response:', error);
+                toast.error('Invalid server response');
+                throw new Error('Invalid server response');
             }
-            return result;
         });
 
         toast.promise(promise, {
@@ -419,6 +460,8 @@ export default function UsersListTable() {
         const updateData: UpdateUserData = {
             name: formData.name,
             email: formData.email,
+            mobile: formData.mobile,
+            role: formData.role,
             isActive: formData.isActive,
             permissions: formData.permissions.map(({ ...rest }) => rest)
         };
@@ -428,7 +471,7 @@ export default function UsersListTable() {
         }
 
         const promise = fetch(`/api/v1/admin/users/update/${editUserId}`, {
-            method: 'PUT',
+            method: 'PATCH',
             headers: {
                 'Content-Type': 'application/json',
             },
@@ -556,8 +599,8 @@ export default function UsersListTable() {
                                     }}
                                     className="w-full py-2 pl-3 pr-8 text-sm text-gray-800 bg-transparent border border-gray-300 rounded-lg appearance-none dark:bg-dark-900 h-9 shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-none focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800 cursor-pointer"
                                 >
-                                    {pageSizeOptions.map((size,index) => (
-                                        <option key={index*size} value={size}>
+                                    {pageSizeOptions.map((size, index) => (
+                                        <option key={index * size} value={size}>
                                             {size}
                                         </option>
                                     ))}
@@ -651,6 +694,7 @@ export default function UsersListTable() {
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Created/Updated</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Name</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Email</TableCell>
+                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Role</TableCell> {/* 👈 New Role Column */}
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Status</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Action</TableCell>
                             </TableRow>
@@ -659,22 +703,41 @@ export default function UsersListTable() {
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                             {!loading && userList.map((user, index) => (
                                 <TableRow key={user._id}>
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">{(currentPage - 1) * pageSize + index + 1}</TableCell>
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}<br></br>{user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}</TableCell>
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user.name}</TableCell>
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">{user.email}</TableCell>
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        <div key={`${user._id}_new`} className="flex items-center space-x-2">
+                                        {(currentPage - 1) * pageSize + index + 1}
+                                    </TableCell>
+
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
+                                        <br />
+                                        {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}
+                                    </TableCell>
+
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        {user.name}
+                                    </TableCell>
+
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        {user.email}
+                                    </TableCell>
+
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
+                                            {user.role || 'User'}
+                                        </span>
+                                    </TableCell>
+
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        <div className="flex items-center space-x-2">
                                             <label className="inline-flex items-center cursor-pointer">
                                                 <input
-                                                    onChange={() => changeStatus(user._id, user.isActive, user.email)}
+                                                    onChange={() => changeStatus(user._id, user.isActive ?? true, user.email)}
                                                     type="checkbox"
                                                     className="sr-only peer"
                                                     checked={user.isActive ? true : false}
                                                     disabled={admin?.email === user.email}
                                                 />
-                                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
-                                                </div>
+                                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                                             </label>
                                         </div>
                                     </TableCell>
@@ -695,6 +758,7 @@ export default function UsersListTable() {
                             ))}
                         </TableBody>
                     </Table>
+
                 </div>
             </div>
 
@@ -749,6 +813,7 @@ export default function UsersListTable() {
                                         type="text"
                                         value={formData.name}
                                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                                        placeholder="Enter full name"
                                         className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     />
 
@@ -758,6 +823,7 @@ export default function UsersListTable() {
                                         value={formData.email}
                                         disabled={admin?.email === formData?.email}
                                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                                        placeholder="Enter email address"
                                         className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     />
 
@@ -766,8 +832,23 @@ export default function UsersListTable() {
                                         type="password"
                                         value={formData.password}
                                         onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                                        className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                         placeholder="Leave blank to keep current password"
+                                        className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                    />
+
+                                    <Label>Mobile</Label>
+                                    <input
+                                        type="text"
+                                        value={formData.mobile || ''}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (/^\d*$/.test(value) && value.length <= 10) {
+                                                setFormData({ ...formData, mobile: value });
+                                            }
+                                        }}
+                                        placeholder="Enter 10-digit mobile number"
+                                        maxLength={10}
+                                        className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     />
 
                                     <Label>Status</Label>
@@ -782,7 +863,22 @@ export default function UsersListTable() {
                                         <option value="active">Active</option>
                                         <option value="inactive">Inactive</option>
                                     </select>
+
+                                    <Label>Role</Label>
+                                    <select
+                                        value={formData.role}
+                                        onChange={(e) =>
+                                            setFormData({ ...formData, role: e.target.value })
+                                        }
+                                        className="w-full py-2 pl-3 pr-8 text-sm text-gray-800 bg-transparent border border-gray-300 rounded-lg appearance-none dark:bg-dark-900 h-9 bg-none shadow-theme-xs placeholder:text-gray-400 focus:border-brand-300 focus:outline-hidden focus:ring-3 focus:ring-brand-500/10 dark:border-gray-700 dark:bg-gray-900 dark:text-white/90 dark:placeholder:text-white/30 dark:focus:border-brand-800"
+                                    >
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+
                                 </div>
+
+
                             )}
                             {activeTab === 'permissions' && (
                                 <div className="space-y-4">
@@ -851,6 +947,7 @@ export default function UsersListTable() {
                                         type="text"
                                         value={createformData.name}
                                         onChange={(e) => setCreateFormData({ ...createformData, name: e.target.value })}
+                                        placeholder="Enter full name"
                                         className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     />
 
@@ -859,6 +956,7 @@ export default function UsersListTable() {
                                         type="email"
                                         value={createformData.email}
                                         onChange={(e) => setCreateFormData({ ...createformData, email: e.target.value })}
+                                        placeholder="Enter email address"
                                         className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     />
 
@@ -867,9 +965,39 @@ export default function UsersListTable() {
                                         type="password"
                                         value={createformData.password}
                                         onChange={(e) => setCreateFormData({ ...createformData, password: e.target.value })}
+                                        placeholder="Enter password"
                                         className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
                                     />
+
+                                    <Label>Mobile</Label>
+                                    <input
+                                        type="text"
+                                        value={createformData.mobile}
+                                        maxLength={10}
+                                        onChange={(e) => {
+                                            const value = e.target.value;
+                                            if (/^\d*$/.test(value) && value.length <= 10) {
+                                                setCreateFormData({ ...createformData, mobile: value });
+                                            }
+                                        }}
+                                        placeholder="Enter 10-digit mobile number"
+                                        className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400"
+                                    />
+
+                                    <Label>Role</Label>
+                                    <select
+                                        value={createformData.role}
+                                        onChange={(e) => setCreateFormData({ ...createformData, role: e.target.value })}
+                                        className="border p-2 rounded bg-white dark:bg-gray-800 text-gray-900 dark:text-white"
+                                    >
+                                        <option value="">Select Role</option>
+                                        <option value="admin">Admin</option>
+                                        <option value="user">User</option>
+                                    </select>
+
+
                                 </div>
+
                             )}
                             {activeTab === 'permissions' && (
                                 <div className="space-y-4">

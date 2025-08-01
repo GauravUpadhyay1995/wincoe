@@ -1,12 +1,14 @@
 import { NextRequest } from 'next/server';
 import { connectToDB } from '@/config/mongo';
 import { withAuth } from '@/lib/withAuth';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 import { asyncHandler } from '@/lib/asyncHandler';
 import { sendResponse } from '@/lib/sendResponse';
 import { User } from '@/models/User';
 
-export const GET = withAuth(asyncHandler(async (req: NextRequest) => {
+export const GET = verifyAdmin(asyncHandler(async (req: NextRequest) => {
   await connectToDB();
+  // console.log('>>>>>>>>...',req); 
 
   const searchParams = req.nextUrl.searchParams;
   const customer = searchParams.get('customer');
@@ -14,7 +16,7 @@ export const GET = withAuth(asyncHandler(async (req: NextRequest) => {
   const page = parseInt(searchParams.get('page') || '1');
   const perPage = searchParams.get('perPage') || '10';
 
-  const showAll = perPage === 'All';
+  const showAll = perPage == 'All';
   const limit = showAll ? 0 : parseInt(perPage);
   const skip = showAll ? 0 : (page - 1) * limit;
 
@@ -87,10 +89,10 @@ export const GET = withAuth(asyncHandler(async (req: NextRequest) => {
     message: customers.length ? 'Customers fetched successfully' : 'No customers found',
     data: {
       totalRecords,
+      isAuthorized : true,
       currentPage: page,
       perPage: showAll ? totalRecords : limit,
-      customers,
-    
+      customers,    
     }
   });
 }));
