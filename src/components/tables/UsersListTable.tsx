@@ -694,7 +694,7 @@ export default function UsersListTable() {
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Created/Updated</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Name</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Email</TableCell>
-                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Role</TableCell> {/* 👈 New Role Column */}
+                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Role</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Status</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Action</TableCell>
                             </TableRow>
@@ -703,24 +703,10 @@ export default function UsersListTable() {
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
                             {!loading && userList.map((user, index) => (
                                 <TableRow key={user._id}>
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {(currentPage - 1) * pageSize + index + 1}
-                                    </TableCell>
-
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}
-                                        <br />
-                                        {user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}
-                                    </TableCell>
-
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {user.name}
-                                    </TableCell>
-
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {user.email}
-                                    </TableCell>
-
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">{(currentPage - 1) * pageSize + index + 1}</TableCell>
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}<br></br>{user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}</TableCell>
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user.name}</TableCell>
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">{user.email}</TableCell>
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
                                         <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium capitalize bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-300">
                                             {user.role || 'User'}
@@ -728,20 +714,20 @@ export default function UsersListTable() {
                                     </TableCell>
 
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        <div className="flex items-center space-x-2">
+                                        <div key={`${user._id}_new`} className="flex items-center space-x-2">
                                             <label className="inline-flex items-center cursor-pointer">
                                                 <input
                                                     onChange={() => changeStatus(user._id, user.isActive ?? true, user.email)}
                                                     type="checkbox"
                                                     className="sr-only peer"
                                                     checked={user.isActive ? true : false}
-                                                    disabled={admin?.email === user.email}
+                                                    disabled={admin?.email == user.email}
                                                 />
-                                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
+                                                <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
+                                                </div>
                                             </label>
                                         </div>
                                     </TableCell>
-
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">
                                         <UserPermissionGuard action="update">
                                             <button
@@ -758,7 +744,6 @@ export default function UsersListTable() {
                             ))}
                         </TableBody>
                     </Table>
-
                 </div>
             </div>
 
