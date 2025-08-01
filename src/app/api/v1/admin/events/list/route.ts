@@ -4,8 +4,9 @@ import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
 import { sendResponse } from '@/lib/sendResponse';
 import { Event } from '@/models/Event';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const GET = withAuth(
+export const GET = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
 

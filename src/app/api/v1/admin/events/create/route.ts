@@ -6,6 +6,7 @@ import { Event } from '@/models/Event';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { createEventSchema } from '@/lib/validations/event.schema';
 import { Types } from 'mongoose';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
 type CreateEventBody = {
   title: string;
@@ -24,7 +25,7 @@ type CreateEventBody = {
   updatedBy: Types.ObjectId;
 };
 
-export const POST = withAuth(
+export const POST = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
     const user = (req as any).user;

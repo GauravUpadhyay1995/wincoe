@@ -6,7 +6,7 @@ import { ImportantDocument } from '@/models/ImportantDocument';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { importantDocumentValidationSchema } from '@/lib/validations/document.schema';
 import { Types } from 'mongoose';
-
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 type CreateDocBody = {
   title: string;
   description: string;
@@ -22,7 +22,7 @@ type CreateDocBody = {
   updatedBy: Types.ObjectId;
 };
 
-export const POST = withAuth(
+export const POST = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
     const user = (req as any).user;

@@ -5,8 +5,9 @@ import { connectToDB } from '@/config/mongo';
 import { Gallery } from '@/models/Gallery';
 import { uploadBufferToS3, deleteFromS3 } from '@/lib/uploadToS3';
 import { Types } from 'mongoose';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const PATCH = withAuth(
+export const PATCH = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string, imageId: string } }) => {
     await connectToDB();
     const { id: galleryId, imageId } = params;
@@ -61,7 +62,7 @@ export const PATCH = withAuth(
   })
 );
 
-export const DELETE = withAuth(
+export const DELETE = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string, imageId: string } }) => {
     await connectToDB();
     const { id:galleryId, imageId } = params;

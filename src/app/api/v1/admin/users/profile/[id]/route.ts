@@ -4,8 +4,9 @@ import { connectToDB } from '@/config/mongo';
 import { User } from '@/models/User';
 import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const GET = withAuth(
+export const GET = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
 

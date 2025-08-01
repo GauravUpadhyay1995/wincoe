@@ -7,8 +7,9 @@ import { User } from '@/models/User'; // ✅ Required for populate
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { updateImportantDocSchema } from '@/lib/validations/document.schema';
 import mongoose, { Types } from 'mongoose';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const PATCH = withAuth(
+export const PATCH = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
 

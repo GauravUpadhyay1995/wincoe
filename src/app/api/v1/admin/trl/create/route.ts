@@ -5,6 +5,7 @@ import { connectToDB } from '@/config/mongo';
 import { Trl } from '@/models/Trl';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { createTrlSchema } from '@/lib/validations/trl.schema';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
 type CreateTrlBody = {
   title: string;
@@ -18,7 +19,7 @@ type CreateTrlBody = {
   updatedBy: string;
 };
 
-export const POST = withAuth(
+export const POST = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
     const user = (req as any).user;

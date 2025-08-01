@@ -5,6 +5,7 @@ import { connectToDB } from '@/config/mongo';
 import { Team } from '@/models/Team';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { ApiError } from '@/lib/errorHandler';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
 type UpdateTeamBody = {
   name?: string;
@@ -16,7 +17,7 @@ type UpdateTeamBody = {
   updatedBy?: string;
 };
 
-export const PATCH = withAuth(
+export const PATCH = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
     const user = (req as any).user;

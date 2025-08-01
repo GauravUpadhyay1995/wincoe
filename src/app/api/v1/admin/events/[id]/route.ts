@@ -3,8 +3,9 @@ import { connectToDB } from '@/config/mongo';
 import { Event } from '@/models/Event';
 import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const GET = withAuth(
+export const GET = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     // Early connection check (reused from connectToDB if implemented efficiently)
     await connectToDB();
