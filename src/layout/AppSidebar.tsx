@@ -14,6 +14,8 @@ import {
   GridIcon,
   HorizontaLDots,
   UserCircleIcon,
+  DocsIcon
+
 } from "../icons/index";
 import SidebarWidget from "./SidebarWidget";
 import { usePermissions } from '@/hooks/usePermissions';
@@ -46,7 +48,17 @@ const AppSidebar: React.FC = () => {
       icon: <UserCircleIcon />,
       path: "/admin/users-list",
     },
+    {
+      name: "News",
+      icon: <DocsIcon />,
+      path: "/admin/news",
+      subItems: [
+        { name: "View All News", path: "/admin/news", pro: false },
+        { name: "Add News", path: "/admin/news/add", pro: false },
+      ],
+    },
   ];
+
 
   const othersItems: NavItem[] = [
     // {
@@ -308,8 +320,9 @@ const AppSidebar: React.FC = () => {
                 <Image
                   src={theme === "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.png"}
                   alt="WIN CoE"
-                  width={250}
+                  width={100}
                   height={10}
+                  className="mb-0 opacity-100 ml-0"
                 />
 
               </span>

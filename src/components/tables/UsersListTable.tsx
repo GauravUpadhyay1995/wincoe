@@ -767,7 +767,7 @@ export default function UsersListTable() {
                         {/* Tab Buttons */}
                         <div className="w-1/4 border-r border-gray-300 dark:border-gray-700 p-2">
                             {tabs.map((tab) => {
-                                const isEditingOwnProfile = admin?.email === formData?.email;
+                                const isEditingOwnProfile = admin?.email == formData?.email;
 
                                 // If admin is editing their own profile, only show "Basic Details"
                                 if (isEditingOwnProfile && tab.label !== 'Basic Details') {

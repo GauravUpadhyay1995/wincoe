@@ -1,14 +1,31 @@
 'use client';
 
-import React, { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useCallback,
+} from 'react';
 import { useRouter } from 'next/navigation';
+import { jwtDecode } from 'jwt-decode';
 
 interface Permission {
   module: string;
   actions: string[];
 }
 
+interface DecodedToken {
+  id: string;
+  email: string;
+  role: string;
+  name: string;
+  permissions: Permission[];
+  exp: number;
+}
+
 interface Admin {
+  id: string;
   email: string;
   name: string;
   permissions: Permission[];
@@ -17,11 +34,10 @@ interface Admin {
 interface AuthContextType {
   admin: Admin | null;
   isLoading: boolean;
-  loading: boolean;
   isAuthenticatedAdmin: boolean;
-  login: (data: Partial<Admin>) => void;
+  login: (token: string) => void;
   logout: () => void;
-  checkAuth: () => Promise<void>;
+  checkAuth: () => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -33,73 +49,114 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticatedAdmin, setIsAuthenticatedAdmin] = useState(false);
 
   const clearCookies = useCallback(() => {
-    document.cookie.split(';').forEach(cookie => {
-      document.cookie = cookie.replace(/^ +/, '').replace(/=.*/, `=;expires=${new Date(0).toUTCString()};path=/`);
-    });
+    // Try to remove all cookies (non-HttpOnly)
+    document.cookie
+      .split(';')
+      .forEach((cookie) => {
+        document.cookie = cookie
+          .replace(/^ +/, '')
+          .replace(/=.*/, '=;expires=' + new Date(0).toUTCString() + ';path=/');
+      });
+
+    // Explicitly try to remove admin_token (if accessible)
+    document.cookie =
+      'admin_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
   }, []);
 
-  const clearAuthData = useCallback(() => {
-    localStorage.removeItem('admin');
-    localStorage.removeItem('admin_token');
-    setAdmin(null);
-    setIsAuthenticatedAdmin(false);
-    if (window.location.pathname.startsWith('/admin/')) {
-      router.push('/login');
-    }
-    clearCookies();
-  }, [router, clearCookies]);
-
-  const login = useCallback((data: Partial<Admin>) => {
-    const { email, name, permissions } = data;
-    if (email && name && permissions) {
-      const adminData = { email, name, permissions };
-      setAdmin(adminData);
-      localStorage.setItem('admin', JSON.stringify(adminData));
-      setIsAuthenticatedAdmin(true);
-      // router.push('/admin'); // Uncomment if redirect is needed
-    }
-  }, []);
-
-  const logout = useCallback(async () => {
+  const clearAuthData = useCallback(async () => {
     try {
-      const response = await fetch('/api/v1/admin/logout', {
+      // Call logout API to clear HttpOnly cookies from the server
+      await fetch('/api/v1/admin/logout', {
         method: 'POST',
         credentials: 'include',
       });
-
-      if (!response.ok) {
-        throw new Error('Logout failed');
-      }
     } catch (error) {
-      console.error('Logout error:', error);
-    } finally {
-      clearAuthData();
+      console.error('Logout API call failed:', error);
     }
-  }, [clearAuthData]);
 
-  const checkAuth = useCallback(async () => {
-    setIsLoading(true);
-    try {
-      const adminResponse = await fetch('/api/v1/admin/login', {
-        method: 'GET',
-        credentials: 'include',
-      });
+    // Clear client-side state
+    localStorage.removeItem('adminToken');
+    localStorage.removeItem('admin');
+    setAdmin(null);
+    setIsAuthenticatedAdmin(false);
+    clearCookies();
 
-      if (adminResponse.ok) {
-        const adminData = await adminResponse.json();
-        if (adminData.success && adminData.data) {
-          const { email, name, permissions } = adminData.data;
-          const adminObj = { email, name, permissions };
-          setAdmin(adminObj);
-          setIsAuthenticatedAdmin(true);
-          localStorage.setItem('admin', JSON.stringify(adminObj));
+    // Always redirect to /admin (or /admin/login if that's the login page)
+    router.replace('/admin');
+  }, [router, clearCookies]);
+
+  const login = useCallback(
+    (token: string) => {
+      if (!token) {
+        console.error('Login failed: Token is null or undefined.');
+        clearAuthData();
+        return;
+      }
+
+      try {
+        const decoded: DecodedToken = jwtDecode(token);
+        const currentTime = Date.now() / 1000;
+
+        if (decoded.exp < currentTime) {
+          console.warn('Token expired at login.');
+          clearAuthData();
           return;
         }
+
+        const adminData: Admin = {
+          id: decoded.id,
+          email: decoded.email,
+          name: decoded.name,
+          permissions: decoded.permissions,
+        };
+
+        setAdmin(adminData);
+        setIsAuthenticatedAdmin(true);
+        localStorage.setItem('adminToken', token);
+        localStorage.setItem('admin', JSON.stringify(adminData));
+      } catch (error) {
+        console.error('Login failed: Invalid token', error);
+        clearAuthData();
+      }
+    },
+    [clearAuthData]
+  );
+
+  const logout = useCallback(() => {
+    clearAuthData();
+  }, [clearAuthData]);
+
+  const checkAuth = useCallback(() => {
+    setIsLoading(true);
+
+    try {
+      const token = localStorage.getItem('adminToken');
+      if (!token) {
+        clearAuthData();
+        return;
       }
 
-      clearAuthData();
+      const decoded: DecodedToken = jwtDecode(token);
+      const currentTime = Date.now() / 1000;
+
+      if (decoded.exp < currentTime) {
+        console.warn('Token expired. Logging out.');
+        clearAuthData();
+        return;
+      }
+
+      const adminData: Admin = {
+        id: decoded.id,
+        email: decoded.email,
+        name: decoded.name,
+        permissions: decoded.permissions,
+      };
+
+      setAdmin(adminData);
+      setIsAuthenticatedAdmin(true);
+      localStorage.setItem('admin', JSON.stringify(adminData));
     } catch (error) {
-      console.error('Auth check error:', error);
+      console.error('Invalid or modified token. Logging out.', error);
       clearAuthData();
     } finally {
       setIsLoading(false);
@@ -107,20 +164,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [clearAuthData]);
 
   useEffect(() => {
-    const storedAdmin = localStorage.getItem('admin');
-    if (storedAdmin) {
-      try {
-        const parsedAdmin = JSON.parse(storedAdmin);
-        setAdmin(parsedAdmin);
-        setIsAuthenticatedAdmin(true);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          console.error('Failed to parse admin data:', error.message);
-        }
-        localStorage.removeItem('admin');
-      }
-    }
-
     checkAuth();
   }, [checkAuth]);
 
@@ -129,14 +172,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       value={{
         admin,
         isLoading,
-        loading: isLoading,
         isAuthenticatedAdmin,
         login,
         logout,
         checkAuth,
       }}
     >
-      {children}
+      {!isLoading && children}
     </AuthContext.Provider>
   );
 }

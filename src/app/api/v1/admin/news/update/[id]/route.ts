@@ -1,11 +1,11 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { asyncHandler } from '@/lib/asyncHandler';
-import { withAuth } from '@/lib/withAuth';
 import { connectToDB } from '@/config/mongo';
 import { News } from '@/models/News';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
-import { ApiError } from '@/lib/errorHandler';
 import {verifyAdmin}  from '@/lib/verifyAdmin';
+// import { ApiError } from '@/lib/errorHandler';
+// import { withAuth } from '@/lib/withAuth';
 
 export const PATCH = verifyAdmin(
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
@@ -45,6 +45,7 @@ export const PATCH = verifyAdmin(
       description: string;
       bannerImage: string;
       updatedBy: string;
+      isActive: boolean;
     }> = {
       updatedBy: user.id,
     };
@@ -55,6 +56,14 @@ export const PATCH = verifyAdmin(
     if (rawBody.description) updateData.description = rawBody.description as string;
     if (bannerImageUrl) updateData.bannerImage = bannerImageUrl;
 
+    // ✅ Add isActive if it exists
+    if (rawBody.isActive !== undefined) {
+      const value = rawBody.isActive.toString().toLowerCase();
+      if (value === 'true' || value === 'false') {
+        updateData.isActive = value === 'true';
+      }
+    }
+    
     const updated = await News.findByIdAndUpdate(
       newsId,
       { $set: { ...updateData, updatedAt: new Date() } },

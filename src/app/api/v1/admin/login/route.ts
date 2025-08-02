@@ -51,16 +51,18 @@ export const POST = asyncHandler(async (req: NextRequest) => {
       message: 'Invalid credentials',
     });
   }
+  const permissions = getAdminPermissions();
 
   // ✅ JWT creation
   const token = generateToken({
     id: user._id.toString(),
     email: user.email,
     role: user.role,
+    name: user.name,
+    permissions,
   });
 
   // ✅ Permissions (can later be fetched from DB if needed)
-  const permissions = getAdminPermissions();
 
   const response = NextResponse.json({
     success: true,

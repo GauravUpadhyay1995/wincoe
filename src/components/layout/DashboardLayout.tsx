@@ -21,7 +21,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const pathname = usePathname();
   const { logout } = useAuth();
-  
+
   const handleLogout = () => {
     logout('user');
   };
@@ -81,9 +81,9 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                 <Image
                   src={theme === "dark" ? "/images/logo/wincoe-logo.png" : "/images/logo/wincoe-logo.png"}
                   alt="WIN CoE"
-                  width={200}
-                  height={200}
-                 
+                  width={100}
+                  height={10}
+                  className="mb-0 opacity-100 ml-0"
                 />
               </span>
             </Link>
@@ -146,7 +146,7 @@ const DashboardLayout = ({ children }: DashboardLayoutProps) => {
                   alt="WIN CoE"
                   width={150}
                   height={200}
-                 
+
                 />
               </span>
             </Link>
