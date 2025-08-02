@@ -195,8 +195,13 @@ const PermissionManager = ({
     );
 };
 
-export default function UsersListTable() {
-    const [allUsers, setAllUsers] = useState<User[]>([]); // Store all fetched users
+interface Props {
+    initialData: User[];
+}
+
+export default function UsersListTable({ initialData }: Props) {
+
+    const [allUsers, setAllUsers] = useState<User[]>(initialData);
     const [userList, setUserList] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);

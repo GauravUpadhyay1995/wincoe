@@ -46,8 +46,13 @@ interface Filters {
     category: string;
 }
 
-export default function NewsList() {
-    const [allNews, setAllNews] = useState<News[]>([]);
+interface Props {
+    initialData: News[];
+}
+
+export default function NewsListTable({ initialData }: Props) {
+    const [allNews, setAllNews] = useState<News[]>(initialData);
+
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
