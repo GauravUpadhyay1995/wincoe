@@ -15,6 +15,7 @@ type UpdateTeamBody = {
   description?: string;
   socialLinks?: Record<string, string>;
   updatedBy?: string;
+  isActive?:boolean;
 };
 
 export const PATCH = verifyAdmin(
@@ -28,7 +29,7 @@ export const PATCH = verifyAdmin(
 
     // Parse optional social links
     let parsedSocialLinks: Record<string, string> = {};
-    if (typeof body.socialLinks === 'string') {
+    if (typeof body.socialLinks == 'string') {
       try {
         parsedSocialLinks = JSON.parse(body.socialLinks);
       } catch {
@@ -52,6 +53,12 @@ export const PATCH = verifyAdmin(
       profileImageUrl = result?.url || profileImageUrl;
     }
 
+    // Determine new isActive value
+    let isActive: boolean | undefined = undefined;
+    if (body.hasOwnProperty('isActive')) {
+      isActive = !existingTeam.isActive; // toggle current value
+    }
+
     // Final data
     const updateData: UpdateTeamBody = {
       ...(body.name && { name: body.name }),
@@ -59,6 +66,7 @@ export const PATCH = verifyAdmin(
       ...(body.department && { department: body.department }),
       ...(body.description && { description: body.description }),
       ...(profileImageUrl && { profileImageUrl }),
+      ...(isActive !== undefined && { isActive }),
       socialLinks: {
         ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
         ...parsedSocialLinks,
