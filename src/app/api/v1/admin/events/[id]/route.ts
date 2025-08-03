@@ -1,11 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/config/mongo';
 import { Event } from '@/models/Event';
-import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
-import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const GET = verifyAdmin(
+
+export const GET =
   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     // Early connection check (reused from connectToDB if implemented efficiently)
     await connectToDB();
@@ -30,5 +29,4 @@ export const GET = verifyAdmin(
       { success: true, message: 'Event fetched successfully', data: event },
       { headers: { 'Cache-Control': 'public, max-age=300' } } // Cache response for 5 minutes
     );
-  })
-);
+  });

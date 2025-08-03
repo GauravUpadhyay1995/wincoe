@@ -32,6 +32,8 @@ const Header = () => {
         { href: '/news', label: 'News' },
         { href: '/steering-committee', label: 'Steering Committee' },
         { href: '/contact', label: 'Contact' },
+        { href: '/docs-links', label: 'Docs & Links' },
+         { href: '/what-we-do', label: 'TRLs / What We Do' },
       ]
     },
   ];

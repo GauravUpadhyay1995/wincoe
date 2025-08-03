@@ -1,12 +1,22 @@
-
-import GrantCard from '@/components/GrantCard';
+"use client";
+import GrantCard from '@/app/(frontend)/GrantCard';
 import { motion } from 'framer-motion';
+import useSWR from 'swr';
+import Link from 'next/link';
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-export default function WhatWeDo() {
+export default function WhatWeDo({ customLimit = 0 }: { customLimit?: number }) {
+    const { data, error, isLoading } = useSWR(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/trl/list?customLimit=${customLimit}`,
+        fetcher
+    );
+
+    if (isLoading) return <LoadingState />;
+
+    if (error) return <ErrorState />;
+    if (!data?.data?.trls?.length) return <EmptyState />;
     return (
         <div className="min-h-screen bg-gray-50 ">
-
-
             <>
                 {/* Hero Section */}
                 <section className="relative py-32 bg-blue-900 rounded-b-2xl">
@@ -43,23 +53,35 @@ export default function WhatWeDo() {
                             Through regular calls for proposals, WIN CoE nurtures cutting-edge bioengineering research at IIT Delhi by offering funding, mentorship and support services in areas like diagnostics, therapeutics, MedTech and Personalized healthcare. WinCoE offer two targeted grant schemes to accelerate innovation across Technology readiness levels (TRL’s):
                         </p>
                     </motion.div>
+                    {(customLimit <= 2 && customLimit > 0) && (
+                        <div className="flex items-center justify-end mb-4">
+                            <Link
+                                href="/trls"
+                                className="text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
+                            >
+                                View All →
+                            </Link>
+                        </div>
+                    )}
+
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-6xl mx-auto">
-                        <GrantCard
-                            title="Accelerator Grant (A Grant)"
-                            amount="Up to ₹50 Lakhs/year"
-                            duration="Maximum 2 years"
-                            requirements={[
-                                "TRL 3 → TRL 5 (Proof-of-concept to early validation)",
-                                "Clinical partner required"
-                            ]}
-                            trlRange="TRL 3-5"
-                            delay={0}
+                        {data.data.trls.map((trl: any, index: number) => (
+                            <GrantCard
+                                key={trl._id}
+                                trl_id={trl._id}
+                                title={trl.title}
+                                amount={trl.amount}
+                                duration={trl.duration}
+                                requirements={trl.requirement}
+                                trlRange={trl.tag}
+                                delay={index * 0.1}
+                                color='orange'
+                            />
+                        ))}
 
-                        />
+                        {/* <GrantCard
 
-                        <GrantCard
-                      
                             title="Translational Grant (T-Grant)"
                             amount="Up to ₹75 Lakhs/year"
                             duration="Maximum 2 years"
@@ -70,7 +92,7 @@ export default function WhatWeDo() {
                             trlRange="TRL 5-7"
                             delay={0.2}
 
-                        />
+                        /> */}
 
                     </div>
 
@@ -99,5 +121,54 @@ export default function WhatWeDo() {
             </>
 
         </div>
+    );
+}
+
+function ErrorState() {
+    return (
+        <section className="py-10">
+            <div className="container mx-auto px-4 text-center">
+                <div className="text-red-500 mb-4">Failed to load TRL</div>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
+                >
+                    Retry
+                </button>
+            </div>
+        </section>
+    );
+}
+
+function EmptyState() {
+    return (
+        <section className="py-10">
+            <div className="container mx-auto px-4 text-center">
+                <div className="text-gray-500">No TRL available</div>
+            </div>
+        </section>
+    );
+}
+function LoadingState() {
+    return (
+        <section className="py-10">
+            <div className="container mx-auto px-4 text-center">
+                <div className="animate-pulse">
+                    <div className="h-12 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto mb-10"></div>
+                    <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10 max-w-6xl mx-auto">
+                        {[...Array(3)].map((_, i) => (
+                            <div
+                                key={i}
+                                className="bg-gray-100 dark:bg-gray-800 rounded-xl p-6 h-64"
+                            >
+                                <div className="h-8 bg-gray-200 dark:bg-gray-700 rounded-full w-8 mx-auto mb-4"></div>
+                                <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded w-3/4 mx-auto mb-3"></div>
+                                <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded w-1/2 mx-auto"></div>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+            </div>
+        </section>
     );
 }

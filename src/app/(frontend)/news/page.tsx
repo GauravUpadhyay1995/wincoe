@@ -22,7 +22,7 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
   }, []);
 
   const { data, error, isLoading } = useSWR(
-    `http://localhost:3000/api/v1/admin/news/list?customLimit=${customLimit}`,
+    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/news/list?customLimit=${customLimit}`,
     fetcher
   );
 
@@ -96,14 +96,15 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
       color: theme === 'dark' ? '#1f2937' : '#ffffff'
     }
   };
-
-  const sectionBgClass =
-    theme === 'dark'
+const sectionBgClass =
+  (customLimit > 3 || customLimit==0)? theme === 'dark'
       ? 'bg-gradient-to-r from-gray-900 via-gray-950 to-black text-gray-100'
-      : 'bg-gradient-to-r from-orange-50 to-cyan-50 text-gray-800';
+      : 'bg-gradient-to-r from-orange-50 to-cyan-50 text-gray-800'
+    : '';
+
 
   return (
-    <section className={`py-20 sm:py-24 ${sectionBgClass}`}>
+    <section className={`py-4 sm:py-4 ${sectionBgClass}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <ScrollAnimation animation="fade" delay={400}>
           {/* Header */}

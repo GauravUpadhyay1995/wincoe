@@ -1,12 +1,10 @@
 import { NextRequest } from 'next/server';
 import { connectToDB } from '@/config/mongo';
-import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
 import { sendResponse } from '@/lib/sendResponse';
 import { Event } from '@/models/Event';
-import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-export const GET = verifyAdmin(
+export const GET = 
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
 
@@ -88,4 +86,3 @@ export const GET = verifyAdmin(
       data: { totalRecords, currentPage: page, perPage: showAll ? totalRecords : limit, events, limit },
     });
   })
-);

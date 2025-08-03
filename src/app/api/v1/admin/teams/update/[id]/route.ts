@@ -11,7 +11,7 @@ type UpdateTeamBody = {
   name?: string;
   designation?: string;
   department?: string;
-  profileImageUrl?: string;
+  profileImage?: string;
   description?: string;
   socialLinks?: Record<string, string>;
   updatedBy?: string;
@@ -44,12 +44,13 @@ export const PATCH = verifyAdmin(
 
     // Handle image upload
     const file = formData.get('profileImage') as File | null;
-    let profileImageUrl = existingTeam.profileImageUrl;
+    let profileImage = existingTeam.profileImage;
 
     if (file) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const result = await uploadBufferToS3(buffer, file.type, file.name, 'teams');
-      profileImageUrl = result?.url || profileImageUrl;
+      profileImage = result?.url || profileImage;
+      console.log("profileImage",profileImage)
     }
 
     // Final data
@@ -58,14 +59,14 @@ export const PATCH = verifyAdmin(
       ...(body.designation && { designation: body.designation }),
       ...(body.department && { department: body.department }),
       ...(body.description && { description: body.description }),
-      ...(profileImageUrl && { profileImageUrl }),
+      ...(profileImage && { profileImage }),
       socialLinks: {
         ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
         ...parsedSocialLinks,
       },
       updatedBy: user.id,
     };
-
+console.log("updateData=",updateData)
     const updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { $set: { ...updateData, updatedAt: new Date() } },

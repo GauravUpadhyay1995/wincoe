@@ -5,19 +5,16 @@ const teamSchema = new Schema({
     type: String,
     required: true,
     trim: true,
-    lowercase: true,
   },
   designation: {
     type: String,
     required: true,
     trim: true,
-    lowercase: true,
   },
   department: {
     type: String,
     required: true,
     trim: true,
-    lowercase:true
   },
   profileImage: {
     type: String, // URL to S3
