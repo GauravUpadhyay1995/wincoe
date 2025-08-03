@@ -5,6 +5,8 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from '@/context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
+import { usePathname } from 'next/navigation';
+
 
 const Header = () => {
   const { theme, toggleTheme } = useTheme();
@@ -12,6 +14,7 @@ const Header = () => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [openSubmenus, setOpenSubmenus] = useState<Record<string, boolean>>({});
   const [hasAnimated, setHasAnimated] = useState(false);
+  const pathname = usePathname();
 
   const navLinks = [
     { href: '/', label: 'Home' },
@@ -75,13 +78,8 @@ const Header = () => {
     }));
   };
 
-
   const closeAllSubmenus = () => {
     setOpenSubmenus({});
-  };
-
-  const handleLoginClick = () => {
-    console.log("Login button clicked!");
   };
 
   // Animation variants
@@ -116,7 +114,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? `${theme === 'dark' ? 'bg-gray-900/90' : 'bg-white/90'} backdrop-blur-md shadow-md rounded-b-xl` : 'bg-transparent'}`}>
+    <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? `${theme == 'dark' ? 'bg-gray-900/90' : 'bg-white/90'} backdrop-blur-md shadow-md rounded-b-xl` : 'bg-transparent'}`}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Main Header Content */}
         <div className="flex items-center justify-between h-20 relative">
@@ -184,13 +182,20 @@ const Header = () => {
                                 <Link
                                   key={subItem.href}
                                   href={subItem.href}
-                                  className={`block px-4 py-2 text-sm transition-colors duration-200
-                                    ${theme === 'dark' ? 'text-gray-200 hover:bg-gray-700' : 'text-gray-700 hover:bg-gray-100'}`}
+                                  className={`block px-4 py-2 text-sm transition-colors duration-200 rounded
+                                  ${pathname.startsWith(subItem.href)
+                                      ? theme === 'dark'
+                                        ? 'bg-gray-700 text-orange-400'
+                                        : 'bg-orange-50 text-orange-600'
+                                      : theme === 'dark'
+                                        ? 'text-gray-200 hover:bg-gray-700'
+                                        : 'text-gray-700 hover:bg-gray-100'}`}
                                   onClick={closeAllSubmenus}
                                 >
                                   {subItem.label}
                                 </Link>
                               ))}
+
                             </div>
                           </motion.div>
                         )}
@@ -200,14 +205,21 @@ const Header = () => {
                     <Link
                       href={item.href}
                       className={`relative px-3 py-2 text-sm font-medium transition-colors duration-200 group
-                        ${theme === 'dark' ? 'text-gray-200 hover:text-orange-400' : 'text-gray-700 hover:text-orange-600'}
-                        after:absolute after:left-0 after:bottom-0 after:h-[2px] after:w-0
-                        ${theme === 'dark' ? 'after:bg-orange-400' : 'after:bg-orange-500'}
-                        after:transition-all after:duration-300 hover:after:w-full focus:outline-none focus:ring-2 focus:ring-orange-500 focus:rounded`}
+    ${theme === 'dark'
+                          ? pathname === item.href
+                            ? 'text-orange-400 after:w-full'
+                            : 'text-gray-200 hover:text-orange-400'
+                          : pathname === item.href
+                            ? 'text-orange-600 after:w-full'
+                            : 'text-gray-700 hover:text-orange-600'}
+    after:absolute after:left-0 after:bottom-0 after:h-[2px]
+    ${theme === 'dark' ? 'after:bg-orange-400' : 'after:bg-orange-500'}
+    after:transition-all after:duration-300 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:rounded`}
                       onClick={closeAllSubmenus}
                     >
                       {item.label}
                     </Link>
+
                   )}
                 </motion.div>
               ))}
@@ -321,8 +333,9 @@ const Header = () => {
                       <>
                         <button
                           onClick={() => toggleSubmenu(item.label)}
+                          aria-expanded={openSubmenus[item.label] || false}
                           className={`w-full text-left px-4 py-2 text-base font-medium rounded-lg transition-colors duration-200 flex justify-between items-center
-                            ${theme === 'dark' ? 'text-gray-200 hover:bg-gray-800/50 hover:text-orange-400' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'}`}
+            ${theme === 'dark' ? 'text-gray-200 hover:bg-gray-800/50 hover:text-orange-400' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'}`}
                         >
                           {item.label}
                           <svg
@@ -337,15 +350,15 @@ const Header = () => {
 
                         <AnimatePresence>
                           {openSubmenus[item.label] && (
-                            <motion.div
-                              initial="hidden"
-                              animate="visible"
-                              exit="exit"
-                              variants={submenuVariants}
-                              className="pl-4"
+                            <motion.ul
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.3 }}
+                              className="pl-6 overflow-hidden"
                             >
                               {item.submenu.map((subItem, subIndex) => (
-                                <motion.div
+                                <motion.li
                                   key={subItem.href}
                                   initial={{ opacity: 0, x: 30 }}
                                   animate={{ opacity: 1, x: 0 }}
@@ -354,7 +367,7 @@ const Header = () => {
                                   <Link
                                     href={subItem.href}
                                     className={`block px-4 py-2 text-sm rounded-lg transition-colors duration-200
-                                      ${theme === 'dark' ? 'text-gray-300 hover:bg-gray-800/50 hover:text-orange-400' : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600'}`}
+                      ${theme === 'dark' ? 'text-gray-300 hover:bg-gray-800/50 hover:text-orange-400' : 'text-gray-600 hover:bg-orange-50 hover:text-orange-600'}`}
                                     onClick={() => {
                                       setIsMobileMenuOpen(false);
                                       closeAllSubmenus();
@@ -362,9 +375,9 @@ const Header = () => {
                                   >
                                     {subItem.label}
                                   </Link>
-                                </motion.div>
+                                </motion.li>
                               ))}
-                            </motion.div>
+                            </motion.ul>
                           )}
                         </AnimatePresence>
                       </>
@@ -372,7 +385,13 @@ const Header = () => {
                       <Link
                         href={item.href}
                         className={`block px-4 py-2 text-base font-medium rounded-lg transition-colors duration-200
-                          ${theme === 'dark' ? 'text-gray-200 hover:bg-gray-800/50 hover:text-orange-400' : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'}`}
+          ${theme === 'dark'
+                            ? pathname === item.href
+                              ? 'text-orange-400 bg-gray-800/50'
+                              : 'text-gray-200 hover:bg-gray-800/50 hover:text-orange-400'
+                            : pathname === item.href
+                              ? 'text-orange-600 bg-orange-50'
+                              : 'text-gray-700 hover:bg-orange-50 hover:text-orange-600'}`}
                         onClick={() => {
                           setIsMobileMenuOpen(false);
                           closeAllSubmenus();
@@ -383,26 +402,8 @@ const Header = () => {
                     )}
                   </motion.div>
                 ))}
-                {/*                 
-                <motion.div
-                  initial={{ opacity: 0, x: 50 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: navLinks.length * 0.1 }}
-                >
-                  <hr className={`my-2 ${theme === 'dark' ? 'border-gray-700' : 'border-gray-200'}`} />
-                  <button
-                    onClick={() => {
-                      handleLoginClick();
-                      setIsMobileMenuOpen(false);
-                      closeAllSubmenus();
-                    }}
-                    className={`w-full text-left px-4 py-2 text-base font-medium rounded-lg transition-colors duration-200
-                            ${theme === 'dark' ? 'text-orange-400 hover:bg-gray-800/50' : 'text-orange-600 hover:bg-orange-50'}`}
-                    aria-label="Login to your account"
-                  >
-                    Login
-                  </button>
-                </motion.div> */}
+
+
               </div>
             </motion.nav>
           )}

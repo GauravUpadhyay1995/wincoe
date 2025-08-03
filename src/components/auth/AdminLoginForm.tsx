@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useAuth } from '@/context/AuthContext';
 import { useRouter } from "next/navigation";
 import Image from "next/image"; // Import Image for potential illustrations
-import Header from '@/components/home/Header';
+// import Header from '@/components/home/Header';
 import { useTheme } from '@/context/ThemeContext';
 
 export default function AdminLoginForm() {
@@ -49,7 +49,7 @@ export default function AdminLoginForm() {
       // console.log('>>>>>>>>>>>>', responce);
 
       if (responce.success) {
-        login(responce.data, 'admin');
+        login(responce.token);
         localStorage.setItem('adminToken', responce.token || '');
         toast.success('Admin login successful!');
         router.push('/admin');

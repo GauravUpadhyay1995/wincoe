@@ -195,8 +195,13 @@ const PermissionManager = ({
     );
 };
 
-export default function UsersListTable() {
-    const [allUsers, setAllUsers] = useState<User[]>([]); // Store all fetched users
+interface Props {
+    initialData: User[];
+}
+
+export default function UsersListTable({ initialData }: Props) {
+
+    const [allUsers, setAllUsers] = useState<User[]>(initialData);
     const [userList, setUserList] = useState<User[]>([]);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
@@ -767,7 +772,7 @@ export default function UsersListTable() {
                         {/* Tab Buttons */}
                         <div className="w-1/4 border-r border-gray-300 dark:border-gray-700 p-2">
                             {tabs.map((tab) => {
-                                const isEditingOwnProfile = admin?.email === formData?.email;
+                                const isEditingOwnProfile = admin?.email == formData?.email;
 
                                 // If admin is editing their own profile, only show "Basic Details"
                                 if (isEditingOwnProfile && tab.label !== 'Basic Details') {

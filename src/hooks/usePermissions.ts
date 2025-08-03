@@ -5,7 +5,7 @@ export const usePermissions = () => {
   const { admin } = useAuth();
   const [isLoading, setIsLoading] = useState(true);
   const [permissions, setPermissions] = useState(admin?.permissions || []);
-// console.log('>>>>>>>>',permissions);
+// console.log('>>>>>>>>',admin);
 
   useEffect(() => {
     if (admin?.permissions) {
