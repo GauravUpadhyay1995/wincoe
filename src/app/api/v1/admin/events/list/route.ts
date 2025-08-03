@@ -4,13 +4,15 @@ import { asyncHandler } from '@/lib/asyncHandler';
 import { sendResponse } from '@/lib/sendResponse';
 import { Event } from '@/models/Event';
 
-export const GET = 
+export const GET =
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
 
     const searchParams = req.nextUrl.searchParams;
 
     const search = searchParams.get('search')?.trim() || '';
+    const from = searchParams.get('from')?.trim() || '';
+
     const title = searchParams.get('title')?.trim() || '';
     const venue = searchParams.get('venue')?.trim() || '';
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
@@ -35,7 +37,7 @@ export const GET =
     if (venue) match.venue = { $regex: venue, $options: 'i' };
     if (startDate) match.startDate = { $gte: startDate };
     if (endDate) match.endDate = { $lte: endDate };
-
+    if (from === 'frontend') match.isActive = true;
     const pipeline: any[] = [];
     if (search) {
       pipeline.push({

@@ -10,7 +10,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 
 export default function EventsSegrigation({ customLimit = 0 }: { customLimit?: number }) {
-  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/events/list?customLimit=${customLimit}`, fetcher);
+  const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/events/list?customLimit=${customLimit}&from=frontend`, fetcher);
 
   if (isLoading) {
     return (

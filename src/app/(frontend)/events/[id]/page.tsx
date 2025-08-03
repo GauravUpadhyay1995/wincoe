@@ -12,7 +12,7 @@ const fetcher = (url: string) => fetch(url).then(res => res.json());
 
 export default function EventDetailsPage() {
     const { id } = useParams();
-    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/events/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, fetcher);
     const event = data?.data;
 
     const IMAGE: { images: string }[] = event?.images?.map(img => ({

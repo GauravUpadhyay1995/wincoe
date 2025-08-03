@@ -25,7 +25,7 @@ export default function NewsDetails({ params }: { params: { id: string } }) {
     const unwrappedParams = use(params);
     const { id } = unwrappedParams;
     useEffect(() => {
-        fetch(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/news/${id}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${id}`)
             .then(res => res.json())
             .then(data => {
                 console.log("API Response:", data);

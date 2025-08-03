@@ -14,7 +14,7 @@ export default function ImportantDocuments() {
     const [ref, inView] = useInView({ threshold: 0, triggerOnce: false });
     const controls = useAnimation();
     const { data, error, isLoading } = useSWR(
-        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/documents/list`,
+        `${process.env.NEXT_PUBLIC_API_URL}/documents/list?from=frontend`,
         fetcher
     );
     function isNewlyPublished(publishDate: string): boolean {

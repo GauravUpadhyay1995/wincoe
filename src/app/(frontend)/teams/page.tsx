@@ -27,7 +27,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function UniversityTeams() {
   const [selectedMember, setSelectedMember] = React.useState<TeamMember | null>(null);
-  const { data, error, isLoading } = useSWR('/api/v1/admin/teams/list', fetcher);
+  const { data, error, isLoading } = useSWR('/api/v1/admin/teams/list?from=frontend', fetcher);
 
   // Animation variants
   const containerVariants = {

@@ -17,6 +17,7 @@ export const GET = asyncHandler(async (req: NextRequest) => {
     const page = Math.max(1, parseInt(searchParams.get('page') || '1'));
     const perPage = searchParams.get('perPage') || '10';
     const customLimit = parseInt(searchParams.get('customLimit') || '') || 0;
+        const from = searchParams.get('from')?.trim() || '';
 
     const showAll = perPage === 'All';
     const limit = customLimit || (showAll ? 0 : parseInt(perPage) || 10);
@@ -27,6 +28,7 @@ export const GET = asyncHandler(async (req: NextRequest) => {
     if (name) match.name = name;
     if (designation) match.designation = designation;
     if (department) match.department = department;
+    if (from === 'frontend') match.isActive = true;
 
     // 📌 Build $search conditions
     const pipeline: any[] = [];

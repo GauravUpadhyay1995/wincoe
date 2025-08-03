@@ -12,6 +12,8 @@ export const GET =  asyncHandler(async (req: NextRequest) => {
 
     const params = req.nextUrl.searchParams;
     const search = params.get('search')?.trim();
+            const from = params.get('from')?.trim() || '';
+
     const title = params.get('title')?.trim();
     const category = params.get('category')?.trim();
     const page = Math.max(1, parseInt(params.get('page') || '1'));
@@ -25,6 +27,7 @@ export const GET =  asyncHandler(async (req: NextRequest) => {
     const match: Record<string, any> = {};
     if (title) match.title = title;
     if (category) match.category = category;
+    if (from === 'frontend') match.isActive = true;
 
     const pipeline: any[] = [];
 

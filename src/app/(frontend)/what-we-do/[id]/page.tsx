@@ -51,7 +51,7 @@ const SkeletonLoader = ({ className = '', lines = 1 }: { className?: string, lin
 
 export default function TrlDetailsPage() {
     const { id } = useParams();
-    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_BACKEND_API_URL}/trl/${id}`, fetcher);
+    const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/trl/${id}`, fetcher);
 
     const trl = data?.data;
 

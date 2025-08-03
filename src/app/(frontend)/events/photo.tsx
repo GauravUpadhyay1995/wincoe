@@ -82,7 +82,7 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
   const [isModalVideoPlaying, setIsModalVideoPlaying] = useState(false);
 
   const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/gallery/list?customLimit=${customLimit}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/gallery/list?customLimit=${customLimit}&from=frontend`,
     fetcher
   );
   useEffect(() => {

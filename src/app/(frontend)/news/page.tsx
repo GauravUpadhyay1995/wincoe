@@ -22,7 +22,7 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
   }, []);
 
   const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/news/list?customLimit=${customLimit}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/news/list?customLimit=${customLimit}&from=frontend`,
     fetcher
   );
 
