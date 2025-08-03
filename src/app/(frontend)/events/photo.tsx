@@ -66,7 +66,7 @@ const imageVariants = {
 };
 export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
   // export default function Gallery() {
-  console.log("customLimit", customLimit)
+  // console.log("customLimit", customLimit)
   const router = useRouter();
   const containerRef = useRef(null);
   const videoRefs = useRef<{ [key: string]: HTMLVideoElement | null }>({});

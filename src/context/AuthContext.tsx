@@ -73,16 +73,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     } catch (error) {
       console.error('Logout API call failed:', error);
     }
-
     // Clear client-side state
     localStorage.removeItem('adminToken');
     localStorage.removeItem('admin');
     setAdmin(null);
     setIsAuthenticatedAdmin(false);
     clearCookies();
-
-    // Always redirect to /admin (or /admin/login if that's the login page)
-    router.replace('/admin');
+    if (typeof window !== 'undefined' && window.location.pathname.includes('/admin')) {
+      console.log('>>>>>>>>');
+      router.replace('/login');
+    }
   }, [router, clearCookies]);
 
   const login = useCallback(

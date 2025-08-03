@@ -6,12 +6,9 @@ import { LoadingProvider } from "@/context/LoadingContext";
 import LoadingScreen from "@/components/common/LoadingScreen";
 import TopLoadingBar from "@/components/common/TopLoadingBar";
 import { Suspense } from 'react';
-
 import { SidebarProvider } from '@/context/SidebarContext';
 import { ThemeProvider } from '@/context/ThemeContext';
 import { AuthProvider } from '@/context/AuthContext';
-import Header from '@/components/home/Header';
-import Footer from '@/components/home/Footer';
 
 const outfit = Outfit({
   subsets: ["latin"],
