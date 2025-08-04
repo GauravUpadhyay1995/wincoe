@@ -66,7 +66,7 @@ export const PATCH = verifyAdmin(
       ...(body.designation && { designation: body.designation }),
       ...(body.department && { department: body.department }),
       ...(body.description && { description: body.description }),
-      ...(profileImageUrl && { profileImageUrl }),
+      ...(profileImage && { profileImage }),
       ...(isActive !== undefined && { isActive }),
       socialLinks: {
         ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
