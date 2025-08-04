@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { fetchWithAuth } from '@/lib/fetchWithAuth';
+import {verifyAdmin}  from '@/lib/verifyAdmin';
 
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
 
@@ -17,7 +17,7 @@ export async function GET(req: NextRequest) {
       );
     }
 
-    const { data, nextResponse } = await fetchWithAuth(
+    const { data, nextResponse } = await verifyAdmin(
       `${API_BASE_URL}/dashboard`,
       {},
       token,
