@@ -10,6 +10,9 @@ import {
   // PageIcon,
   // PieChartIcon,
   // TableIcon,
+  GroupIcon,
+  ShootingStarIcon,
+  FolderIcon,
   ChevronDownIcon,
   GridIcon,
   HorizontaLDots,
@@ -37,6 +40,7 @@ const AppSidebar: React.FC = () => {
   const { canAccess, isLoading } = usePermissions();
 
   // Move navItems inside so canAccess is available
+
   const navItems: NavItem[] = [
     {
       icon: <GridIcon />,
@@ -53,9 +57,32 @@ const AppSidebar: React.FC = () => {
       icon: <DocsIcon />,
       path: "/admin/news",
       subItems: [
-        { name: "View All News", path: "/admin/news", pro: false },
+        { name: "All News", path: "/admin/news", pro: false },
         { name: "Add News", path: "/admin/news/add", pro: false },
       ],
+    },
+    {
+      name: "Teams",
+      icon: <GroupIcon />,
+      path: "/admin/teams",
+      subItems: [
+        { name: "All Teams", path: "/admin/teams", pro: false },
+        { name: "Add Team", path: "/admin/teams/add", pro: false },
+      ],
+    },
+    {
+      name: "TRL",
+      icon: <ShootingStarIcon />,
+      path: "/admin/trl",
+      subItems: [
+        { name: "All TRLs", path: "/admin/trl", pro: false },
+        { name: "Add TRL", path: "/admin/trl/add", pro: false },
+      ],
+    },
+    {
+      name: "Gallery",
+      icon: <FolderIcon />,
+      path: "/admin/gallery",
     },
   ];
 
@@ -330,7 +357,7 @@ const AppSidebar: React.FC = () => {
           ) : (
             <div className="flex items-center">
               <span className="text-xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
-                RK
+                WIN CoE
               </span>
             </div>
           )}
