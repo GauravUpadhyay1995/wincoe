@@ -210,7 +210,7 @@ export default function AdminLoginForm() {
                 Admin Dashboard Access
               </h2>
               <p className="text-purple-100 text-lg mb-8 opacity-90">
-                Manage users, loans, and system settings with comprehensive control.
+                 Welcome to the admin dashboard. Please login to access the features.
               </p>
               {/* <Button
               variant="primary"
