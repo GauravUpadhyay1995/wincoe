@@ -67,6 +67,48 @@ export const EcommerceMetrics = () => {
 
     // fetchData();
   }, []);
+  useEffect(() => {
+  const styles = `
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
+    .animate-fadeIn {
+      animation: fadeIn 0.5s ease-out forwards;
+    }
+
+    .animate-slideIn {
+      animation: slideIn 0.5s ease-out forwards;
+    }
+  `;
+
+  const styleSheet = document.createElement("style");
+  styleSheet.textContent = styles;
+  document.head.appendChild(styleSheet);
+
+  return () => {
+    document.head.removeChild(styleSheet); // Cleanup on unmount
+  };
+}, []);
+
 
   if (loading) {
     return (
@@ -281,39 +323,7 @@ const MetricCard = ({
 };
 
 // Add these styles at the top of the file after the imports
-const styles = `
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-@keyframes slideIn {
-  from {
-    opacity: 0;
-    transform: translateX(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-.animate-fadeIn {
-  animation: fadeIn 0.5s ease-out forwards;
-}
-
-.animate-slideIn {
-  animation: slideIn 0.5s ease-out forwards;
-}
-`;
 
 // Add this right after the styles constant
-const styleSheet = document.createElement("style");
-styleSheet.textContent = styles;
-document.head.appendChild(styleSheet);
+
