@@ -3,13 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
-import dynamic from 'next/dynamic';
-
-const SummernoteEditor = dynamic(
-  () => import('@/components/HtmlEditor/SummernoteEditor'),
-  { ssr: false }
-);
-
+import SummernoteEditor from '@/components/HtmlEditor/SummernoteEditor';
 import FileInput from '@/components/form/input/FileInput';
 import { toast } from 'react-hot-toast';
 import { useSearchParams } from 'next/navigation';
