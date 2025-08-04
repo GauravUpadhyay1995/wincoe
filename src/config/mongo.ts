@@ -13,7 +13,7 @@ export const connectToDB = async () => {
 
   try {
     await mongoose.connect(MONGODB_URI, {
-      dbName: 'db_wincoe',
+      dbName: 'db_wincoe_local',
     });
     isConnected = true;
     console.log('✅ MongoDB connected');

@@ -17,8 +17,8 @@ export default function AdminLoginForm() {
   const { theme } = useTheme();
   const router = useRouter();
   const { login } = useAuth();
-  const [email, setEmail] = useState("rupam@example.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -70,12 +70,13 @@ export default function AdminLoginForm() {
   return (
     <>
 
-      <div className="mt-4 flex items-center justify-center min-h-screen  dark:bg-gray-900 p-4 sm:p-6">
+      <div className="mt-4 flex items-center justify-center min-h-screen   dark:bg-gray-900 p-4 sm:p-6">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5 }}
-          className="flex flex-col lg:flex-row w-full max-w-4xl bg-white dark:bg-gray-800 rounded-3xl shadow-2xl overflow-hidden"
+          className="flex flex-col lg:flex-row w-full max-w-4xl bg-gradient-to-br from-orange-50/70 via-cyan-50/70 to-blue-50/70 dark:from-gray-900 dark:via-gray-950 dark:to-black
+                  border-t border-orange-200/50 dark:border-gray-800/50 rounded-3xl shadow-2xl overflow-hidden"
         >
           {/* Left Panel: Admin Login Form */}
           <div className="w-full lg:w-1/2 p-6 sm:p-10 flex flex-col justify-center">
@@ -192,20 +193,27 @@ export default function AdminLoginForm() {
           </div>
 
           {/* Right Panel: Admin Welcome/Illustration Section */}
-          <div className="hidden lg:flex w-1/2 p-6 sm:p-10 gradient-bg from-purple-500 to-purple-800 dark:from-purple-700 dark:to-purple-900 text-white flex-col items-center justify-center text-center">
+          <div className="hidden lg:flex w-1/2 p-6 sm:p-10 bg-gradient-to-br from-cyan-500 to-orange-500 dark:from-cyan-500 dark:to-purple-900 text-white flex-col items-center justify-center text-center">
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               {/* You can replace this with an actual admin illustration */}
-              <Image
-                src={theme == "dark" ? "/images/logo/wincoe.svg" : "/images/logo/wincoe.svg"}
-                alt="WIN CoE"
-                width={150}
-                height={150}
-                className="mb-6 opacity-90 ml-16"
-              />
+              <div className="flex-shrink-0 z-20">
+            <Link
+              href="/"
+              className="block p-2 rounded-lg transition-all duration-300 transform"
+              aria-label="Go to Home page"
+              
+            >
+              <div className="flex items-center gap-2 sm:gap-3">
+                <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={100} height={0} priority />
+                <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={120} height={0} priority />
+                <Image src="/images/logo/Wadhwani-Foundation.webp" alt="WIN CoE Logo" width={100} height={0} priority />
+              </div>
+            </Link>
+          </div>
               <h2 className="font-bold text-3xl sm:text-4xl mb-4 leading-tight">
                 Admin Dashboard Access
               </h2>

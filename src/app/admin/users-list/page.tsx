@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 export default async function UsersTables() {
   const cookieHeader = cookies().toString();
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/admin/users/list?perPage=25`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/list?perPage=25`, {
     headers: {
       Cookie: cookieHeader,
     },
