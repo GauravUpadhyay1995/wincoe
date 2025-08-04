@@ -8,10 +8,10 @@ import {
 } from '@aws-sdk/client-s3';
 
 const s3 = new S3Client({
-  region: process.env.AWS_REGION!,
+  region: process.env.NEXT_PUBLIC_AWS_REGION!,
   credentials: {
-    accessKeyId: process.env.AWS_ACCESS_KEY_ID!,
-    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY!,
+    accessKeyId: process.env.NEXT_PUBLIC_AWS_ACCESS_KEY_ID!,
+    secretAccessKey: process.env.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY!,
   },
 });
 
@@ -36,7 +36,7 @@ export const uploadBufferToS3 = async (
     const key = `${folder}/${Date.now()}-${cleanFileName}`;
 
     const input: PutObjectCommandInput = {
-      Bucket: process.env.AWS_BUCKET_NAME!,
+      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
       Key: key,
       Body: buffer,
       ContentType: mimetype,
@@ -46,7 +46,7 @@ export const uploadBufferToS3 = async (
     await s3.send(command);
 
     return {
-      url: `https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${key}`,
+      url: `https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${key}`,
       key,
       size: buffer.length,
     };
@@ -62,7 +62,7 @@ export const uploadBufferToS3 = async (
 export const deleteFromS3 = async (url: string, folder: string): Promise<void> => {
   try {
     // Extract key from URL, ensuring it matches the folder prefix
-    if (!url.startsWith(`https://${process.env.AWS_BUCKET_NAME}.s3.${process.env.AWS_REGION}.amazonaws.com/${folder}/`)) {
+    if (!url.startsWith(`https://${process.env.NEXT_PUBLIC_AWS_BUCKET_NAME}.s3.${process.env.NEXT_PUBLIC_AWS_REGION}.amazonaws.com/${folder}/`)) {
       throw new Error(`Invalid URL or folder mismatch: expected ${folder} prefix`);
     }
 
@@ -70,7 +70,7 @@ export const deleteFromS3 = async (url: string, folder: string): Promise<void> =
     if (!key) throw new Error('Unable to extract S3 key from URL');
 
     const command = new DeleteObjectCommand({
-      Bucket: process.env.AWS_BUCKET_NAME!,
+      Bucket: process.env.NEXT_PUBLIC_AWS_BUCKET_NAME!,
       Key: key,
     });
 
