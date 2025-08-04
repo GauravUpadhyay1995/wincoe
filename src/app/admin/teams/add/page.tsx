@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
-import SummernoteEditor from '@/components/HtmlEditor/SummernoteEditor';
+// import SummernoteEditor from '@/components/HtmlEditor/SummernoteEditor';
 import FileInput from '@/components/form/input/FileInput';
 import { toast } from 'react-hot-toast';
 import LoadingScreen from '@/components/common/LoadingScreen';
@@ -229,12 +229,18 @@ export default function AddTeamPage() {
 
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
-          <SummernoteEditor
+          {/* <SummernoteEditor
             value={description}
             onChange={setDescription}
             height={300}
             fullWidth
             className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden"
+          /> */}
+          <textarea
+            value={description}
+             onChange={setDescription}
+            rows={6}
+            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
           />
         </div>
 
