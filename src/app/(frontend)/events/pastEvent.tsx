@@ -10,6 +10,7 @@ type Event = {
   date: string;
   description: string;
   image: string;
+  eventID:string;
 };
 export default function PastEvents({ events = [] }: { events: Event[] }) {
   const containerRef = useRef(null);
@@ -84,7 +85,7 @@ export default function PastEvents({ events = [] }: { events: Event[] }) {
           </motion.h2>
 
           <motion.p
-           
+
             className="text-lg text-gray-600 text-center mb-12 max-w-3xl mx-auto"
           >
             Highlights from our recent activities and gatherings
@@ -92,7 +93,7 @@ export default function PastEvents({ events = [] }: { events: Event[] }) {
 
 
 
-          <div className="flex items-center justify-end mb-4">
+          {/* <div className="flex items-center justify-end mb-4">
 
             <Link
               href="/events"
@@ -100,7 +101,7 @@ export default function PastEvents({ events = [] }: { events: Event[] }) {
             >
               View All →
             </Link>
-          </div>
+          </div> */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {events.map((event, index) => (
               <motion.div

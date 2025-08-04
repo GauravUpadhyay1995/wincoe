@@ -39,7 +39,7 @@ interface Teams {
     department: string;
     profileImage: string;
     status: boolean;
-    created_at: string;
+    createdAt: string;
     updated_at: string;
 }
 
@@ -353,9 +353,18 @@ export default function NewsListTable({ initialData }: Props) {
                                     </TableCell>
 
                                     <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {team.created_at ? new Date(team.created_at).toLocaleDateString() : 'N/A'}
+                                        {team.createdAt ?
+                                            new Date(team.createdAt).toLocaleString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                minute: '2-digit',
+                                                second: '2-digit',
+                                                hour12: true
+                                            })
+                                            : 'N/A'}
                                     </TableCell>
-
                                     <TableCell className="px-5 py-2 text-end text-theme-sm text-gray-600 dark:text-gray-400">
                                         <div className="flex justify-end items-center gap-2">
                                             <div key={`${team.id}_status`} className="flex items-center space-x-2">

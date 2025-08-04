@@ -87,7 +87,6 @@ export const POST = verifyAdmin(
     const docData: CreateDocBody = {
       ...value,
       documents: imageMetaData.length > 0 ? imageMetaData : undefined,
-      isActive: rawBody.isActive === 'true',
       createdBy: new Types.ObjectId(user.id),
       updatedBy: new Types.ObjectId(user.id),
     };

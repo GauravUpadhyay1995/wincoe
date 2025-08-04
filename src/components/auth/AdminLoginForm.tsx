@@ -43,7 +43,7 @@ export default function AdminLoginForm() {
       const responce = await response.json();
       // console.log('Response from admin login:', response.ok, responce);
       if (!response.ok) {
-        throw new Error(responce.message || 'Failed to login');
+        throw new Error(responce.message || 'Failed to login1');
       }
 
       // console.log('>>>>>>>>>>>>', responce);

@@ -10,6 +10,8 @@ export const GET =  asyncHandler(async (req: NextRequest) => {
 
     const searchParams = req.nextUrl.searchParams;
     const search = searchParams.get('search')?.trim() || '';
+        const from = searchParams.get('from')?.trim() || '';
+
     const title = searchParams.get('title')?.trim() || '';
     const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
     const perPage = (searchParams.get('perPage') || '10').toLowerCase();
@@ -30,6 +32,7 @@ export const GET =  asyncHandler(async (req: NextRequest) => {
     if (title) {
       match.title = { $regex: title, $options: 'i' };
     }
+    if (from === 'frontend') match.isActive = true;
 
     const pipeline: any[] = [];
 

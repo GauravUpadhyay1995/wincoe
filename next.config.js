@@ -8,7 +8,7 @@ const nextConfig = {
   },
   images: {
     domains: [
-      's3-todo-bucket-gaurav.s3.ap-south-1.amazonaws.com',
+     'wincoe-bucket.s3.ap-south-1.amazonaws.com',
       'img.youtube.com', // ✅ Add this line
     ],
   },

@@ -1,14 +1,17 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useTheme } from '@/context/ThemeContext';
 import { motion, AnimatePresence } from 'framer-motion';
 import { usePathname } from 'next/navigation';
 
-
 const Header = () => {
+  const desktopNavRef = useRef<HTMLElement>(null);
+  const mobileMenuRef = useRef<HTMLElement>(null);
+  const submenuRefs = useRef<Record<string, HTMLDivElement | null>>({});
+
   const { theme, toggleTheme } = useTheme();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -33,8 +36,10 @@ const Header = () => {
       label: 'More',
       submenu: [
         { href: '/news', label: 'News' },
-        { href: '/steering-committee', label: 'Steering Committee' },
-        { href: '/contact', label: 'Contact' },
+        // { href: '/steering-committee', label: 'Steering Committee' },
+        { href: '/contact-us', label: 'Contact' },
+        { href: '/docs-links', label: 'Docs & Links' },
+        { href: '/what-we-do', label: 'TRLs / What We Do' },
       ]
     },
   ];
@@ -56,19 +61,48 @@ const Header = () => {
   }, [isMobileMenuOpen]);
 
   useEffect(() => {
-    // Set animation flag after first load
     const timer = setTimeout(() => {
       setHasAnimated(true);
-    }, 1000); // Delay slightly to ensure page is loaded
+    }, 1000);
 
     return () => clearTimeout(timer);
   }, []);
 
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      // Close mobile menu when clicking outside
+      if (isMobileMenuOpen && mobileMenuRef.current && !mobileMenuRef.current.contains(event.target as Node)) {
+        setIsMobileMenuOpen(false);
+        closeAllSubmenus();
+      }
+
+      // Close desktop submenus when clicking outside
+      if (desktopNavRef.current && !desktopNavRef.current.contains(event.target as Node)) {
+        closeAllSubmenus();
+      } else {
+        // Check if click is outside any open submenu
+        const clickedOutsideAllSubmenus = Object.entries(openSubmenus).every(([key, isOpen]) => {
+          if (!isOpen) return true;
+          const submenuEl = submenuRefs.current[key];
+          return submenuEl && !submenuEl.contains(event.target as Node);
+        });
+
+        if (clickedOutsideAllSubmenus) {
+          closeAllSubmenus();
+        }
+      }
+    }
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMobileMenuOpen, openSubmenus]);
+
   const toggleSubmenu = (menuKey: string) => {
     setOpenSubmenus(prev => ({
       ...prev,
-      [menuKey]: !prev[menuKey], // Toggle the clicked submenu
-      // Close all other submenus
+      [menuKey]: !prev[menuKey],
       ...Object.keys(prev).reduce((acc, key) => {
         if (key !== menuKey) acc[key] = false;
         return acc;
@@ -80,7 +114,6 @@ const Header = () => {
     setOpenSubmenus({});
   };
 
-  // Animation variants
   const menuItemVariants = {
     hidden: { opacity: 0, x: 50 },
     visible: {
@@ -113,7 +146,7 @@ const Header = () => {
 
   return (
     <header className={`fixed top-0 left-0 w-full z-50 transition-all duration-300 ${isScrolled ? `${theme == 'dark' ? 'bg-gray-900/90' : 'bg-white/90'} backdrop-blur-md shadow-md rounded-b-xl` : 'bg-transparent'}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-0 sm:px-0 lg:px-8">
         {/* Main Header Content */}
         <div className="flex items-center justify-between h-20 relative">
           {/* Logo */}
@@ -133,7 +166,7 @@ const Header = () => {
           </div>
 
           {/* Desktop Navigation */}
-          <nav className="hidden md:flex flex-1 justify-center" aria-label="Main navigation">
+          <nav ref={desktopNavRef} className="hidden md:flex flex-1 justify-center" aria-label="Main navigation">
             <div className="flex items-center space-x-2 lg:space-x-4">
               {navLinks.map((item, index) => (
                 <motion.div
@@ -168,6 +201,7 @@ const Header = () => {
                       <AnimatePresence>
                         {openSubmenus[item.label] && (
                           <motion.div
+                            ref={el => submenuRefs.current[item.label] = el}
                             initial="hidden"
                             animate="visible"
                             exit="exit"
@@ -193,7 +227,6 @@ const Header = () => {
                                   {subItem.label}
                                 </Link>
                               ))}
-
                             </div>
                           </motion.div>
                         )}
@@ -217,7 +250,6 @@ const Header = () => {
                     >
                       {item.label}
                     </Link>
-
                   )}
                 </motion.div>
               ))}
@@ -226,54 +258,6 @@ const Header = () => {
 
           {/* Right-aligned content */}
           <div className="flex items-center space-x-2 sm:space-x-4 ml-auto md:ml-0 z-20">
-            {/* Theme Toggle Button */}
-            {/* <motion.div
-              initial={hasAnimated ? false : "hidden"}
-              animate="visible"
-              variants={menuItemVariants}
-              transition={{ delay: hasAnimated ? 0 : navLinks.length * 0.1 }}
-            >
-              <button
-                onClick={toggleTheme}
-                className={`p-2 rounded-full transition-all duration-300 ease-in-out transform hover:scale-110
-                  ${theme === 'dark'
-                    ? 'text-yellow-400 hover:bg-gray-800 active:scale-95'
-                    : 'text-gray-700 hover:bg-gray-100 active:scale-95'}
-                  focus:outline-none focus:ring-2 focus:ring-orange-500 relative flex items-center justify-center`}
-                aria-label="Toggle theme"
-              >
-                <AnimatePresence mode="wait" initial={false}>
-                  {theme === 'dark' ? (
-                    <motion.div
-                      key="moon"
-                      variants={iconVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="absolute"
-                    >
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z" />
-                      </svg>
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="sun"
-                      variants={iconVariants}
-                      initial="hidden"
-                      animate="visible"
-                      exit="exit"
-                      className="absolute"
-                    >
-                      <svg className="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 3v1m0 16v1m9-9h1M3 12H2m15.325-4.575l.707-.707M6.707 17.293l-.707.707M18.66 18.66l-.707-.707M5.34 5.34l-.707-.707M12 17a5 5 0 100-10 5 5 0 000 10z" />
-                      </svg>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </button>
-            </motion.div> */}
-
             {/* Mobile Menu Toggle Button */}
             <motion.div
               initial={hasAnimated ? false : "hidden"}
@@ -308,6 +292,7 @@ const Header = () => {
         <AnimatePresence>
           {isMobileMenuOpen && (
             <motion.nav
+              ref={mobileMenuRef}
               id="mobile-menu"
               variants={mobileMenuVariants}
               initial="hidden"
@@ -400,8 +385,6 @@ const Header = () => {
                     )}
                   </motion.div>
                 ))}
-
-
               </div>
             </motion.nav>
           )}

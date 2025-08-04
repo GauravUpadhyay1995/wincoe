@@ -14,6 +14,7 @@ export const GET =  asyncHandler(async (req: NextRequest) => {
             search: params.get('search')?.trim() || '',
             title: params.get('title')?.trim(),
         };
+        const from = params.get('from')?.trim() || '';
 
         const page = Math.max(1, parseInt(params.get('page') || '1'));
         const perPage = params.get('perPage') || '10';
@@ -44,6 +45,7 @@ export const GET =  asyncHandler(async (req: NextRequest) => {
         if (filters.title) {
             match.title = { $regex: filters.title, $options: 'i' }; // Case-insensitive partial match
         }
+    if (from === 'frontend') match.isActive = true;
 
         if (Object.keys(match).length) {
             pipeline.push({ $match: match });

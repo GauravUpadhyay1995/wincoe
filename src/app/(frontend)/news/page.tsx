@@ -22,7 +22,7 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
   }, []);
 
   const { data, error, isLoading } = useSWR(
-    `http://localhost:3000/api/v1/admin/news/list?customLimit=${customLimit}`,
+    `${process.env.NEXT_PUBLIC_API_URL}/news/list?customLimit=${customLimit}&from=frontend`,
     fetcher
   );
 
@@ -96,14 +96,15 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
       color: theme === 'dark' ? '#1f2937' : '#ffffff'
     }
   };
-
-  const sectionBgClass =
-    theme === 'dark'
+const sectionBgClass =
+  (customLimit > 3 || customLimit==0)? theme === 'dark'
       ? 'bg-gradient-to-r from-gray-900 via-gray-950 to-black text-gray-100'
-      : 'bg-gradient-to-r from-orange-50 to-cyan-50 text-gray-800';
+      : 'bg-gradient-to-r from-orange-50 to-cyan-50 text-gray-800'
+    : '';
+
 
   return (
-    <section className={`py-20 sm:py-24 ${sectionBgClass}`}>
+    <section className={`py-4 sm:py-4 ${sectionBgClass}`}>
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
         <ScrollAnimation animation="fade" delay={400}>
           {/* Header */}
@@ -182,7 +183,8 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
                     <p className="text-base mb-4 line-clamp-3">{featuredNews.excerpt}</p>
                     <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(featuredNews.createdAt).toLocaleDateString()} • {featuredNews.readTime || '2 min'} read
+                        {new Date(featuredNews.createdAt).toLocaleDateString()} •
+                      
                       </span>
                       <ReadMoreButton itemId={featuredNews._id} />
                     </div>
@@ -224,9 +226,9 @@ export default function NewsDisplay({ customLimit = 0 }: { customLimit?: number 
                         <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-700 dark:text-purple-200">
                           {item.category}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {/* <span className="text-xs text-gray-500 dark:text-gray-400">
                           {item.readTime || '2 min'} read
-                        </span>
+                        </span> */}
                       </div>
                       <h3 className="text-lg sm:text-xl font-bold mb-2 leading-tight">{item.title}</h3>
                       <p className="text-sm mb-4 line-clamp-3 flex-grow">{item.excerpt}</p>

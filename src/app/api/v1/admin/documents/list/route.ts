@@ -9,7 +9,7 @@ export const GET = asyncHandler(async (req: NextRequest) => {
   await connectToDB();
 
   const searchParams = req.nextUrl.searchParams;
-
+  const from = searchParams.get('from')?.trim() || '';
   const search = searchParams.get('search')?.trim() || '';
   const title = searchParams.get('title')?.trim() || '';
   const page = Math.max(1, parseInt(searchParams.get('page') || '1', 10));
@@ -32,6 +32,7 @@ export const GET = asyncHandler(async (req: NextRequest) => {
   const match: Record<string, any> = {};
   if (title) match.title = { $regex: title, $options: 'i' };
   if (publishDate) match.publishDate = { $gte: publishDate };
+  if (from === 'frontend') match.isActive = true;
 
   const pipeline: any[] = [];
   if (search) {

@@ -16,6 +16,7 @@ interface NewsItem {
 }
 
 export default function NewsDetails({ params }: { params: { id: string } }) {
+
     const { theme } = useTheme();
     const [news, setNews] = useState<NewsItem | null>(null);
     const [loading, setLoading] = useState(true);
@@ -23,9 +24,8 @@ export default function NewsDetails({ params }: { params: { id: string } }) {
     // Unwrap the params promise
     const unwrappedParams = use(params);
     const { id } = unwrappedParams;
-    console.log("back", process.env.BACKEND_API_URL)
     useEffect(() => {
-        fetch(`http://localhost:3000/api/v1/admin/news/${id}`)
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/${id}`)
             .then(res => res.json())
             .then(data => {
                 console.log("API Response:", data);
@@ -76,7 +76,7 @@ export default function NewsDetails({ params }: { params: { id: string } }) {
 
             <div className="flex justify-between items-center text-sm mb-4 text-gray-500 dark:text-gray-400">
                 <span>{new Date(news.createdAt).toLocaleDateString()}</span>
-                <span>{news.readTime || '2 min'} read</span>
+                {/* <span>{news.readTime || '2 min'} read</span> */}
             </div>
 
             <motion.img

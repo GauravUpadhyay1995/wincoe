@@ -5,17 +5,18 @@ import { connectToDB } from '@/config/mongo';
 import { Team } from '@/models/Team';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { ApiError } from '@/lib/errorHandler';
-import {verifyAdmin}  from '@/lib/verifyAdmin';
+import { verifyAdmin } from '@/lib/verifyAdmin';
 
 type UpdateTeamBody = {
   name?: string;
   designation?: string;
   department?: string;
-  profileImageUrl?: string;
+  profileImage?: string;
   description?: string;
+  isSteering: boolean;
   socialLinks?: Record<string, string>;
   updatedBy?: string;
-  isActive?:boolean;
+  isActive?: boolean;
 };
 
 export const PATCH = verifyAdmin(
@@ -25,6 +26,7 @@ export const PATCH = verifyAdmin(
     const teamId = params.id;
 
     const formData = await req.formData();
+    console.log("formDATA=", formData)
     const body = Object.fromEntries(formData.entries());
 
     // Parse optional social links
@@ -45,12 +47,13 @@ export const PATCH = verifyAdmin(
 
     // Handle image upload
     const file = formData.get('profileImage') as File | null;
-    let profileImageUrl = existingTeam.profileImageUrl;
+    let profileImage = existingTeam.profileImage;
 
     if (file) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const result = await uploadBufferToS3(buffer, file.type, file.name, 'teams');
-      profileImageUrl = result?.url || profileImageUrl;
+      profileImage = result?.url || profileImage;
+      console.log("profileImage", profileImage)
     }
 
     // Determine new isActive value
@@ -64,8 +67,8 @@ export const PATCH = verifyAdmin(
       ...(body.name && { name: body.name }),
       ...(body.designation && { designation: body.designation }),
       ...(body.department && { department: body.department }),
-      ...(body.description && { description: body.description }),
-      ...(profileImageUrl && { profileImageUrl }),
+      ...(body.isSteering && { isSteering: body.isSteering }),
+      ...(profileImage && { profileImage }),
       ...(isActive !== undefined && { isActive }),
       socialLinks: {
         ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
@@ -73,7 +76,7 @@ export const PATCH = verifyAdmin(
       },
       updatedBy: user.id,
     };
-
+    console.log("updateData=", updateData)
     const updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { $set: { ...updateData, updatedAt: new Date() } },

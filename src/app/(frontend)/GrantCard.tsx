@@ -1,14 +1,17 @@
+"use client";
 import { motion } from 'framer-motion';
 import { FiDollarSign, FiCalendar, FiList, FiArrowRight } from 'react-icons/fi';
+import { useRouter } from 'next/navigation';
+const GrantCard = ({
+  trl_id,
 
-const GrantCard = ({ 
-  title, 
-  amount, 
-  duration, 
-  requirements, 
-  trlRange, 
+  title,
+  amount,
+  duration,
+  requirements,
+  trlRange,
   delay = 0,
-  color = 'orange' 
+  color = 'orange'
 }) => {
   // Color variants
   const colorVariants = {
@@ -43,15 +46,16 @@ const GrantCard = ({
       darkGradient: 'from-emerald-500 to-emerald-600'
     }
   };
-
+  const router = useRouter();
   const colors = colorVariants[color] || colorVariants.orange;
 
   return (
     <motion.div
+
       initial={{ opacity: 0, y: 30, scale: 0.95 }}
       whileInView={{ opacity: 1, y: 0, scale: 1 }}
       whileHover={{ y: -5 }}
-      transition={{ 
+      transition={{
         delay: delay * 0.2,
         type: 'spring',
         stiffness: 200,
@@ -62,32 +66,32 @@ const GrantCard = ({
     >
       {/* Decorative gradient overlay */}
       <div className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 ${colors.gradient} transition-opacity duration-500`}></div>
-      
+
       {/* Card content */}
       <div className="relative z-10 h-full flex flex-col">
         {/* Header with TRL badge */}
         <div className="p-6 pb-4">
           <div className="flex justify-between items-start mb-4">
-            <motion.h3 
+            <motion.h3
               className="text-xl md:text-2xl font-bold text-orange-600 dark:text-white "
               whileHover={{ x: 3 }}
               transition={{ type: 'spring' }}
             >
               {title}
             </motion.h3>
-            <motion.span 
+            <motion.span
               className={`${colors.bg} ${colors.text} text-xs font-semibold px-3 py-1 rounded-full`}
               whileHover={{ scale: 1.05 }}
             >
-               {trlRange}
+              {trlRange}
             </motion.span>
           </div>
         </div>
-        
+
         {/* Card body */}
         <div className="px-6 pb-6 flex-grow">
           {/* Funding amount */}
-          <motion.div 
+          <motion.div
             className="mb-6 p-4 rounded-xl bg-gradient-to-r from-orange-100 to-cyan-50 dark:bg-gray-800 shadow-sm"
             whileHover={{ scale: 1.02 }}
           >
@@ -97,9 +101,9 @@ const GrantCard = ({
             </div>
             <p className={`text-2xl md:text-3xl font-bold ${colors.text}`}>{amount}</p>
           </motion.div>
-          
+
           {/* Duration */}
-          <motion.div 
+          <motion.div
             className="mb-6 p-4 rounded-xl bg-gradient-to-r from-orange-100 to-cyan-50 dark:bg-gray-800 shadow-sm"
             whileHover={{ scale: 1.02 }}
           >
@@ -109,9 +113,9 @@ const GrantCard = ({
             </div>
             <p className="font-medium text-gray-800 dark:text-gray-100">{duration}</p>
           </motion.div>
-          
+
           {/* Requirements */}
-          <motion.div 
+          <motion.div
             className="p-4 rounded-xl bg-gradient-to-r from-orange-100 to-cyan-50 dark:bg-gray-800 shadow-sm"
             whileHover={{ scale: 1.02 }}
           >
@@ -119,7 +123,10 @@ const GrantCard = ({
               <FiList className={`w-5 h-5 ${colors.text} mr-2`} />
               <p className="text-gray-600 dark:text-gray-300 text-sm">Requirements</p>
             </div>
-            <ul className="space-y-2">
+            <div>
+              {requirements}
+            </div>
+            {/* <ul className="space-y-2">
               {requirements.map((req, index) => (
                 <motion.li 
                   key={index}
@@ -133,16 +140,17 @@ const GrantCard = ({
                   {req}
                 </motion.li>
               ))}
-            </ul>
+            </ul> */}
           </motion.div>
         </div>
-        
+
         {/* Footer with CTA */}
-        <motion.div 
+        <motion.div
           className="px-6 pb-6"
           whileHover={{ x: 5 }}
         >
-          <button className={`flex items-center text-sm font-medium ${colors.text} group`}>
+          <button className={`flex items-center text-sm font-medium ${colors.text} group`} onClick={() => router.push(`/what-we-do/${trl_id}`)}
+          >
             Learn more about this grant
             <FiArrowRight className="ml-2 transition-transform duration-300 group-hover:translate-x-1" />
           </button>

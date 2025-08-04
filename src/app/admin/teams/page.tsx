@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 export default async function NewsTables() {
   const cookieHeader = cookies().toString(); // get cookies for API auth
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/admin/teams/list`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teams/list`, {
     headers: {
       Cookie: cookieHeader,
     },

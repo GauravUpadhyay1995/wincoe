@@ -4,12 +4,13 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 type Slide = {
-  bgImage: string;
-  title: string;
-  subtitle: string;
-  cta: string;
-  ctaLink: string;
+  bgImage: string; // Required
+  title?: string;
+  subtitle?: string;
+  cta?: string;
+  ctaLink?: string;
 };
+
 
 type HomeCarouselProps = {
   images: Slide[];
@@ -62,35 +63,44 @@ const HomeCarousel: React.FC<HomeCarouselProps> = ({ images }) => {
           >
             <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
               <div className="text-center px-4 max-w-4xl mx-auto">
-                <motion.h1
-                  className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.2, duration: 0.5 }}
-                >
-                  {slides[currentSlide].title}
-                </motion.h1>
-                <motion.p
-                  className="text-xl md:text-2xl text-white mb-8"
-                  initial={{ y: 50, opacity: 0 }}
-                  animate={{ y: 0, opacity: 1 }}
-                  transition={{ delay: 0.4, duration: 0.5 }}
-                >
-                  {slides[currentSlide].subtitle}
-                </motion.p>
-                <motion.a
-                  href={slides[currentSlide].ctaLink}
-                  className="inline-block px-8 py-3 bg-orange-600 text-white font-medium rounded-full shadow-lg hover:bg-orange-700 transition-colors"
-                  whileHover={{ scale: 1.05 }}
-                  whileTap={{ scale: 0.95 }}
-                  initial={{ scale: 0.9, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                >
-                  {slides[currentSlide].cta}
-                </motion.a>
+                {slides[currentSlide].title && (
+                  <motion.h1
+                    className="text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4"
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2, duration: 0.5 }}
+                  >
+                    {slides[currentSlide].title}
+                  </motion.h1>
+                )}
+
+                {slides[currentSlide].subtitle && (
+                  <motion.p
+                    className="text-xl md:text-2xl text-white mb-8"
+                    initial={{ y: 50, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.4, duration: 0.5 }}
+                  >
+                    {slides[currentSlide].subtitle}
+                  </motion.p>
+                )}
+
+                {slides[currentSlide].cta && slides[currentSlide].ctaLink && (
+                  <motion.a
+                    href={slides[currentSlide].ctaLink}
+                    className="inline-block px-8 py-3 bg-orange-600 text-white font-medium rounded-full shadow-lg hover:bg-orange-700 transition-colors"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    initial={{ scale: 0.9, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.6, duration: 0.5 }}
+                  >
+                    {slides[currentSlide].cta}
+                  </motion.a>
+                )}
               </div>
             </div>
+
           </motion.div>
         </AnimatePresence>
 
