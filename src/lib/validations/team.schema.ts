@@ -26,4 +26,5 @@ export const createTeamSchema = Joi.object({
         'object.base': 'Social links must be an object'
     }),
     isActive: Joi.boolean().optional().default(true),
+    isSteering: Joi.boolean().optional().default(false)
 }).options({ abortEarly: false });

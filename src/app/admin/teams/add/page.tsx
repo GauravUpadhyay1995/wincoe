@@ -33,6 +33,8 @@ export default function AddTeamPage() {
   const [profileImage, setProfileImage] = useState<File | null>(null);
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [socialLinks, setSocialLinks] = useState<{ platform: string; url: string }[]>([]);
+  const [isSteering, setIsSteering] = useState(false);
+
 
   useEffect(() => {
     if (id) {
@@ -51,6 +53,7 @@ export default function AddTeamPage() {
             setDesignation(team.designation);
             setDepartment(team.department);
             setDescription(team.description);
+            setIsSteering(team.isSteering || false); // Ensure boolean value
 
             // Convert object to array for editing
             if (team.socialLinks && typeof team.socialLinks === 'object') {
@@ -84,6 +87,7 @@ export default function AddTeamPage() {
     formData.append('designation', designation);
     formData.append('department', department);
     formData.append('description', description);
+    formData.append('isSteering', isSteering);
 
     const socialObject = socialLinks.reduce((acc, curr) => {
       if (curr.platform && curr.url) acc[curr.platform] = curr.url;
@@ -150,85 +154,109 @@ export default function AddTeamPage() {
       <PageBreadcrumb pageTitle="Add Team" />
       <form
         onSubmit={handleSubmit}
-        className="bg-white dark:bg-gray-900 rounded-lg shadow p-6 border border-gray-100 dark:border-white/10 w-full space-y-6"
+        className="bg-white dark:bg-gray-900 rounded-lg shadow-xl p-6 border border-gray-200 dark:border-gray-700 w-full space-y-6"
       >
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Name</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Name</label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               required
               placeholder="Enter name"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Designation</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Designation</label>
             <input
               type="text"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
               required
               placeholder="Enter designation"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Department</label>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Department</label>
             <input
               type="text"
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
               required
               placeholder="Enter department"
-              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
+          </div>
+
+          <div className="">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Upload Profile Image</label>
+            <div className="flex items-center gap-4">
+              {profileImageUrl && !profileImage && (
+                <div className="flex-shrink-0">
+                  <img
+                    src={profileImageUrl}
+                    alt="Uploaded profile"
+                    className="w-28 h-28 object-cover rounded-lg cursor-pointer hover:opacity-80 border border-gray-200 dark:border-gray-600 transition"
+                    onClick={() => window.open(profileImageUrl, '_blank')}
+                  />
+                </div>
+              )}
+              <FileInput
+                onChange={(e) => setProfileImage(e.target.files?.[0] || null)}
+                required={!id}
+                className="w-full"
+              />
+            </div>
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Category</label>
+            <select
+              value={isSteering ? 'true' : 'false'}
+              onChange={(e) => setIsSteering(e.target.value === 'true')}
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+            >
+              <option value="false">Core Team</option>
+              <option value="true">Steering Committee Team</option>
+            </select>
           </div>
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Upload Profile Image</label>
-
-          {profileImageUrl && !profileImage && (
-            <div className="mb-2">
-              <img
-                src={profileImageUrl}
-                alt="Uploaded profile"
-                className="w-28 h-28 object-cover rounded cursor-pointer hover:opacity-80 border"
-                onClick={() => window.open(profileImageUrl, '_blank')}
-              />
-            </div>
-          )}
-
-          <FileInput onChange={(e) => setProfileImage(e.target.files?.[0] || null)} required={!id} />
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
+          <SummernoteEditor
+            value={description}
+            onChange={setDescription}
+            height={300}
+            fullWidth
+            className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden"
+          />
         </div>
 
         <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">Description</label>
-          <SummernoteEditor value={description} onChange={setDescription} height={300} fullWidth />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-white mb-2">Social Media Links</label>
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Social Media Links</label>
           <div className="space-y-3">
             {socialLinks.map((link, index) => (
-              <div key={index} className="flex gap-3 items-center text-gray-700 dark:text-white">
-                <span className="capitalize text-sm w-24 text-gray-700 dark:text-white">{link.platform}</span>
+              <div key={index} className="flex gap-3 items-center">
+                <span className="capitalize text-sm w-24 text-gray-700 dark:text-gray-300">
+                  {link.platform}
+                </span>
                 <input
                   type="url"
                   placeholder="https://..."
                   value={link.url}
                   onChange={(e) => updateSocialLink(index, e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-700 rounded-md bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white"
+                  className="flex-1 px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                 />
                 <button
                   type="button"
                   onClick={() => removeSocialLink(link.platform)}
-                  className="text-red-500 text-lg font-bold px-2 text-gray-700 dark:text-white"
+                  className="text-red-500 hover:text-red-600 dark:hover:text-red-400 text-lg font-bold px-2 transition"
                 >
                   ×
                 </button>
@@ -242,7 +270,7 @@ export default function AddTeamPage() {
                     if (e.target.value) addNewSocialLink(e.target.value);
                     e.target.selectedIndex = 0;
                   }}
-                  className="px-3 py-2 border rounded-md bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-white"
+                  className="px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-700 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
                 >
                   <option value="">+ Add Platform</option>
                   {availableOptions.map((platform) => (
@@ -256,20 +284,28 @@ export default function AddTeamPage() {
           </div>
         </div>
 
-        <div className="flex justify-end items-center mt-6 gap-3 w-full flex-wrap">
+        <div className="flex justify-end items-center gap-3 pt-4">
           <button
             type="button"
             onClick={() => router.back()}
-            className="bg-gray-200 text-gray-800 px-6 py-2 rounded-md text-sm hover:bg-gray-300 transition"
+            className="px-6 py-2 rounded-lg text-sm font-medium bg-gray-200 hover:bg-gray-300 text-gray-800 dark:bg-gray-700 dark:hover:bg-gray-600 dark:text-white transition"
           >
             Back
           </button>
           <button
             type="submit"
             disabled={isLoading}
-            className="bg-blue-600 text-white px-6 py-2 rounded-md text-sm hover:bg-blue-700 transition"
+            className="px-6 py-2 rounded-lg text-sm font-medium bg-gradient-to-r from-orange-500 to-pink-500 text-white hover:from-orange-600 hover:to-pink-600 disabled:opacity-70 transition"
           >
-            {isLoading ? (id ? 'Updating...' : 'Saving...') : id ? 'Update Team' : 'Save Team'}
+            {isLoading ? (
+              <span className="flex items-center justify-center">
+                <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                {id ? 'Updating...' : 'Saving...'}
+              </span>
+            ) : id ? 'Update Team' : 'Save Team'}
           </button>
         </div>
       </form>

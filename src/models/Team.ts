@@ -34,6 +34,10 @@ const teamSchema = new Schema({
     type: Boolean,
     default: true,
   },
+  isSteering: {
+    type: Boolean,
+    default: false,
+  },
   createdBy: {
     type: Types.ObjectId,
     ref: 'User',

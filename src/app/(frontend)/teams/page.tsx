@@ -15,6 +15,7 @@ type TeamMember = {
   department: string;
   profileImage: string;
   description?: string;
+  isSteering: boolean;
   socialLinks?: {
     facebook?: string;
     linkedin?: string;
@@ -112,6 +113,8 @@ export default function UniversityTeams() {
   if (!data?.data?.teams?.length) return <EmptyState />;
 
   const teamMembers = data.data.teams;
+  const steeringMembers = teamMembers.filter(member => member.isSteering);
+  const regularMembers = teamMembers.filter(member => !member.isSteering);
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-orange-50 to-cyan-50">
@@ -146,87 +149,66 @@ export default function UniversityTeams() {
                   viewport={{ once: true, margin: "-100px" }}
                   variants={containerVariants}
                 >
-                  <motion.h3
-                    className="text-2xl font-bold text-gray-800 dark:text-white mb-8 border-b pb-2 border-gray-200 dark:border-gray-700"
-                    initial={{ opacity: 0, x: -20 }}
-                    whileInView={{ opacity: 1, x: 0, transition: { delay: 0.2 } }}
-                    viewport={{ once: true }}
-                  >
-                    Our Team
-                  </motion.h3>
-
-                  <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    {teamMembers.map((member: TeamMember, i: number) => (
-                      <motion.div
-                        key={member._id}
-                        className="shadow-xl text-center relative overflow-hidden border border-gray-100 group cursor-pointer bg-gradient-to-r from-orange-50 to-cyan-50 p-8 rounded-3xl"
-                        variants={cardVariants}
-                        whileHover="hover"
-                        onClick={() => handleMemberClick(member)}
+                  {/* Steering Committee Section */}
+                  {steeringMembers.length > 0 && (
+                    <>
+                     
+                       <motion.h3
+                        className="text-xl md:text-3xl font-bold text-center  text-gray-900 dark:text-white mb-6"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={titleVariants}
                       >
-                        <motion.div
-                          className="w-40 h-40 mx-auto mb-6 relative rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl group-hover:border-orange-400 transition-all duration-500"
-                          variants={imageVariants}
-                        >
-                          <Image
-                            src={member.profileImage}
-                            alt={member.name}
-                            fill
-                            className="object-cover"
+                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Steering Committee</span>
+                      </motion.h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
+                        {steeringMembers.map((member: TeamMember, i: number) => (
+                          <TeamMemberCard
+                            key={member._id}
+                            member={member}
+                            index={i}
+                            variants={{
+                              card: cardVariants,
+                              image: imageVariants
+                            }}
+                            onClick={handleMemberClick}
                           />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                        </motion.div>
+                        ))}
+                      </div>
+                    </>
+                  )}
 
-                        <motion.h3
-                          className="text-2xl font-bold text-gray-800 dark:text-white mb-2"
-                          initial={{ opacity: 0, y: 10 }}
-                          whileInView={{ opacity: 1, y: 0, transition: { delay: 0.2 + i * 0.05 } }}
-                          viewport={{ once: true }}
-                        >
-                          {member.name}
-                        </motion.h3>
-                        <motion.p
-                          className="text-md text-gray-500 dark:text-gray-400 mb-4 font-medium"
-                          initial={{ opacity: 0, y: 10 }}
-                          whileInView={{ opacity: 1, y: 0, transition: { delay: 0.3 + i * 0.05 } }}
-                          viewport={{ once: true }}
-                        >
-                          {member.designation}
-                        </motion.p>
+                  {/* Regular Team Members Section */}
+                  {regularMembers.length > 0 && (
+                    <>
+                         <motion.h3
+                        className="text-xl md:text-3xl font-bold text-center  text-gray-900 dark:text-white mb-6"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={titleVariants}
+                      >
+                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Core Team</span>
+                      </motion.h3>
 
-                        {member.department && (
-                          <motion.p
-                            className="text-sm text-orange-500 dark:text-orange-400 mb-6"
-                            initial={{ opacity: 0, y: 10 }}
-                            whileInView={{ opacity: 1, y: 0, transition: { delay: 0.4 + i * 0.05 } }}
-                            viewport={{ once: true }}
-                          >
-                            {member.department}
-                          </motion.p>
-                        )}
-
-                        <motion.div
-                          className="flex justify-center gap-4 mt-3"
-                          initial={{ opacity: 0 }}
-                          whileInView={{ opacity: 1, transition: { delay: 0.5 + i * 0.05 } }}
-                          viewport={{ once: true }}
-                        >
-                          {member.socialLinks?.linkedin && (
-                            <SocialLink href={member.socialLinks.linkedin} icon={<FiLinkedin />} color="blue" />
-                          )}
-                          {member.socialLinks?.twitter && (
-                            <SocialLink href={member.socialLinks.twitter} icon={<FiTwitter />} color="sky" />
-                          )}
-                          {member.socialLinks?.email && (
-                            <SocialLink href={`mailto:${member.socialLinks.email}`} icon={<FiMail />} color="rose" />
-                          )}
-                          {member.socialLinks?.facebook && (
-                            <SocialLink href={member.socialLinks.facebook} icon={<FiFacebook />} color="indigo" />
-                          )}
-                        </motion.div>
-                      </motion.div>
-                    ))}
-                  </div>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        {regularMembers.map((member: TeamMember, i: number) => (
+                          <TeamMemberCard
+                            key={member._id}
+                            member={member}
+                            index={i}
+                            variants={{
+                              card: cardVariants,
+                              image: imageVariants
+                            }}
+                            onClick={handleMemberClick}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                 </motion.div>
               </div>
             </div>
@@ -234,9 +216,9 @@ export default function UniversityTeams() {
         </section>
       </main>
 
-      <MemberModal 
-        member={selectedMember} 
-        onClose={closeModal} 
+      <MemberModal
+        member={selectedMember}
+        onClose={closeModal}
         variants={{ modal: modalVariants, backdrop: backdropVariants }}
       />
 
@@ -245,6 +227,86 @@ export default function UniversityTeams() {
   );
 }
 
+// Team Member Card Component
+function TeamMemberCard({ member, index, variants, onClick }: {
+  member: TeamMember;
+  index: number;
+  variants: {
+    card: typeof cardVariants;
+    image: typeof imageVariants;
+  };
+  onClick: (member: TeamMember) => void;
+}) {
+  return (
+    <motion.div
+      className="shadow-xl text-center relative overflow-hidden border border-gray-100 group cursor-pointer bg-gradient-to-r from-orange-50 to-cyan-50 p-8 rounded-3xl"
+      variants={variants.card}
+      whileHover="hover"
+      onClick={() => onClick(member)}
+    >
+      <motion.div
+        className="w-40 h-40 mx-auto mb-6 relative rounded-full overflow-hidden border-4 border-white dark:border-gray-800 shadow-2xl group-hover:border-orange-400 transition-all duration-500"
+        variants={variants.image}
+      >
+        <Image
+          src={member.profileImage}
+          alt={member.name}
+          fill
+          className="object-cover"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+      </motion.div>
+
+      <motion.h3
+        className="text-2xl font-bold text-gray-800 dark:text-white mb-2"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0, transition: { delay: 0.2 + index * 0.05 } }}
+        viewport={{ once: true }}
+      >
+        {member.name}
+      </motion.h3>
+      <motion.p
+        className="text-md text-gray-500 dark:text-gray-400 mb-4 font-medium"
+        initial={{ opacity: 0, y: 10 }}
+        whileInView={{ opacity: 1, y: 0, transition: { delay: 0.3 + index * 0.05 } }}
+        viewport={{ once: true }}
+      >
+        {member.designation}
+      </motion.p>
+
+      {member.department && (
+        <motion.p
+          className="text-sm text-orange-500 dark:text-orange-400 mb-6"
+          initial={{ opacity: 0, y: 10 }}
+          whileInView={{ opacity: 1, y: 0, transition: { delay: 0.4 + index * 0.05 } }}
+          viewport={{ once: true }}
+        >
+          {member.department}
+        </motion.p>
+      )}
+
+      <motion.div
+        className="flex justify-center gap-4 mt-3"
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 1, transition: { delay: 0.5 + index * 0.05 } }}
+        viewport={{ once: true }}
+      >
+        {member.socialLinks?.linkedin && (
+          <SocialLink href={member.socialLinks.linkedin} icon={<FiLinkedin />} color="blue" />
+        )}
+        {member.socialLinks?.twitter && (
+          <SocialLink href={member.socialLinks.twitter} icon={<FiTwitter />} color="sky" />
+        )}
+        {member.socialLinks?.email && (
+          <SocialLink href={`mailto:${member.socialLinks.email}`} icon={<FiMail />} color="rose" />
+        )}
+        {member.socialLinks?.facebook && (
+          <SocialLink href={member.socialLinks.facebook} icon={<FiFacebook />} color="indigo" />
+        )}
+      </motion.div>
+    </motion.div>
+  );
+}
 // Sub-components for better organization
 function LoadingState() {
   return (
@@ -259,7 +321,7 @@ function ErrorState() {
     <div className="min-h-screen flex items-center justify-center">
       <div className="text-center">
         <p className="text-red-500 mb-4">Failed to load team members</p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="px-4 py-2 bg-orange-500 text-white rounded hover:bg-orange-600"
         >
@@ -293,8 +355,8 @@ function SocialLink({ href, icon, color }: { href: string; icon: React.ReactNode
   );
 }
 
-function MemberModal({ member, onClose, variants }: { 
-  member: TeamMember | null; 
+function MemberModal({ member, onClose, variants }: {
+  member: TeamMember | null;
   onClose: () => void;
   variants: {
     modal: typeof modalVariants;
@@ -368,11 +430,19 @@ function MemberModal({ member, onClose, variants }: {
                     {member.department}
                   </p>
                 )}
-                <div className="prose dark:prose-invert max-w-none">
+                <motion.div
+                  className="prose dark:prose-invert max-w-none text-gray-700 dark:text-gray-300 "
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  dangerouslySetInnerHTML={{ __html: member.description }}
+                />
+                {/* <div className="prose dark:prose-invert max-w-none">
                   <p className="text-gray-700 dark:text-gray-300">
+                     
                     {member.description || "No description available."}
                   </p>
-                </div>
+                </div> */}
               </div>
             </div>
           </div>
@@ -396,3 +466,5 @@ function SocialButton({ href, icon, color }: { href: string; icon: React.ReactNo
     </motion.a>
   );
 }
+
+// Rest of the components remain the same (LoadingState, ErrorState, EmptyState, SocialLink, MemberModal, SocialButton)

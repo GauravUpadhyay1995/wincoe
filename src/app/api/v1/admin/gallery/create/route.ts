@@ -94,7 +94,6 @@ export const POST = verifyAdmin(
     const galleryData: CreateGalleryBody = {
       ...value,
       images: imageMetaData.length > 0 ? imageMetaData : undefined,
-      isActive: rawBody.isActive === 'true',
       createdBy: new Types.ObjectId(user.id),
       updatedBy: new Types.ObjectId(user.id),
     };

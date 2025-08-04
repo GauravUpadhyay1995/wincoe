@@ -6,7 +6,7 @@ import { Team } from '@/models/Team';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { createTeamSchema } from '@/lib/validations/team.schema';
 import { Types } from 'mongoose';
-import {verifyAdmin}  from '@/lib/verifyAdmin';
+import { verifyAdmin } from '@/lib/verifyAdmin';
 
 type CreateTeamBody = {
   name: string;
@@ -75,7 +75,6 @@ export const POST = verifyAdmin(
     const teamData: CreateTeamBody = {
       ...value,
       profileImage: profileImageUrl || '',
-      isActive: rawBody.isActive === 'true',
       createdBy: new Types.ObjectId(user.id),
       updatedBy: new Types.ObjectId(user.id),
     };

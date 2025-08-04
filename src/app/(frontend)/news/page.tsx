@@ -183,7 +183,8 @@ const sectionBgClass =
                     <p className="text-base mb-4 line-clamp-3">{featuredNews.excerpt}</p>
                     <div className="flex justify-between items-center mt-auto pt-4 border-t border-gray-200 dark:border-gray-700">
                       <span className="text-sm text-gray-500 dark:text-gray-400">
-                        {new Date(featuredNews.createdAt).toLocaleDateString()} • {featuredNews.readTime || '2 min'} read
+                        {new Date(featuredNews.createdAt).toLocaleDateString()} •
+                      
                       </span>
                       <ReadMoreButton itemId={featuredNews._id} />
                     </div>
@@ -225,9 +226,9 @@ const sectionBgClass =
                         <span className="text-xs font-semibold px-3 py-1 rounded-full bg-purple-100 text-purple-800 dark:bg-purple-700 dark:text-purple-200">
                           {item.category}
                         </span>
-                        <span className="text-xs text-gray-500 dark:text-gray-400">
+                        {/* <span className="text-xs text-gray-500 dark:text-gray-400">
                           {item.readTime || '2 min'} read
-                        </span>
+                        </span> */}
                       </div>
                       <h3 className="text-lg sm:text-xl font-bold mb-2 leading-tight">{item.title}</h3>
                       <p className="text-sm mb-4 line-clamp-3 flex-grow">{item.excerpt}</p>

@@ -76,7 +76,7 @@ export default function NewsDetails({ params }: { params: { id: string } }) {
 
             <div className="flex justify-between items-center text-sm mb-4 text-gray-500 dark:text-gray-400">
                 <span>{new Date(news.createdAt).toLocaleDateString()}</span>
-                <span>{news.readTime || '2 min'} read</span>
+                {/* <span>{news.readTime || '2 min'} read</span> */}
             </div>
 
             <motion.img
