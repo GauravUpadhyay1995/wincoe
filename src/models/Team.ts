@@ -6,29 +6,35 @@ const teamSchema = new Schema({
     required: true,
     trim: true,
   },
-  designation: {
-    type: String,
-    required: true,
-    trim: true,
-  },
-  department: {
-    type: String,
-    required: true,
-    trim: true,
+  showingOrder: {
+    type: Number,
+    default: null,
+    required: false
   },
   profileImage: {
     type: String, // URL to S3
+    required: true,
+  },
+  designation: {
+    type: String,
+    trim: true,
+    required: false,
+  },
+  department: {
+    type: String,
+    trim: true,
     required: false,
   },
   socialLinks: {
     type: Map,
-    of: String, // URL as string
+    of: String,
     default: {},
+    required: false,
   },
   description: {
     type: String,
-    required: false,
     trim: true,
+    required: false,
   },
   isActive: {
     type: Boolean,
@@ -41,12 +47,10 @@ const teamSchema = new Schema({
   createdBy: {
     type: Types.ObjectId,
     ref: 'User',
-    required: true,
   },
   updatedBy: {
     type: Types.ObjectId,
     ref: 'User',
-    required: true,
   },
 }, { timestamps: true });
 

@@ -314,6 +314,7 @@ export default function NewsListTable({ initialData }: Props) {
                         <TableHeader className="border-b border-gray-100 dark:border-white/[0.05]">
                             <TableRow>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Sr. No.</TableCell>
+                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Frontend Position.</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Name</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Designation</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Department</TableCell>
@@ -328,6 +329,9 @@ export default function NewsListTable({ initialData }: Props) {
                                 <TableRow key={team._id}>
                                     <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
                                         {(currentPage - 1) * pageSize + index + 1}
+                                    </TableCell>
+                                    <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate whitespace-nowrap overflow-hidden text-ellipsis" title={team.showingOrder}>
+                                        {team.showingOrder}
                                     </TableCell>
 
                                     <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate whitespace-nowrap overflow-hidden text-ellipsis" title={team.name}>

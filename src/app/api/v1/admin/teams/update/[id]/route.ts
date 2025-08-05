@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { asyncHandler } from '@/lib/asyncHandler';
-import { withAuth } from '@/lib/withAuth';
 import { connectToDB } from '@/config/mongo';
 import { Team } from '@/models/Team';
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
@@ -13,7 +12,8 @@ type UpdateTeamBody = {
   department?: string;
   profileImage?: string;
   description?: string;
-  isSteering: boolean;
+  isSteering?: boolean;
+  showingOrder?: number | null;
   socialLinks?: Record<string, string>;
   updatedBy?: string;
   isActive?: boolean;
@@ -26,12 +26,11 @@ export const PATCH = verifyAdmin(
     const teamId = params.id;
 
     const formData = await req.formData();
-    // console.log("formDATA=", formData)
     const body = Object.fromEntries(formData.entries());
 
-    // Parse optional social links
+    // ✅ Parse socialLinks (optional)
     let parsedSocialLinks: Record<string, string> = {};
-    if (typeof body.socialLinks == 'string') {
+    if (typeof body.socialLinks === 'string') {
       try {
         parsedSocialLinks = JSON.parse(body.socialLinks);
       } catch {
@@ -39,46 +38,50 @@ export const PATCH = verifyAdmin(
       }
     }
 
-
-    // Check if team exists
+    // ✅ Check if team exists
     const existingTeam = await Team.findById(teamId);
     if (!existingTeam) {
       return NextResponse.json({ success: false, message: 'Team not found' }, { status: 404 });
     }
 
-    // Handle image upload
+    // ✅ Handle profile image upload (optional)
     const file = formData.get('profileImage') as File | null;
     let profileImage = existingTeam.profileImage;
-
     if (file) {
       const buffer = Buffer.from(await file.arrayBuffer());
       const result = await uploadBufferToS3(buffer, file.type, file.name, 'teams');
       profileImage = result?.url || profileImage;
-      // console.log("profileImage", profileImage)
     }
 
-    // Determine new isActive value
-    let isActive: boolean | undefined = undefined;
+    // ✅ Toggle isActive if explicitly provided
+    let isActive: boolean | undefined;
     if (body.hasOwnProperty('isActive')) {
-      isActive = !existingTeam.isActive; // toggle current value
+      const input = body.isActive?.toString().toLowerCase();
+      isActive = input === 'true' ? true : input === 'false' ? false : !existingTeam.isActive;
     }
 
-    // Final data
+    // ✅ Convert isSteering string to boolean
+    let isSteering: boolean | undefined;
+    if (body.hasOwnProperty('isSteering')) {
+      const input = body.isSteering?.toString().toLowerCase();
+      isSteering = input === 'true';
+    }
+
+    // ✅ Build update object
     const updateData: UpdateTeamBody = {
       ...(body.name && { name: body.name }),
       ...(body.designation && { designation: body.designation }),
       ...(body.department && { department: body.department }),
-      ...(body.isSteering && { isSteering: body.isSteering }),
+      ...(body.description && { description: body.description }),
+      ...(isSteering !== undefined && { isSteering }),
+      ...(body.showingOrder !== undefined && { showingOrder: body.showingOrder }),
       ...(profileImage && { profileImage }),
+      ...(parsedSocialLinks && Object.keys(parsedSocialLinks).length && { socialLinks: parsedSocialLinks }),
       ...(isActive !== undefined && { isActive }),
-      // socialLinks: {
-      //   ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
-      //   ...parsedSocialLinks,
-      // },
-      socialLinks: parsedSocialLinks,
       updatedBy: user.id,
     };
-    // console.log("updateData=", updateData)
+
+    // ✅ Perform update
     const updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { $set: { ...updateData, updatedAt: new Date() } },
