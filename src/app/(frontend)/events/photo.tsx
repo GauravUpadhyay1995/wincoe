@@ -87,7 +87,7 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
   const [playingVideoId, setPlayingVideoId] = useState<string | null>(null);
 
   const { data, error, isLoading } = useSWR(
-    `${process.env.NEXT_PUBLIC_API_URL}/gallery/list?customLimit=${customLimit}&from=frontend`,
+    `${process.env.NEXT_PUBLIC_API_URL}/gallery/list?customLimit=${customLimit}&from=frontend&perPage=10000&page=1`,
     fetcher
   );
   useEffect(() => {
