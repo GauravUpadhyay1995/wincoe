@@ -1,6 +1,6 @@
 "use client";
 import { motion } from 'framer-motion';
-import { FiDollarSign, FiCalendar, FiList, FiArrowRight } from 'react-icons/fi';
+import {  FiCalendar, FiList, FiArrowRight } from 'react-icons/fi';
 import { useRouter } from 'next/navigation';
 const GrantCard = ({
   trl_id,
@@ -96,7 +96,7 @@ const GrantCard = ({
             whileHover={{ scale: 1.02 }}
           >
             <div className="flex items-center mb-2">
-              <FiDollarSign className={`w-5 h-5 ${colors.text} mr-2`} />
+              
               <p className="text-gray-600 dark:text-gray-300 text-sm">Funding Amount</p>
             </div>
             <p className={`text-2xl md:text-3xl font-bold ${colors.text}`}>{amount}</p>

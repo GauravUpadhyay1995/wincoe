@@ -3,7 +3,7 @@
 import { useParams } from 'next/navigation';
 import useSWR from 'swr';
 import { motion } from 'framer-motion';
-import { FiArrowLeft, FiClock, FiDollarSign, FiList, FiFileText } from 'react-icons/fi';
+import { FiArrowLeft, FiClock,  FiList, FiFileText } from 'react-icons/fi';
 import Link from 'next/link';
 
 const fetcher = (url: string) => fetch(url).then(res => res.json());
@@ -153,7 +153,7 @@ export default function TrlDetailsPage() {
                                 whileHover={{ scale: 1.05 }}
                                 className="inline-flex items-center bg-green-100 text-green-800 text-sm font-medium px-3 py-1 rounded-full"
                             >
-                                <FiDollarSign className="mr-1" /> {trl.amount}
+                                {trl.amount}
                             </motion.span>
                         </div>
                     </motion.div>
