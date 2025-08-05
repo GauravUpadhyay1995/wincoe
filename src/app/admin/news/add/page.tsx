@@ -3,12 +3,8 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
-// import dynamic from 'next/dynamic';
+import SummernoteEditor from '@/components/HtmlEditor/SummernoteEditor';
 
-// const SummernoteEditor = dynamic(
-//   () => import('@/components/HtmlEditor/SummernoteEditor'),
-//   { ssr: false }
-// );
 
 import FileInput from '@/components/form/input/FileInput';
 import { toast } from 'react-hot-toast';
@@ -156,7 +152,7 @@ export default function AddNewsPage() {
         </div>
 
         {/* Summernote Description Editor */}
-        {/* <div>
+        <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
             Description
           </label>
@@ -167,18 +163,8 @@ export default function AddNewsPage() {
             fullWidth
           />
 
-        </div> */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
-            Description
-          </label>
-          <textarea
-            value={description}
-            onChange={(e) => setDescription(e.target.value)}
-            rows={6}
-            className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 dark:bg-gray-800 dark:text-white"
-          />
         </div>
+     
 
         <div className="flex justify-end items-center mt-6 gap-3 w-full flex-wrap">
           {/* Back button (right) */}
