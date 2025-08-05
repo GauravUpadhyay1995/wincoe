@@ -34,7 +34,7 @@ export default function AddTeamPage() {
   const [profileImageUrl, setProfileImageUrl] = useState<string | null>(null);
   const [socialLinks, setSocialLinks] = useState<{ platform: string; url: string }[]>([]);
   const [isSteering, setIsSteering] = useState(false);
-
+  const titleOfPage = id ? 'Update Team' : 'Create Team';
 
   useEffect(() => {
     if (id) {
@@ -95,6 +95,7 @@ export default function AddTeamPage() {
     }, {} as Record<string, string>);
     formData.append('socialLinks', JSON.stringify(socialObject));
 
+
     if (profileImage) formData.append('profileImage', profileImage);
 
     const url = id ? `/api/v1/admin/teams/update/${id}` : `/api/v1/admin/teams/create`;
@@ -115,7 +116,7 @@ export default function AddTeamPage() {
     toast.promise(promise, {
       loading: id ? 'Updating team...' : 'Creating team...',
       success: () => {
-        router.push('/admin/teams');
+        // router.push('/admin/teams');
         return id ? 'Team updated successfully!' : 'Team created successfully!';
       },
       error: (err) => err.message || 'Something went wrong',
@@ -151,7 +152,7 @@ export default function AddTeamPage() {
 
   return (
     <div>
-      <PageBreadcrumb pageTitle="Add Team" />
+      <PageBreadcrumb pageTitle={titleOfPage} />
       <form
         onSubmit={handleSubmit}
         className="bg-white dark:bg-gray-900 rounded-lg shadow-xl p-6 border border-gray-200 dark:border-gray-700 w-full space-y-6"

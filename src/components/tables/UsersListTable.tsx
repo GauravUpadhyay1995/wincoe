@@ -709,7 +709,23 @@ export default function UsersListTable({ initialData }: Props) {
                             {!loading && userList.map((user, index) => (
                                 <TableRow key={user._id}>
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">{(currentPage - 1) * pageSize + index + 1}</TableCell>
-                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString() : 'N/A'}<br></br>{user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString() : 'N/A'}</TableCell>
+                                    <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user?.createdAt ? new Date(user.createdAt).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                // minute: '2-digit',
+                                                // second: '2-digit',
+                                                hour12: true
+                                            }) : 'N/A'}<br></br>{user?.updatedAt ? new Date(user.updatedAt).toLocaleDateString('en-US', {
+                                                year: 'numeric',
+                                                month: 'short',
+                                                day: 'numeric',
+                                                hour: '2-digit',
+                                                // minute: '2-digit',
+                                                // second: '2-digit',
+                                                hour12: true
+                                            }) : 'N/A'}</TableCell>
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400"> {user.name}</TableCell>
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">{user.email}</TableCell>
                                     <TableCell className="px-5 py-1 text-start text-theme-sm text-gray-600 dark:text-gray-400">

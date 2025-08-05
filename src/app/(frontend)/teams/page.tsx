@@ -3,7 +3,17 @@
 import React from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiLinkedin, FiTwitter, FiMail, FiX, FiFacebook } from 'react-icons/fi';
+import {
+  FiFacebook,
+  FiLinkedin,
+  FiInstagram,
+  FiTwitter,
+  FiGithub,
+  FiMail,
+  FiGlobe,
+  FiYoutube,
+  FiX,
+} from "react-icons/fi";
 import useSWR from 'swr';
 import Header from '@/components/home/Header';
 import Footer from '@/components/home/Footer';
@@ -16,12 +26,21 @@ type TeamMember = {
   profileImage: string;
   description?: string;
   isSteering: boolean;
-  socialLinks?: {
-    facebook?: string;
-    linkedin?: string;
-    twitter?: string;
-    email?: string;
-  };
+  socialLinks: Record<string, string>; // e.g., { linkedin: "...", github: "...", x: "..." }
+};
+
+const socialIconMap: Record<
+  string,
+  { icon: JSX.Element; color: string; isEmail?: boolean }
+> = {
+  facebook: { icon: <FiFacebook />, color: "indigo" },
+  linkedin: { icon: <FiLinkedin />, color: "blue" },
+  instagram: { icon: <FiInstagram />, color: "pink" },
+  twitter: { icon: <FiTwitter />, color: "sky" },
+  github: { icon: <FiGithub />, color: "gray" },
+  gmail: { icon: <FiMail />, color: "rose", isEmail: true },
+  youtube: { icon: <FiYoutube />, color: "red" },
+  portfolio: { icon: <FiGlobe />, color: "green" }, // for personal website
 };
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
@@ -152,15 +171,15 @@ export default function UniversityTeams() {
                   {/* Steering Committee Section */}
                   {steeringMembers.length > 0 && (
                     <>
-                     
-                       <motion.h3
+
+                      <motion.h3
                         className="text-xl md:text-3xl font-bold text-center  text-gray-900 dark:text-white mb-6"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={titleVariants}
                       >
-                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Steering Committee</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Steering Committee</span>
                       </motion.h3>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8 mb-16">
@@ -183,14 +202,14 @@ export default function UniversityTeams() {
                   {/* Regular Team Members Section */}
                   {regularMembers.length > 0 && (
                     <>
-                         <motion.h3
+                      <motion.h3
                         className="text-xl md:text-3xl font-bold text-center  text-gray-900 dark:text-white mb-6"
                         initial="hidden"
                         whileInView="visible"
                         viewport={{ once: true }}
                         variants={titleVariants}
                       >
-                       <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Core Team</span>
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Core Team</span>
                       </motion.h3>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
@@ -286,24 +305,36 @@ function TeamMemberCard({ member, index, variants, onClick }: {
       )}
 
       <motion.div
-        className="flex justify-center gap-4 mt-3"
+        className="flex flex-wrap justify-center gap-4 mt-4"
         initial={{ opacity: 0 }}
-        whileInView={{ opacity: 1, transition: { delay: 0.5 + index * 0.05 } }}
+        whileInView={{ opacity: 1 }}
+        transition={{ duration: 0.5, ease: 'easeOut' }}
         viewport={{ once: true }}
       >
-        {member.socialLinks?.linkedin && (
-          <SocialLink href={member.socialLinks.linkedin} icon={<FiLinkedin />} color="blue" />
-        )}
-        {member.socialLinks?.twitter && (
-          <SocialLink href={member.socialLinks.twitter} icon={<FiTwitter />} color="sky" />
-        )}
-        {member.socialLinks?.email && (
-          <SocialLink href={`mailto:${member.socialLinks.email}`} icon={<FiMail />} color="rose" />
-        )}
-        {member.socialLinks?.facebook && (
-          <SocialLink href={member.socialLinks.facebook} icon={<FiFacebook />} color="indigo" />
-        )}
+        {member.socialLinks &&
+          Object.entries(member.socialLinks).map(([key, value], idx) => {
+            const platform = socialIconMap[key];
+            if (!platform || !value) return null;
+
+            const href = platform.isEmail ? `mailto:${value}` : value;
+
+            return (
+              <motion.a
+                key={key}
+                href={href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={`w-10 h-10 flex items-center justify-center rounded-full bg-${platform.color}-100 text-${platform.color}-600 hover:bg-${platform.color}-200 transition`}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: 0.5 + idx * 0.1, duration: 0.4 }}
+              >
+                {platform.icon}
+              </motion.a>
+            );
+          })}
       </motion.div>
+
     </motion.div>
   );
 }
@@ -402,20 +433,28 @@ function MemberModal({ member, onClose, variants }: {
                     className="object-cover"
                   />
                 </div>
-                <div className="mt-6 flex justify-center gap-6">
-                  {member.socialLinks?.linkedin && (
-                    <SocialButton href={member.socialLinks.linkedin} icon={<FiLinkedin />} color="blue" />
-                  )}
-                  {member.socialLinks?.twitter && (
-                    <SocialButton href={member.socialLinks.twitter} icon={<FiTwitter />} color="sky" />
-                  )}
-                  {member.socialLinks?.email && (
-                    <SocialButton href={`mailto:${member.socialLinks.email}`} icon={<FiMail />} color="rose" />
-                  )}
-                  {member.socialLinks?.facebook && (
-                    <SocialButton href={member.socialLinks.facebook} icon={<FiFacebook />} color="indigo" />
-                  )}
+                <div className="mt-6 flex flex-wrap justify-center gap-4">
+                  {member.socialLinks &&
+                    Object.entries(member.socialLinks).map(([key, value]) => {
+                      const platform = socialIconMap[key];
+                      if (!platform || !value) return null;
+
+                      const href = platform.isEmail ? `mailto:${value}` : value;
+
+                      return (
+                        <a
+                          key={key}
+                          href={href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`w-10 h-10 flex items-center justify-center rounded-full bg-${platform.color}-100 text-${platform.color}-600 hover:bg-${platform.color}-200 transition`}
+                        >
+                          {platform.icon}
+                        </a>
+                      );
+                    })}
                 </div>
+
               </div>
 
               <div>

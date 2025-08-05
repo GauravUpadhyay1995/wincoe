@@ -29,39 +29,47 @@ export const POST = verifyAdmin(
   asyncHandler(async (req: NextRequest) => {
     await connectToDB();
     const user = (req as any).user;
+
     const formData = await req.formData();
 
     const rawBody: any = {};
+    const imageFiles: File[] = [];
+
     for (const [key, value] of formData.entries()) {
-      if (key === 'video_url') {
-        if (!rawBody.video_url) rawBody.video_url = [];
-        // Parse the video data if it's JSON string
+      if (key === 'images' && value instanceof File) {
+        imageFiles.push(value);
+      } else if (key === 'video_url') {
         try {
-          const videoData = JSON.parse(value as string);
-          rawBody.video_url.push({
-            url: videoData.url,
-            title: videoData.title || '',
-            description: videoData.description || ''
-          });
-        } catch (e: any) {
-          // Fallback to simple URL if parsing fails
-          rawBody.video_url.push({
-            url: value,
+          const parsed = JSON.parse(value.toString());
+          if (Array.isArray(parsed)) {
+            rawBody.video_url = parsed.map(v => ({
+              url: v.url,
+              title: v.title || '',
+              description: v.description || ''
+            }));
+          } else {
+            rawBody.video_url = [{
+              url: parsed.url,
+              title: parsed.title || '',
+              description: parsed.description || ''
+            }];
+          }
+        } catch (err) {
+          // fallback for non-JSON string
+          rawBody.video_url = [{
+            url: value.toString(),
             title: '',
             description: ''
-          });
+          }];
         }
       } else {
         rawBody[key] = value;
       }
     }
 
-    // ✅ Extract image files
-    const imageFiles = formData.getAll('images') as File[];
-    delete rawBody.images;
-
-    // ✅ Validate with Joi
+    // ✅ Validate input
     const { error, value } = createGallerySchema.validate(rawBody, { abortEarly: false });
+
     if (error) {
       const formattedErrors = error.details.reduce((acc, curr) => {
         acc[curr.path[0] as string] = curr.message;
@@ -76,8 +84,8 @@ export const POST = verifyAdmin(
       }, { status: 400 });
     }
 
-    // ✅ Upload image files
-    let imageMetaData: CreateGalleryBody['images'] = [];
+    // ✅ Upload images to S3
+    const imageMetaData: CreateGalleryBody['images'] = [];
 
     for (const file of imageFiles) {
       const buffer = Buffer.from(await file.arrayBuffer());
@@ -111,7 +119,6 @@ export const POST = verifyAdmin(
 // ✅ Insert into DB
 const createGallery = async (data: CreateGalleryBody) => {
   try {
-   
     const gallery = new Gallery(data);
     const saved = await gallery.save();
     return saved.toObject();

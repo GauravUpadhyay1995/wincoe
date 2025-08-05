@@ -29,7 +29,8 @@ export const PATCH = verifyAdmin(
     for (const [key, value] of formData.entries()) {
       if (key === 'video_url') {
         if (!rawBody.video_url) rawBody.video_url = [];
-        rawBody.video_url.push({ url: value });
+        rawBody.video_url = JSON.parse(value.toString());
+        // rawBody.video_url.push({ url: value });
       } else {
         rawBody[key] = value;
       }
@@ -86,10 +87,8 @@ export const PATCH = verifyAdmin(
     }
 
     if (value.video_url?.length > 0) {
-      pushFields.video_url = { $each: value.video_url };
-      delete updateFields.video_url; // ❌ prevent conflict
+      updateFields.video_url = value.video_url; // ✅ overwrite instead of pushing
     }
-
     // Main update
     const updated = await Gallery.findByIdAndUpdate(
       galleryId,

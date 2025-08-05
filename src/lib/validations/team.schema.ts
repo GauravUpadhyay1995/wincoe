@@ -19,11 +19,15 @@ export const createTeamSchema = Joi.object({
     description: Joi.string().trim().optional().allow('').messages({
         'string.base': 'Description must be a string'
     }),
-    socialLinks: Joi.object({
-        facebook: Joi.string().trim().optional().allow(''),
-        linkedin: Joi.string().trim().optional().allow(''),
-    }).optional().messages({
-        'object.base': 'Social links must be an object'
+    socialLinks: Joi.object().pattern(
+        Joi.string(), // dynamic key
+        Joi.string().uri().required().messages({
+        'string.uri': 'Each social link must be a valid URL',
+        'any.required': 'Social link URL is required',
+        'string.empty': 'Social link URL cannot be empty'
+        })
+    ).optional().messages({
+        'object.base': 'Social links must be an object',
     }),
     isActive: Joi.boolean().optional().default(true),
     isSteering: Joi.boolean().optional().default(false)

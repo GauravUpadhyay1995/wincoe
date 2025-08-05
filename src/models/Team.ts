@@ -21,9 +21,9 @@ const teamSchema = new Schema({
     required: false,
   },
   socialLinks: {
-    facebook: { type: String, trim: true },
-    linkedin: { type: String, trim: true },
-    twitter: { type: String, trim: true },
+    type: Map,
+    of: String, // URL as string
+    default: {},
   },
   description: {
     type: String,

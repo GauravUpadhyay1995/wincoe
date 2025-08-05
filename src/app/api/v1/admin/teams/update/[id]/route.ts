@@ -26,7 +26,7 @@ export const PATCH = verifyAdmin(
     const teamId = params.id;
 
     const formData = await req.formData();
-    console.log("formDATA=", formData)
+    // console.log("formDATA=", formData)
     const body = Object.fromEntries(formData.entries());
 
     // Parse optional social links
@@ -38,6 +38,7 @@ export const PATCH = verifyAdmin(
         parsedSocialLinks = {};
       }
     }
+
 
     // Check if team exists
     const existingTeam = await Team.findById(teamId);
@@ -53,7 +54,7 @@ export const PATCH = verifyAdmin(
       const buffer = Buffer.from(await file.arrayBuffer());
       const result = await uploadBufferToS3(buffer, file.type, file.name, 'teams');
       profileImage = result?.url || profileImage;
-      console.log("profileImage", profileImage)
+      // console.log("profileImage", profileImage)
     }
 
     // Determine new isActive value
@@ -70,13 +71,14 @@ export const PATCH = verifyAdmin(
       ...(body.isSteering && { isSteering: body.isSteering }),
       ...(profileImage && { profileImage }),
       ...(isActive !== undefined && { isActive }),
-      socialLinks: {
-        ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
-        ...parsedSocialLinks,
-      },
+      // socialLinks: {
+      //   ...existingTeam.socialLinks?.toObject?.(), // existing links (if any)
+      //   ...parsedSocialLinks,
+      // },
+      socialLinks: parsedSocialLinks,
       updatedBy: user.id,
     };
-    console.log("updateData=", updateData)
+    // console.log("updateData=", updateData)
     const updatedTeam = await Team.findByIdAndUpdate(
       teamId,
       { $set: { ...updateData, updatedAt: new Date() } },

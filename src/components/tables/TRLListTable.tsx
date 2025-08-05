@@ -19,100 +19,101 @@ import { AnimatePresence, motion } from 'framer-motion';
 import Badge from "@/components/ui/badge/Badge";
 import { useRouter } from 'next/navigation';
 
-interface NewsApiResponse {
-    success: boolean;
-    message?: string;
-    isAuthorized?: boolean;
-    data?: {
-        news?: News[];
-        totalRecords?: number;
-        perPage?: number;
-    };
-}
-
-interface News {
+interface Trl {
     _id: string;
     title: string;
-    category: string;
+    duration: string;
+    amount: string;
+    requirement: string;
     description: string;
-    bannerImage: string;
+    banner: string;
+    tag: string;
     isActive: boolean;
-    createdAt: string | Date;
-    updatedAt: string | Date;
+    createdAt: string;
+}
+
+interface TrlApiResponse {
+    success: boolean;
+    message?: string;
+    data?: {
+        trls: Trl[];
+        totalRecords: number;
+        perPage: number;
+    };
 }
 
 interface Filters {
     title: string;
-    category: string;
 }
 
 interface Props {
-    initialData: News[];
+    initialData: Trl[];
 }
 
 export default function NewsListTable({ initialData }: Props) {
-    const [allNews, setAllNews] = useState<News[]>(initialData);
-
+    const [allTRLs, setAllTrls] = useState<Trl[]>(initialData);
     const [loading, setLoading] = useState(true);
     const [currentPage, setCurrentPage] = useState(1);
     const [pageSize, setPageSize] = useState(10);
-    const [filters, setFilters] = useState<Filters>({ title: '', category: '' });
+    const [filters, setFilters] = useState<Filters>({ title: '' });
     const [showFilterPanel, setShowFilterPanel] = useState(false);
     const router = useRouter();
     const debouncedFilters = useDebounce(filters, 300);
-    const filteredNews = useMemo(() => {
-        return allNews.filter(news => {
-            const titleMatch = news.title
+
+    const filteredTeams = useMemo(() => {
+        return allTRLs.filter(trl => {
+            const titleMatch = trl.title
                 .toLowerCase()
                 .includes(debouncedFilters.title.toLowerCase());
-            const categoryMatch = news.category
-                .toLowerCase()
-                .includes(debouncedFilters.category.toLowerCase());
-            return titleMatch && categoryMatch;
+            return titleMatch;
         });
-    }, [allNews, debouncedFilters]);
+    }, [allTRLs, debouncedFilters]);
 
-    const totalPages = Math.ceil(filteredNews.length / pageSize);
-    const currentPageData = filteredNews.slice(
-        (currentPage - 1) * pageSize,
-        currentPage * pageSize
-    );
 
+    const totalPages = Math.ceil(filteredTeams.length / pageSize);
     const basePageSizes = [10, 25, 50, 100, 500];
+
     const pageSizeOptions = useMemo(() => {
-        if (filteredNews.length === 0) return [10];
-        const filtered = basePageSizes.filter(size => size < filteredNews.length);
-        if (!filtered.includes(filteredNews.length)) {
-            filtered.push(filteredNews.length);
+        if (filteredTeams.length === 0) return [10];
+        const filtered = basePageSizes.filter(size => size < filteredTeams.length);
+        if (!filtered.includes(filteredTeams.length)) {
+            filtered.push(filteredTeams.length);
         }
         return [...new Set(filtered)].sort((a, b) => a - b);
-    }, [filteredNews.length]);
+    }, [filteredTeams.length]);
 
-    const fetchAllNews = useCallback(async () => {
+    const paginatedData = useMemo(() => {
+        const start = (currentPage - 1) * pageSize;
+        return filteredTeams.slice(start, start + pageSize);
+    }, [filteredTeams, currentPage, pageSize]);
+
+
+    const fetchAllTRLs = useCallback(async () => {
         setLoading(true);
         try {
-            const response = await fetch(`/api/v1/admin/news/list/?perPage=${pageSize}`, {
+            const response = await fetch(`/api/v1/admin/trl/list/?perPage=${pageSize}`, {
                 credentials: 'include',
             });
-            const result: NewsApiResponse = await response.json();
+            const result: TrlApiResponse = await response.json();
+            // console.log('>>>>>>',result);
             if (result.success && result.data) {
-                setAllNews(result.data.news || []);
+                setAllTrls(result.data.trls || []);
             } else {
-                toast.error(result.message || 'Failed to load news');
-                setAllNews([]);
+                toast.error(result.message || 'Failed to load Trl');
+                setAllTrls([]);
             }
         } catch (error) {
-            console.error('Error fetching news:', error);
-            toast.error('Error fetching news list');
-            setAllNews([]);
+            console.error('Error fetching Trl:', error);
+            toast.error('Error fetching Trl list');
+            setAllTrls([]);
         } finally {
             setLoading(false);
         }
     }, [pageSize]);
 
     useEffect(() => {
-        fetchAllNews();
-    }, [fetchAllNews]);
+        fetchAllTRLs();
+    }, [fetchAllTRLs]);
 
     const handleFilterChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -121,44 +122,51 @@ export default function NewsListTable({ initialData }: Props) {
     };
 
     const resetFilters = () => {
-        setFilters({ title: '', category: '' });
+        setFilters({ title: '' });
         setCurrentPage(1);
     };
 
-    const changeStatus = async (newsId: string, currentStatus: boolean) => {
+    const handleToggle = (trlId: string, currentStatus: boolean) => {
+        setAllTrls(prev =>
+            prev.map(item =>
+                item._id === trlId
+                    ? { ...item, isActive: !currentStatus }
+                    : item
+            )
+        );
+    };
+
+
+    const changeStatus = async (trlId: string, currentStatus: boolean) => {
         try {
+
             const formData = new FormData();
             formData.append('isActive', (!currentStatus).toString()); // Toggle status
 
-            const response = await fetch(`/api/v1/admin/news/update/${newsId}`, {
+            const response = await fetch(`/api/v1/admin/trl/update/${trlId}`, {
                 method: 'PATCH',
                 credentials: 'include',
                 body: formData,
             });
 
-            const result: NewsApiResponse = await response.json();
+            const result: TrlApiResponse = await response.json();
 
             if (result.success) {
-                setAllNews(prev =>
-                    prev.map(item =>
-                        item._id === newsId
-                            ? { ...item, isActive: !currentStatus } // ✅ Update isActive here
-                            : item
-                    )
-                );
-                toast.success('News status updated');
+                handleToggle(trlId, currentStatus)
+                toast.success('TRL status updated');
             } else {
-                toast.error(result.message || 'Failed to update news status');
+                toast.error(result.message || 'Failed to update TRL status');
             }
+
         } catch (error) {
-            console.error('Error updating news status:', error);
-            toast.error('Error updating news status');
+            console.error('Error updating TRL status:', error);
+            toast.error('Error updating TRL status');
         }
     };
 
 
-    const handleEdit = (newsId: string) => {
-        router.push(`/admin/news/add?id=${newsId}`);
+    const handleEdit = (trlId: string) => {
+        router.push(`/admin/trl/add?id=${trlId}`);
     };
 
 
@@ -221,10 +229,10 @@ export default function NewsListTable({ initialData }: Props) {
                                 </button>
 
                                 <button
-                                    onClick={() => router.push('/admin/news/add')}
+                                    onClick={() => router.push('/admin/trl/add')}
                                     className="inline-flex items-center px-4 py-2 justify-center gap-2 rounded-full font-medium text-sm bg-blue-light-500/15 text-blue-light-500 dark:bg-blue-light-500/15 dark:text-blue-light-500 cursor-pointer"
                                 >
-                                    + Add News
+                                    + Add TRL
                                 </button>
                             </div>
 
@@ -242,6 +250,7 @@ export default function NewsListTable({ initialData }: Props) {
                             className="overflow-hidden w-full"
                         >
                             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 p-4 bg-gray-50 dark:bg-gray-800 border-b border-gray-200 dark:border-white/[0.05]">
+                                {/* Name Filter */}
                                 <div className="space-y-1">
                                     <label className="text-sm font-medium text-gray-700 dark:text-white">
                                         Title:
@@ -251,27 +260,16 @@ export default function NewsListTable({ initialData }: Props) {
                                         name="title"
                                         value={filters.title}
                                         onChange={handleFilterChange}
-                                        placeholder="Search by title"
+                                        placeholder="Search by Title"
                                         className="w-full py-2 px-3 text-sm border rounded-lg dark:bg-gray-900 dark:text-white dark:border-gray-700"
                                     />
                                 </div>
-                                <div className="space-y-1">
-                                    <label className="text-sm font-medium text-gray-700 dark:text-white">
-                                        Category:
-                                    </label>
-                                    <input
-                                        type="text"
-                                        name="category"
-                                        value={filters.category}
-                                        onChange={handleFilterChange}
-                                        placeholder="Search by category"
-                                        className="w-full py-2 px-3 text-sm border rounded-lg dark:bg-gray-900 dark:text-white dark:border-gray-700"
-                                    />
-                                </div>
+
                             </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
+
             </div>
 
             <div className="max-w-full overflow-x-auto">
@@ -281,7 +279,9 @@ export default function NewsListTable({ initialData }: Props) {
                             <TableRow>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Sr. No.</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Title</TableCell>
-                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Category</TableCell>
+                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Duration</TableCell>
+                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Amount</TableCell>
+                                <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Tag</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Banner</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-start text-theme-xs text-gray-500">Created At</TableCell>
                                 <TableCell isHeader className="px-5 py-3 font-medium text-end text-theme-xs text-gray-500">Action</TableCell>
@@ -289,40 +289,40 @@ export default function NewsListTable({ initialData }: Props) {
                         </TableHeader>
 
                         <TableBody className="divide-y divide-gray-100 dark:divide-white/[0.05]">
-                            {!loading && allNews.map((news, index) => (
-                                <TableRow key={news._id}>
+                            {!loading && paginatedData.map((trlInfo, index) => (
+                                <TableRow key={trlInfo._id}>
                                     <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
                                         {(currentPage - 1) * pageSize + index + 1}
                                     </TableCell>
 
-                                    <TableCell
-                                        className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate whitespace-nowrap overflow-hidden text-ellipsis"
-                                        title={news.title}
-                                    >
-                                        {news.title}
+                                    <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400 max-w-[200px] truncate whitespace-nowrap overflow-hidden text-ellipsis" title={trlInfo.title}>
+                                        {trlInfo.title}
                                     </TableCell>
 
-                                    <TableCell
-                                        className="px-5 py-2 text-start text-theme-sm capitalize text-gray-600 dark:text-gray-400 max-w-[150px] truncate whitespace-nowrap overflow-hidden text-ellipsis"
-                                        title={news.category || 'N/A'}
-                                    >
-                                        {news.category || 'N/A'}
+                                    <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400 max-w-[150px] truncate whitespace-nowrap overflow-hidden text-ellipsis" title={trlInfo.duration}>
+                                        {trlInfo.duration}
                                     </TableCell>
-
-
 
                                     <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {news.bannerImage ? (
+                                        {trlInfo.amount || 'N/A'}
+                                    </TableCell>
+                                    <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        {trlInfo.tag || 'N/A'}
+                                    </TableCell>
+
+                                    <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
+                                        {trlInfo.banner ? (
                                             <img
-                                                src={news.bannerImage}
-                                                alt="Banner"
-                                                className="h-10 w-16 object-cover rounded shadow"
+                                                src={trlInfo.banner}
+                                                alt="Profile"
+                                                className="h-10 w-10 object-cover rounded-full shadow"
                                             />
                                         ) : 'N/A'}
                                     </TableCell>
 
                                     <TableCell className="px-5 py-2 text-start text-theme-sm text-gray-600 dark:text-gray-400">
-                                        {news.createdAt ? new Date(news.createdAt).toLocaleDateString('en-US', {
+                                        {trlInfo.createdAt ?
+                                            new Date(trlInfo.createdAt).toLocaleString('en-US', {
                                                 year: 'numeric',
                                                 month: 'short',
                                                 day: 'numeric',
@@ -330,45 +330,37 @@ export default function NewsListTable({ initialData }: Props) {
                                                 // minute: '2-digit',
                                                 // second: '2-digit',
                                                 hour12: true
-                                            }) : 'N/A'}
+                                            })
+                                            : 'N/A'}
                                     </TableCell>
-
                                     <TableCell className="px-5 py-2 text-end text-theme-sm text-gray-600 dark:text-gray-400">
                                         <div className="flex justify-end items-center gap-2">
-
-                                            <div key={`${news._id}_new`} className="flex items-center space-x-2">
+                                            <div key={`${trlInfo._id}_status`} className="flex items-center space-x-2">
                                                 <label className="inline-flex items-center cursor-pointer">
                                                     <input
-                                                        onChange={() => changeStatus(news._id, news.isActive ?? true)}
+                                                        onChange={() => changeStatus(trlInfo._id, trlInfo.isActive)}
                                                         type="checkbox"
                                                         className="sr-only peer"
-                                                        checked={news.isActive ? true : false}
-
+                                                        checked={trlInfo.isActive ? true : false}
                                                     />
-                                                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600">
-                                                    </div>
+                                                    <div className="relative w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600 dark:peer-checked:bg-blue-600"></div>
                                                 </label>
                                             </div>
 
                                             <button
-                                                onClick={() => handleEdit(news._id)}
+                                                onClick={() => handleEdit(trlInfo._id)}
                                                 className="p-2 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 text-blue-600 dark:text-blue-400"
-                                                title="Edit News"
+                                                title="Edit Team"
                                             >
                                                 <PencilSquareIcon className="w-5 h-5" />
                                             </button>
-                                            {/* <button
-                                                onClick={() => handleDelete(news._id)}
-                                                className="p-2 rounded-full hover:bg-red-50 dark:hover:bg-red-900/20 text-red-600 dark:text-red-400"
-                                                title="Delete News"
-                                            >
-                                                <TrashIcon className="w-5 h-5" />
-                                            </button> */}
+
                                         </div>
                                     </TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>
+
                     </Table>
                 </div>
             </div>
@@ -377,7 +369,7 @@ export default function NewsListTable({ initialData }: Props) {
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
-                    totalItems={filteredNews.length}
+                    totalItems={filteredTeams.length}
                     onPageChange={setCurrentPage}
                 />
             </div>
