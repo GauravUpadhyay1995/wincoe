@@ -65,31 +65,20 @@ export default function HomePage() {
             bgImage: "/images/gallery/gallery-6.jpg",
             cta: "Discover Devices",
             ctaLink: "/projects/wearables"
+        },
+        {
+           
+            bgImage: "/images/gallery/carsoul.png",
+           
+        }
+        ,
+        {
+            
+            bgImage: "/images/gallery/carsoul-1.png",
+           
         }
     ];
-    const Pastevents = [
-
-        {
-            title: "WIN CoE Inauguration",
-            date: "December 2024",
-            description:
-                "Official launch of the Wadhwani Innovation Network Centre of Excellence",
-            image: "/images/past-events/image-01.jpg",
-        },
-
-        {
-            title: "First Grant Recipients Announcement",
-            date: "March 2025",
-            description: "Celebrating the first round of grant recipients",
-            image: "/images/past-events/image-02.jpg",
-        },
-        {
-            title: "HealthTech Symposium",
-            date: "June 2025",
-            description: "Annual symposium on healthcare technology innovations",
-            image: "/images/past-events/image-03.jpg",
-        },
-    ];
+   
 
 
     return (
