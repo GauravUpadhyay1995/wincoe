@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import PageBreadcrumb from '@/components/common/PageBreadCrumb';
- import SummernoteEditor from '@/components/HtmlEditor/SummernoteEditor';
+import SummernoteEditor from '@/components/HtmlEditor/SummernoteEditor';
 import FileInput from '@/components/form/input/FileInput';
 import { toast } from 'react-hot-toast';
 import LoadingScreen from '@/components/common/LoadingScreen';
@@ -28,6 +28,7 @@ export default function AddTeamPage() {
 
   const [name, setName] = useState('');
   const [designation, setDesignation] = useState('');
+  const [showingOrder, setShowingOrder] = useState<number | null>(null);
   const [department, setDepartment] = useState('');
   const [description, setDescription] = useState('');
   const [profileImage, setProfileImage] = useState<File | null>(null);
@@ -54,6 +55,7 @@ export default function AddTeamPage() {
             setDepartment(team.department);
             setDescription(team.description);
             setIsSteering(team.isSteering || false); // Ensure boolean value
+            setShowingOrder(team.showingOrder || null)
 
             // Convert object to array for editing
             if (team.socialLinks && typeof team.socialLinks === 'object') {
@@ -84,10 +86,15 @@ export default function AddTeamPage() {
     e.preventDefault();
     const formData = new FormData();
     formData.append('name', name);
-    formData.append('designation', designation);
-    formData.append('department', department);
-    formData.append('description', description);
-    formData.append('isSteering', isSteering);
+    formData.append('designation', designation || '');
+    formData.append('department', department || '');
+    formData.append('description', description || '');
+
+    formData.append('isSteering', isSteering.toString());
+
+    if (showingOrder !== null) {
+      formData.append('showingOrder', showingOrder.toString());
+    }
 
     const socialObject = socialLinks.reduce((acc, curr) => {
       if (curr.platform && curr.url) acc[curr.platform] = curr.url;
@@ -176,7 +183,6 @@ export default function AddTeamPage() {
               type="text"
               value={designation}
               onChange={(e) => setDesignation(e.target.value)}
-              required
               placeholder="Enter designation"
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
@@ -188,7 +194,6 @@ export default function AddTeamPage() {
               type="text"
               value={department}
               onChange={(e) => setDepartment(e.target.value)}
-              required
               placeholder="Enter department"
               className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
             />
@@ -226,6 +231,28 @@ export default function AddTeamPage() {
               <option value="true">Steering Committee Team</option>
             </select>
           </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Showing Position</label>
+            <input
+              type="number"
+              min={1}
+              step={1}
+              value={showingOrder ?? ''}
+              onChange={(e) => {
+                const value = e.target.value;
+                if (!value) {
+                  setShowingOrder(null);
+                } else {
+                  const parsed = parseInt(value);
+                  if (parsed >= 1) setShowingOrder(parsed);
+                }
+              }}
+              placeholder="Enter number you want to show on frontend"
+              className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-800 text-sm text-gray-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition"
+            />
+
+
+          </div>
         </div>
 
         <div>
@@ -237,7 +264,7 @@ export default function AddTeamPage() {
             fullWidth
             className="border border-gray-300 dark:border-gray-600 rounded-lg overflow-hidden"
           />
-      
+
         </div>
 
         <div>

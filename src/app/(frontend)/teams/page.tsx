@@ -47,7 +47,7 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export default function UniversityTeams() {
   const [selectedMember, setSelectedMember] = React.useState<TeamMember | null>(null);
-  const { data, error, isLoading } = useSWR('/api/v1/admin/teams/list?from=frontend', fetcher);
+  const { data, error, isLoading } = useSWR('/api/v1/admin/teams/list?from=frontend&perPage=1000&page=1', fetcher);
 
   // Animation variants
   const containerVariants = {
@@ -131,9 +131,16 @@ export default function UniversityTeams() {
   if (error) return <ErrorState />;
   if (!data?.data?.teams?.length) return <EmptyState />;
 
-  const teamMembers = data.data.teams;
-  const steeringMembers = teamMembers.filter(member => member.isSteering);
-  const regularMembers = teamMembers.filter(member => !member.isSteering);
+ const teamMembers = data.data.teams;
+
+const steeringMembers = teamMembers
+  .filter(member => member.isSteering)
+  .sort((a, b) => (a.showingOrder ?? Infinity) - (b.showingOrder ?? Infinity));
+
+const regularMembers = teamMembers
+  .filter(member => !member.isSteering)
+  .sort((a, b) => (a.showingOrder ?? Infinity) - (b.showingOrder ?? Infinity));
+
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-orange-50 to-cyan-50">

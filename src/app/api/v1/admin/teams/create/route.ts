@@ -10,12 +10,14 @@ import { verifyAdmin } from '@/lib/verifyAdmin';
 
 type CreateTeamBody = {
   name: string;
-  designation: string;
-  department: string;
-  profileImage?: string;
+  profileImage: string;
+  designation?: string;
+  department?: string;
   description?: string;
-  socialLinks?: Record<string, string>; // or { [key: string]: string }
+  socialLinks?: Record<string, string>;
+  showingOrder?: number | null;
   isActive?: boolean;
+  isSteering?: boolean;
   createdBy: Types.ObjectId;
   updatedBy: Types.ObjectId;
 };
@@ -28,26 +30,21 @@ export const POST = verifyAdmin(
 
     const rawBody = Object.fromEntries(formData.entries());
 
+    // ✅ Parse socialLinks if it exists as a stringified JSON
     let parsedSocialLinks: Record<string, string> = {};
-
     if (typeof rawBody.socialLinks === 'string') {
       try {
         parsedSocialLinks = JSON.parse(rawBody.socialLinks);
       } catch {
         parsedSocialLinks = {};
       }
-    } else if (typeof rawBody.socialLinks === 'object' && rawBody.socialLinks !== null) {
-      parsedSocialLinks = rawBody.socialLinks as Record<string, string>;
     }
-
-    // Inject the parsed socialLinks into rawBody for validation
     rawBody.socialLinks = parsedSocialLinks;
 
-
-    // Remove file key before validation
+    // ⚠ Remove profileImage before Joi validation
     delete rawBody.profileImage;
 
-    // ✅ Joi Validation
+    // ✅ Validate request body
     const { error, value } = createTeamSchema.validate(rawBody, { abortEarly: false });
     if (error) {
       const formattedErrors = error.details.reduce((acc, curr) => {
@@ -66,19 +63,39 @@ export const POST = verifyAdmin(
       );
     }
 
-    // ✅ Handle file upload
-    let profileImageUrl = '';
+    // ✅ Handle file upload (required)
     const file = formData.get('profileImage') as File | null;
-    if (file) {
-      const buffer = Buffer.from(await file.arrayBuffer());
-      const upload = await uploadBufferToS3(buffer, file.type, file.name, 'teams');
-      profileImageUrl = upload?.url || '';
+    if (!file) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Profile image is required',
+          errors: { profileImage: 'Profile image file is required' },
+          data: null,
+        },
+        { status: 400 }
+      );
     }
 
-    // ✅ Prepare Team data
+    const buffer = Buffer.from(await file.arrayBuffer());
+    const upload = await uploadBufferToS3(buffer, file.type, file.name, 'teams');
+    const profileImageUrl = upload?.url;
+
+    if (!profileImageUrl) {
+      return NextResponse.json(
+        {
+          success: false,
+          message: 'Failed to upload profile image',
+          data: null,
+        },
+        { status: 500 }
+      );
+    }
+
+    // ✅ Build team data
     const teamData: CreateTeamBody = {
       ...value,
-      profileImage: profileImageUrl || '',
+      profileImage: profileImageUrl,
       createdBy: new Types.ObjectId(user.id),
       updatedBy: new Types.ObjectId(user.id),
     };
@@ -94,7 +111,7 @@ export const POST = verifyAdmin(
   })
 );
 
-// 🔁 Separate logic for DB insertion
+// 🔁 Helper function
 const createTeam = async (data: CreateTeamBody) => {
   try {
     await connectToDB();
