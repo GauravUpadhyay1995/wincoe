@@ -285,7 +285,7 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
                   : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
               >
-                Images ({(customLimit > 0 && customLimit< currentImages.length)? customLimit : currentImages.length})
+                Images 
               </button>
               <button
                 onClick={() => setActiveTab('videos')}
@@ -294,7 +294,7 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
                   : 'bg-white text-gray-700 hover:bg-gray-50'
                   }`}
               >
-                Videos ({(customLimit > 0 && customLimit< currentImages.length)? customLimit : currentImages.length})
+                Videos 
               </button>
             </div>
           </div>
