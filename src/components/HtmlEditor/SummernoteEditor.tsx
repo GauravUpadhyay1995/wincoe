@@ -57,7 +57,7 @@ export default function SummernoteEditor({
 
   // 💡 Inject dark mode styles
   const applyDarkMode = () => {
-    const isDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+    const isDark = window.matchMedia('(prefers-color-scheme: white)').matches;
     const iframe = document.querySelector('.note-editable') as HTMLElement;
 
     if (isDark && iframe) {
