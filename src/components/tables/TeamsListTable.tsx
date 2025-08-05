@@ -359,8 +359,8 @@ export default function NewsListTable({ initialData }: Props) {
                                                 month: 'short',
                                                 day: 'numeric',
                                                 hour: '2-digit',
-                                                minute: '2-digit',
-                                                second: '2-digit',
+                                                // minute: '2-digit',
+                                                // second: '2-digit',
                                                 hour12: true
                                             })
                                             : 'N/A'}

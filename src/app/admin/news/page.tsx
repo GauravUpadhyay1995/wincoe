@@ -1,5 +1,3 @@
-// app/admin/news/page.tsx or similar
-
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import NewsListTable from "@/components/tables/NewsListTable";
 import { Metadata } from "next";
@@ -11,18 +9,27 @@ export const metadata: Metadata = {
 };
 
 export default async function NewsTables() {
-  const cookieHeader = cookies().toString(); // get cookies for API auth
+  // ✅ Properly format all cookies as a header string
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .map((cookie) => `${cookie.name}=${cookie.value}`)
+    .join("; ");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/news/list/?perPage=25`, {
-    headers: {
-      Cookie: cookieHeader,
-    },
-    cache: 'no-store',
-  });
-  console.log(res)
+  // ✅ API call using server-side cookies
+  const res = await fetch(
+    `${process.env.NEXT_PUBLIC_API_URL}/news/list/?perPage=25`,
+    {
+      headers: {
+        Cookie: cookieHeader,
+      },
+      cache: "no-store", // prevent stale data
+    }
+  );
 
   const result = await res.json();
   const newsData = result?.data?.news || [];
+
   return (
     <div>
       <PageBreadcrumb pageTitle="News List" />

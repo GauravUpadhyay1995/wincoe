@@ -14,10 +14,7 @@ type CreateTeamBody = {
   department: string;
   profileImage?: string;
   description?: string;
-  socialLinks?: {
-    facebook?: string;
-    linkedin?: string;
-  };
+  socialLinks?: Record<string, string>; // or { [key: string]: string }
   isActive?: boolean;
   createdBy: Types.ObjectId;
   updatedBy: Types.ObjectId;
@@ -31,14 +28,21 @@ export const POST = verifyAdmin(
 
     const rawBody = Object.fromEntries(formData.entries());
 
-    // Parse `socialLinks` JSON if provided
+    let parsedSocialLinks: Record<string, string> = {};
+
     if (typeof rawBody.socialLinks === 'string') {
       try {
-        rawBody.socialLinks = JSON.parse(rawBody.socialLinks);
+        parsedSocialLinks = JSON.parse(rawBody.socialLinks);
       } catch {
-        rawBody.socialLinks = {};
+        parsedSocialLinks = {};
       }
+    } else if (typeof rawBody.socialLinks === 'object' && rawBody.socialLinks !== null) {
+      parsedSocialLinks = rawBody.socialLinks as Record<string, string>;
     }
+
+    // Inject the parsed socialLinks into rawBody for validation
+    rawBody.socialLinks = parsedSocialLinks;
+
 
     // Remove file key before validation
     delete rawBody.profileImage;

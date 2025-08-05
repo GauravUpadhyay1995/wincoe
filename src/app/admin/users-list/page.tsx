@@ -1,7 +1,7 @@
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import UsersListTable from "@/components/tables/UsersListTable";
 import { Metadata } from "next";
-import { cookies } from "next/headers"; // required for auth cookies
+import { cookies } from "next/headers";
 
 export const metadata: Metadata = {
   title: "Users List | WIN CoE",
@@ -9,18 +9,23 @@ export const metadata: Metadata = {
 };
 
 export default async function UsersTables() {
-  const cookieHeader = cookies().toString();
+  // ✅ Properly extract and format cookies for API auth
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .map((cookie) => `${cookie.name}=${cookie.value}`)
+    .join("; ");
 
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/admin/users/list?perPage=25`, {
+  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/list?perPage=25`, {
     headers: {
       Cookie: cookieHeader,
     },
-    cache: 'no-store', // disables caching for fresh data
+    cache: 'no-store', // ensures fresh server data
   });
 
   const result = await res.json();
   const usersData = result?.data?.customers || [];
-  // console.log('result',usersData);
+
   return (
     <div>
       <PageBreadcrumb pageTitle="Users List" />

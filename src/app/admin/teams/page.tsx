@@ -1,4 +1,4 @@
-// app/admin/news/page.tsx or similar
+// app/admin/teams/page.tsx (or news/page.tsx if you're using it under "news")
 
 import PageBreadcrumb from "@/components/common/PageBreadCrumb";
 import TeamsListTable from "@/components/tables/TeamsListTable";
@@ -10,18 +10,25 @@ export const metadata: Metadata = {
   description: "Teams List",
 };
 
-export default async function NewsTables() {
-  const cookieHeader = cookies().toString(); // get cookies for API auth
+export default async function TeamsTables() {
+  // ✅ Proper cookie formatting
+  const cookieStore = await cookies();
+  const cookieHeader = cookieStore
+    .getAll()
+    .map((cookie) => `${cookie.name}=${cookie.value}`)
+    .join("; ");
 
+  // ✅ Server-side API call with cookies
   const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/teams/list`, {
     headers: {
       Cookie: cookieHeader,
     },
-    cache: 'no-store',
+    cache: "no-store", // always fetch fresh data
   });
+
   const result = await res.json();
   const teamsData = result?.data?.teams || [];
-    // console.log('>>>>>>>>>>',teamsData);  
+
   return (
     <div>
       <PageBreadcrumb pageTitle="Teams List" />

@@ -83,6 +83,10 @@ const AppSidebar: React.FC = () => {
       name: "Gallery",
       icon: <FolderIcon />,
       path: "/admin/gallery",
+      subItems: [
+        { name: "All Galleries", path: "/admin/gallery", pro: false },
+        { name: "Add Gallery", path: "/admin/gallery/add", pro: false },
+      ],
     },
   ];
 

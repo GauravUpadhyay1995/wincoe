@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import {verifyAdmin}  from '@/lib/verifyAdmin';
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL;
+const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export async function GET(req: NextRequest) {
   try {
