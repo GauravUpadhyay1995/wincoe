@@ -62,13 +62,14 @@ export default function About() {
       <main className="overflow-hidden">
         <section className="relative h-[70vh] min-h-[610px] overflow-hidden">
           <motion.div
-            className="absolute inset-0 bg-[url('/images/about/about.jpg')] bg-cover bg-center"
+            className="absolute inset-0 bg-[url('/images/about/about.png')] bg-cover bg-center"
             initial={{ scale: 1.2 }}
             animate={{ scale: 1 }}
             transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
           >
             <motion.div
-              className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80"
+              // className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80"
+               className="absolute inset-0 "
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ duration: 1 }}
@@ -99,7 +100,7 @@ export default function About() {
             />
           ))}
 
-          <div className="relative z-10 h-full flex items-center justify-center px-4">
+          {/* <div className="relative z-10 h-full flex items-center justify-center px-4">
             <motion.div
               initial="hidden"
               animate="visible"
@@ -152,7 +153,7 @@ export default function About() {
                 </motion.button>
               </motion.div>
             </motion.div>
-          </div>
+          </div> */}
 
           <motion.div
             className="absolute bottom-10 left-1/2 -translate-x-1/2"
@@ -339,6 +340,7 @@ export default function About() {
               </motion.div>
             ))}
           </motion.div>
+
         </section>
 
       </main>
