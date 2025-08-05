@@ -4,6 +4,7 @@
 import { motion } from 'framer-motion';
 
 import { useEffect, useState } from 'react';
+import Carousel from '@/components/carousel/carousel';
 
 const fadeInUp = {
   hidden: { opacity: 0, y: 30 },
@@ -42,6 +43,21 @@ type Particle = {
 };
 
 export default function About() {
+
+  const images = [
+
+    // {
+
+    //     bgImage: "/images/about/about-new.jpg",
+
+    // }
+    // ,
+    {
+
+      bgImage: "/images/about/about.png",
+
+    }
+  ];
   const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
@@ -60,7 +76,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       <main className="overflow-hidden">
-        <section className="relative h-[70vh] min-h-[610px] overflow-hidden">
+        {/* <section className="relative h-[70vh] min-h-[610px] overflow-hidden">
           <motion.div
             className="absolute inset-0 bg-[url('/images/about/about.png')] bg-cover bg-center"
             initial={{ scale: 1.2 }}
@@ -68,7 +84,6 @@ export default function About() {
             transition={{ duration: 1.5, ease: [0.33, 1, 0.68, 1] }}
           >
             <motion.div
-              // className="absolute inset-0 bg-gradient-to-b from-black/80 via-black/60 to-black/80"
                className="absolute inset-0 "
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -100,61 +115,7 @@ export default function About() {
             />
           ))}
 
-          {/* <div className="relative z-10 h-full flex items-center justify-center px-4">
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={staggerContainer}
-              className="text-center max-w-6xl mx-auto"
-            >
-              <div className="overflow-hidden">
-                <motion.h1
-                  className="text-5xl md:text-7xl lg:text-8xl font-extrabold text-white mb-6"
-                  initial={{ y: 100 }}
-                  animate={{ y: 0 }}
-                  transition={{
-                    duration: 1,
-                    ease: [0.33, 1, 0.68, 1],
-                  }}
-                >
-                  <span className="inline-block">About </span>
-                  <span className="inline-block bg-gradient-to-r from-orange-400 to-cyan-300 text-transparent bg-clip-text">
-                    WIN CoE
-                  </span>
-                </motion.h1>
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.4, duration: 0.8, ease: [0.33, 1, 0.68, 1] }}
-              >
-                <p className="text-xl md:text-2xl lg:text-3xl text-gray-200 max-w-3xl mx-auto font-medium">
-                  Driving <span className="text-orange-300">Innovation</span>. Transforming{' '}
-                  <span className="text-cyan-300">Healthcare</span>.
-                </p>
-              </motion.div>
-
-              <motion.div
-                className="mt-12"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.6, duration: 0.5 }}
-              >
-                <motion.button
-                  className="px-8 py-3 bg-gradient-to-r from-orange-500 to-cyan-600 text-white rounded-full font-semibold text-lg shadow-lg"
-                  whileHover={{
-                    scale: 1.05,
-                    boxShadow: '0 5px 15px rgba(0, 0, 0, 0.3)',
-                  }}
-                  whileTap={{ scale: 0.95 }}
-                >
-                  Explore Our Work
-                </motion.button>
-              </motion.div>
-            </motion.div>
-          </div> */}
-
+          
           <motion.div
             className="absolute bottom-10 left-1/2 -translate-x-1/2"
             initial={{ opacity: 0, y: -20 }}
@@ -174,8 +135,11 @@ export default function About() {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 14l-7 7m0 0l-7-7m7 7V3" />
             </svg>
           </motion.div>
-        </section>
+        </section> */}
 
+        <section className="relative min-h-screen overflow-hidden shadow-xl">
+          <Carousel images={images} />
+        </section>
         <section className="py-20 px-4 container mx-auto">
           <motion.div
             className="max-w-5xl mx-auto"
