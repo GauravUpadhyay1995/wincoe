@@ -93,14 +93,14 @@ export default function HomePage() {
                 </section>
 
                 {/* What We Do */}
-                <section className="py-12 px-4">
+                <section className=" px-4">
                     <WhatWeDo customLimit={2} />
                 </section>
 
              
 
                 {/*  Events */}
-                <section className="py-12">
+                <section className="">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
 
@@ -110,7 +110,7 @@ export default function HomePage() {
                 </section>
 
                 {/* Photo */}
-                <section className="py-12 bg-gray-50 dark:bg-gray-900">
+                <section className=" bg-gray-50 dark:bg-gray-900">
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
                             <Photo customLimit={6} />

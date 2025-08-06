@@ -245,7 +245,8 @@ function getVideoThumbnail(videoUrl: string): string {
               <circle cx="22" cy="20" r="2" fill="#ec4a0a" />
               <path d="M12 36l6-6 8 10 6-8 10 12" />
             </svg>
-            Gallery & <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center transform transition-transform">
+            Gallery &
+             {/* <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center transform transition-transform">
               <svg
                 stroke="currentColor"
                 fill="none"
@@ -258,8 +259,8 @@ function getVideoThumbnail(videoUrl: string): string {
               >
                 <polygon points="5 3 19 12 5 21 5 3"></polygon>
               </svg>
-            </div>
-            Videos
+            </div> */}
+            Video
           </motion.h2>
 
           <div className="flex justify-center gap-4 mb-4">

@@ -197,9 +197,9 @@ const Footer = () => {
                 { href: '/about', label: 'About Us' },
                 { href: '/teams', label: 'Teams' },
                 { href: '/events', label: 'Events' },
-                { href: '/news', label: 'News' },
+                // { href: '/news', label: 'News' },
                 { href: '/gallery', label: 'Gallery' },
-                { href: '/contact', label: 'Contact' },
+                { href: '/contact-us', label: 'Contact' },
               ].map((link) => (
                 <motion.li
                   key={link.href}

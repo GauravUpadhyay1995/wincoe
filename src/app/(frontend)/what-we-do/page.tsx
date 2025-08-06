@@ -56,7 +56,7 @@ export default function WhatWeDo({ customLimit = 0 }: { customLimit?: number }) 
                     {(customLimit <= 2 && customLimit > 0) && (
                         <div className="flex items-center justify-end mb-4">
                             <Link
-                                href="/trls"
+                                href="/what-we-do"
                                 className="text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
                             >
                                 View All →

@@ -160,7 +160,7 @@ const Header = () => {
             >
               <div className="flex items-center gap-2 sm:gap-3">
                 <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={100} height={10} priority />
-                <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={120} height={10} priority />
+                <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={100} height={10} priority />
                 <Image src="/images/logo/Wadhwani-Foundation.webp" alt="WIN CoE Logo" width={80} height={10} priority />
               </div>
             </Link>
