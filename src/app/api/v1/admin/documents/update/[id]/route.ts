@@ -3,7 +3,8 @@ import { asyncHandler } from '@/lib/asyncHandler';
 import { withAuth } from '@/lib/withAuth';
 import { connectToDB } from '@/config/mongo';
 import { ImportantDocument } from '@/models/ImportantDocument';
-import { User } from '@/models/User'; // ✅ Required for populate
+import { User } from '@/models/User';
+
 import { uploadBufferToS3 } from '@/lib/uploadToS3';
 import { updateImportantDocSchema } from '@/lib/validations/document.schema';
 import mongoose, { Types } from 'mongoose';

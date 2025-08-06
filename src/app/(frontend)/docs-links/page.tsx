@@ -176,8 +176,12 @@ export default function ImportantDocuments() {
                             </motion.div>
 
 
-                            <p className="mb-4">{group.description}</p>
+                            <p
+                                className="mb-4"
+                                dangerouslySetInnerHTML={{ __html: group.description }}
+                            ></p>
 
+                            
                             <div className="grid sm:grid-cols-6 md:grid-cols-3 lg:grid-cols-6 gap-8">
                                 {group.documents.map((doc: any, index: number) => (
                                     <motion.div

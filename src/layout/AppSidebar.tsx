@@ -53,15 +53,6 @@ const AppSidebar: React.FC = () => {
       path: "/admin/users-list",
     },
     {
-      name: "News",
-      icon: <DocsIcon />,
-      path: "/admin/news",
-      subItems: [
-        { name: "All News", path: "/admin/news", pro: false },
-        { name: "Add News", path: "/admin/news/add", pro: false },
-      ],
-    },
-    {
       name: "Teams",
       icon: <GroupIcon />,
       path: "/admin/teams",
@@ -70,6 +61,34 @@ const AppSidebar: React.FC = () => {
         { name: "Add Team", path: "/admin/teams/add", pro: false },
       ],
     },
+    {
+      name: "Events",
+      icon: <GroupIcon />,
+      path: "/admin/events",
+      subItems: [
+        { name: "All Events", path: "/admin/events", pro: false },
+        { name: "Add Events", path: "/admin/teams/add", pro: false },
+      ],
+    },
+    {
+      name: "Docs & Links",
+      icon: <GroupIcon />,
+      path: "/admin/links-docs",
+      subItems: [
+        { name: "All Links-Docs", path: "/admin/links-docs", pro: false },
+        { name: "Add Links-Docs", path: "/admin/links-docs/add", pro: false },
+      ],
+    },
+    {
+      name: "News",
+      icon: <DocsIcon />,
+      path: "/admin/news",
+      subItems: [
+        { name: "All News", path: "/admin/news", pro: false },
+        { name: "Add News", path: "/admin/news/add", pro: false },
+      ],
+    },
+    
     {
       name: "TRL",
       icon: <ShootingStarIcon />,
