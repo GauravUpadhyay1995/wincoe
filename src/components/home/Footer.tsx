@@ -167,19 +167,19 @@ const Footer = () => {
             </motion.p>
             {/* Social Media Icons */}
             <div className="flex space-x-4 mt-6">
-              <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Facebook" variants={iconLinkVariants} initial="rest" whileHover="hover">
+              {/* <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Facebook" variants={iconLinkVariants} initial="rest" whileHover="hover">
                 <Image src="/images/facebook.svg" alt="Facebook" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
               <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Twitter" variants={iconLinkVariants} initial="rest" whileHover="hover">
 
                 <Image src="/images/twitter.svg" alt="Twitter" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
-              </motion.a>
-              <motion.a href="https://www.linkedin.com/company/cbme-iitdelhi/?originalSubdomain=in" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on LinkedIn" variants={iconLinkVariants} initial="rest" whileHover="hover">
+              </motion.a> */}
+              <motion.a href="https://www.linkedin.com/company/wadhwanifoundation/" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on LinkedIn" variants={iconLinkVariants} initial="rest" whileHover="hover">
                 <Image src="/images/linkedIn.svg" alt="LinkedIn" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
               </motion.a>
-              <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Instagram" variants={iconLinkVariants} initial="rest" whileHover="hover">
+              {/* <motion.a href="#" target="_blank" rel="noopener noreferrer" aria-label="WIN CoE on Instagram" variants={iconLinkVariants} initial="rest" whileHover="hover">
                 <Image src="/images/instagram.svg" alt="Instagram" width={24} height={24} className="filter  hover:grayscale-0 transition-all duration-300" />
-              </motion.a>
+              </motion.a> */}
             </div>
           </motion.div>
           <motion.div variants={itemVariants} className="hidden lg:block" />
@@ -299,10 +299,12 @@ const Footer = () => {
               className="not-italic text-base text-gray-700 dark:text-gray-300 space-y-2 flex flex-col items-center md:items-start"
               whileHover={{ x: 5 }}
             >
-              <span>WIN CoE Foundation</span>
-              <span>Block-3, Room No: 299B</span>
-              <span>CBME, IIT Delhi,</span>
-              <span>New Delhi, 110016, India</span> {/* Added "India" for clarity */}
+              <span>Wadhwani Innovation Network               
+              </span>
+               <span>Centre of Excellence</span>
+              <span>GB-2, Research and Innovation Par</span>
+             
+              <span>IIT Delhi, New Delhi</span> {/* Added "India" for clarity */}
             </motion.address>
             <motion.div className="mt-4" variants={itemVariants}>
               <Link

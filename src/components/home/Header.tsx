@@ -35,7 +35,7 @@ const Header = () => {
       href: '/more',
       label: 'More',
       submenu: [
-        { href: '/news', label: 'News' },
+        // { href: '/news', label: 'News' },
         // { href: '/steering-committee', label: 'Steering Committee' },
         { href: '/contact-us', label: 'Contact' },
         { href: '/docs-links', label: 'Docs & Links' },

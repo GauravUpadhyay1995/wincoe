@@ -110,11 +110,11 @@ export default function WhatWeDo({ customLimit = 0 }: { customLimit?: number }) 
                                     Beyond funding, WIN CoE provides comprehensive support including mentorship from industry experts, access to state-of-the-art facilities, IP guidance, and connections to potential investors and industry partners.
                                 </p>
                             </div>
-                            <div className="md:w-1/3 flex justify-center">
+                            {/* <div className="md:w-1/3 flex justify-center">
                                 <button className="px-8 py-3 bg-gradient-to-r from-orange-500 to-cyan-500 text-white rounded-full font-semibold shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
                                     View Current RFPs
                                 </button>
-                            </div>
+                            </div> */}
                         </div>
                     </motion.div>
                 </section>

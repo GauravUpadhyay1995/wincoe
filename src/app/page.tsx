@@ -10,7 +10,7 @@ import WhatWeDo from '@/app/(frontend)/what-we-do/page';
 import Photo from './(frontend)/events/photo';
 // import ImportantDocuments from './(frontend)/docs-links/page';
 import { motion } from "framer-motion";
-import NewsDisplay from './(frontend)/news/page';
+// import NewsDisplay from './(frontend)/news/page';
 import ThematicAreas from '@/components/common/ThematicArea';
 import Events from '@/app/(frontend)/events/page'
 
@@ -119,13 +119,13 @@ export default function HomePage() {
                 </section>
 
                 {/* News */}
-                <section >
+                {/* <section >
                     <div className="container mx-auto max-w-6xl px-4">
                         <ScrollAnimation animation="fade" delay={400}>
                             <NewsDisplay customLimit={3} />
                         </ScrollAnimation>
                     </div>
-                </section>
+                </section> */}
 
                 {/* Important Documents */}
                 {/* <section className="py-12 bg-gradient-to-b from-white to-orange-50 dark:from-gray-900 dark:to-gray-800">
