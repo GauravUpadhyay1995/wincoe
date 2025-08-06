@@ -199,6 +199,28 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
       }
     }
   };
+function extractYouTubeVideoId(url: string): string | null {
+  const regex = /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=))([\w-]+)/;
+  const match = url.match(regex);
+  return match ? match[1] : null;
+}
+
+function extractGoogleDriveFileId(url: string): string | null {
+  const match = url.match(/\/d\/([a-zA-Z0-9_-]+)\//);
+  return match ? match[1] : null;
+}
+
+function getVideoThumbnail(videoUrl: string): string {
+  if (videoUrl.includes("youtube.com") || videoUrl.includes("youtu.be")) {
+    const id = extractYouTubeVideoId(videoUrl);
+    return id ? `https://img.youtube.com/vi/${id}/hqdefault.jpg` : '';
+  }
+  if (videoUrl.includes("drive.google.com")) {
+    const id = extractGoogleDriveFileId(videoUrl);
+    return id ? `https://drive.google.com/thumbnail?id=${id}` : '';
+  }
+  return ''; // fallback
+}
 
   return (
     <div className="relative" ref={containerRef}>
@@ -393,32 +415,35 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
                           onHoverStart={() => handleVideoHover(video._id, true)}
                           onHoverEnd={() => handleVideoHover(video._id, false)}
                         >
-                          <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden hover:border-4 hover:border-orange-600">
-                            <iframe
-                              className="w-full h-full object-cover"
-                              src={`${video.url}${video.url.includes('?') ? '&' : '?'}modestbranding=1`}
-                              title="YouTube video"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                              allowFullScreen
-                            ></iframe>
-                            <motion.div
-                              className="absolute inset-0 bg-orange/20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
-                              whileHover={{ opacity: 1 }}
-                            >
-                              <motion.div
-                                initial={{ scale: 0 }}
-                                whileHover={{ scale: 1 }}
-                                className="p-3 bg-white/90 rounded-full"
-                              >
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                                </svg>
-                              </motion.div>
-                            </motion.div>
-                            <div className="absolute bottom-2 right-2 bg-orange-600 text-white text-xs px-2 py-1 rounded">
-                              4:43
-                            </div>
-                          </div>
+                         <div className="relative aspect-video bg-gray-200 dark:bg-gray-700 rounded-lg mb-4 overflow-hidden hover:border-4 hover:border-orange-600">
+  {video.url.includes('youtube.com') || video.url.includes('youtu.be') || video.url.includes('drive.google.com') ? (
+    <img
+      src={getVideoThumbnail(video.url)}
+      alt="Video Thumbnail"
+      className="w-full h-full object-cover"
+    />
+  ) : (
+    <video
+      src={video.url}
+      className="w-full h-full object-cover"
+      controls
+      playsInline
+    />
+  )}
+  <motion.div
+    className="absolute inset-0 bg-orange/20 opacity-0 hover:opacity-100 transition-opacity duration-300 flex items-center justify-center"
+    whileHover={{ opacity: 1 }}
+  >
+    <motion.div
+      initial={{ scale: 0 }}
+      whileHover={{ scale: 1 }}
+      className="p-3 bg-white/90 rounded-full"
+    >
+      <FiPlay className="h-8 w-8 text-blue-600" />
+    </motion.div>
+  </motion.div>
+</div>
+
 
                           <div className="flex-grow">
                             <h3 className="text-xl font-bold text-gray-800 dark:text-white mb-1 break-words overflow-hidden">
@@ -474,187 +499,190 @@ export default function Gallery({ customLimit = 0 }: { customLimit?: number }) {
       </section>
 
       {/* Modal Viewer */}
-         <AnimatePresence>
-             {(selectedImage || selectedVideo) && (
-               <motion.div
-                 initial={{ opacity: 0 }}
-                 animate={{ opacity: 1 }}
-                 exit={{ opacity: 0 }}
-                 transition={{ duration: 0.1 }}
-                 className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
-                 onClick={closeModal}
-                 id="media-modal"
-               >
-                 <motion.div
-                   initial={{ scale: 0.8 }}
-                   animate={{ scale: 1 }}
-                   exit={{ scale: 0.8 }}
-                   transition={{ type: 'spring', stiffness: 100, damping: 15 }}
-                   className="relative max-w-4xl w-full mx-4"
-                   onClick={(e) => e.stopPropagation()}
-                 >
-                   {/* Controls (Zoom / Fullscreen / Share / Download) */}
-                   <div className="absolute top-2 right-2 z-20 flex gap-2">
-                     {/* Fullscreen toggle */}
-                     <button
-                       onClick={() => {
-                         const el = document.fullscreenElement
-                           ? document.exitFullscreen()
-                           : document.querySelector('#media-modal')?.requestFullscreen();
-                       }}
-                       className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
-                     >
-                       ⛶
-                     </button>
-                     {/* Zoom In */}
-                     <button
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         setZoom(z => Math.min(z + 0.25, 3));
-                       }}
-                       className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
-                     >
-                       🔍+
-                     </button>
-                     {/* Zoom Out */}
-                     <button
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         setZoom(z => Math.max(z - 0.25, 1));
-                       }}
-                       className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
-                     >
-                       🔍−
-                     </button>
-                     {/* Share */}
-                     <button
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         const url = selectedImage?.url || selectedVideo?.url;
-                         if (navigator.share && url) {
-                           navigator.share({ title: 'Media', url });
-                         } else {
-                           alert('Web Share not supported.');
-                         }
-                       }}
-                       className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
-                     >
-                       📤
-                     </button>
-                     {/* Download */}
-                     <a
-                       href={selectedImage?.url || selectedVideo?.url}
-                       download
-                       target="_blank"
-                       rel="noopener noreferrer"
-                       className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
-                     >
-                       ⬇
-                     </a>
-                     {/* Close */}
-                     <button
-                       onClick={closeModal}
-                       className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
-                     >
-                       <XMarkIcon className="h-5 w-5 text-orange-700" />
-                     </button>
-                   </div>
-       
-                   <div className="relative max-h-[80vh] w-full mr-4 rounded-xl overflow-hidden">
-                     <AnimatePresence custom={direction} mode="wait">
-                       {selectedImage ? (
-                         <motion.div
-                           className="flex items-center justify-center"
-                           style={{ transform: `scale(${zoom})`, transition: 'transform 0.3s ease' }}
-                         >
-                           <motion.img
-                             key={selectedImage.url}
-                             src={selectedImage.url}
-                             alt="Gallery image"
-                             className="max-w-full max-h-[70vh] object-contain mx-auto rounded-xl"
-                             custom={direction}
-                             variants={imageVariants}
-                             initial="enter"
-                             animate="center"
-                             exit="exit"
-                             transition={{
-                               x: { type: 'spring', stiffness: 500, damping: 30 },
-                               rotate: { duration: 0.6 },
-                               opacity: { duration: 0.1 }
-                             }}
-                           />
-                         </motion.div>
-                       ) : (
-                         <motion.div
-                           key={selectedVideo?.url}
-                           custom={direction}
-                           variants={imageVariants}
-                           initial="enter"
-                           animate="center"
-                           exit="exit"
-                           transition={{
-                             x: { type: 'spring', stiffness: 500, damping: 30 },
-                             rotate: { duration: 0.6 },
-                             opacity: { duration: 0.1 }
-                           }}
-                           className="w-full aspect-video relative p-4"
-                         >
-                           {selectedVideo?.url.includes('youtube.com') || selectedVideo?.url.includes('youtu.be') ? (
-                             <iframe
-                               className="w-full h-full rounded-xl"
-                               src={`${selectedVideo.url}${selectedVideo.url.includes('?') ? '&' : '?'}autoplay=1`}
-                               title="YouTube video"
-                               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                               allowFullScreen
-                             ></iframe>
-                           ) : (
-                             <video
-                               ref={modalVideoRef}
-                               src={selectedVideo?.url}
-                               className="w-full h-full object-contain"
-                               controls
-                               autoPlay={isModalVideoPlaying}
-                               playsInline
-                               onPlay={() => setIsModalVideoPlaying(true)}
-                               onPause={() => setIsModalVideoPlaying(false)}
-                             />
-                           )}
-                         </motion.div>
-                       )}
-                     </AnimatePresence>
-                   </div>
-       
-                   <div className="flex justify-between items-center mt-4 bg-orange-200 rounded-lg p-2">
-                     <button
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         navigate('prev');
-                       }}
-                       className="p-2 text-orange-600 hover:text-orange-400 transition-colors"
-                       aria-label="Previous"
-                     >
-                       <ChevronLeftIcon className="h-8 w-8" />
-                     </button>
-       
-                     <span className="text-orange-600 text-xl font-medium">
-                       {currentIndex + 1} / {activeTab === 'images' ? currentImages.length : currentVideos.length}
-                     </span>
-       
-                     <button
-                       onClick={(e) => {
-                         e.stopPropagation();
-                         navigate('next');
-                       }}
-                       className="p-2 text-orange-600 hover:text-orange-400 transition-colors"
-                       aria-label="Next"
-                     >
-                       <ChevronRightIcon className="h-8 w-8" />
-                     </button>
-                   </div>
-                 </motion.div>
-               </motion.div>
-             )}
-           </AnimatePresence>
+        <AnimatePresence>
+  {(selectedImage || selectedVideo) && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.1 }}
+      className="fixed inset-0 z-50 flex items-center justify-center backdrop-blur-sm"
+      onClick={closeModal}
+      id="media-modal"
+    >
+      <motion.div
+        initial={{ scale: 0.8 }}
+        animate={{ scale: 1 }}
+        exit={{ scale: 0.8 }}
+        transition={{ type: 'spring', stiffness: 100, damping: 15 }}
+        className="relative max-w-4xl w-full mx-4"
+        onClick={(e) => e.stopPropagation()}
+      >
+        {/* Controls */}
+        <div className="absolute top-2 right-2 z-20 flex gap-2">
+          <button
+            onClick={() => {
+              const el = document.fullscreenElement
+                ? document.exitFullscreen()
+                : document.querySelector('#media-modal')?.requestFullscreen();
+            }}
+            className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
+          >
+            ⛶
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoom(z => Math.min(z + 0.25, 3));
+            }}
+            className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
+          >
+            🔍+
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setZoom(z => Math.max(z - 0.25, 1));
+            }}
+            className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
+          >
+            🔍−
+          </button>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              const url = selectedImage?.url || selectedVideo?.url;
+              if (navigator.share && url) {
+                navigator.share({ title: 'Media', url });
+              } else {
+                alert('Web Share not supported.');
+              }
+            }}
+            className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
+          >
+            📤
+          </button>
+          <a
+            href={selectedImage?.url || selectedVideo?.url}
+            download
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
+          >
+            ⬇
+          </a>
+          <button
+            onClick={closeModal}
+            className="p-2 bg-white/80 hover:bg-white rounded-full shadow"
+          >
+            <XMarkIcon className="h-5 w-5 text-orange-700" />
+          </button>
+        </div>
+
+        {/* Content */}
+        <div className="relative max-h-[80vh] w-full mr-4 rounded-xl overflow-hidden">
+          <AnimatePresence custom={direction} mode="wait">
+            {selectedImage ? (
+              <motion.div
+                className="flex items-center justify-center"
+                style={{ transform: `scale(${zoom})`, transition: 'transform 0.3s ease' }}
+              >
+                <motion.img
+                  key={selectedImage.url}
+                  src={selectedImage.url}
+                  alt="Gallery image"
+                  className="max-w-full max-h-[70vh] object-contain mx-auto rounded-xl"
+                  custom={direction}
+                  variants={imageVariants}
+                  initial="enter"
+                  animate="center"
+                  exit="exit"
+                  transition={{
+                    x: { type: 'spring', stiffness: 500, damping: 30 },
+                    rotate: { duration: 0.6 },
+                    opacity: { duration: 0.1 }
+                  }}
+                />
+              </motion.div>
+            ) : (
+              <motion.div
+                key={selectedVideo?.url}
+                custom={direction}
+                variants={imageVariants}
+                initial="enter"
+                animate="center"
+                exit="exit"
+                transition={{
+                  x: { type: 'spring', stiffness: 500, damping: 30 },
+                  rotate: { duration: 0.6 },
+                  opacity: { duration: 0.1 }
+                }}
+                className="w-full aspect-video relative p-4"
+              >
+                {selectedVideo?.url.includes('youtube.com') || selectedVideo?.url.includes('youtu.be') ? (
+                  <iframe
+                    className="w-full h-full rounded-xl"
+                    src={`https://www.youtube.com/embed/${extractYouTubeVideoId(selectedVideo.url)}?autoplay=1`}
+                    title="YouTube video"
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  ></iframe>
+                ) : selectedVideo?.url.includes('drive.google.com') ? (
+                  <iframe
+                    className="w-full h-full rounded-xl"
+                    src={`https://drive.google.com/file/d/${extractGoogleDriveFileId(selectedVideo.url)}/preview`}
+                    allow="autoplay"
+                    allowFullScreen
+                    title="Google Drive video"
+                  ></iframe>
+                ) : (
+                  <video
+                    ref={modalVideoRef}
+                    src={selectedVideo?.url}
+                    className="w-full h-full object-contain"
+                    controls
+                    autoPlay={isModalVideoPlaying}
+                    playsInline
+                    onPlay={() => setIsModalVideoPlaying(true)}
+                    onPause={() => setIsModalVideoPlaying(false)}
+                  />
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+
+        {/* Navigation */}
+        <div className="flex justify-between items-center mt-4 bg-orange-200 rounded-lg p-2">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate('prev');
+            }}
+            className="p-2 text-orange-600 hover:text-orange-400 transition-colors"
+            aria-label="Previous"
+          >
+            <ChevronLeftIcon className="h-8 w-8" />
+          </button>
+          <span className="text-orange-600 text-xl font-medium">
+            {currentIndex + 1} / {activeTab === 'images' ? currentImages.length : currentVideos.length}
+          </span>
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate('next');
+            }}
+            className="p-2 text-orange-600 hover:text-orange-400 transition-colors"
+            aria-label="Next"
+          >
+            <ChevronRightIcon className="h-8 w-8" />
+          </button>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
     </div >
   );
 }
