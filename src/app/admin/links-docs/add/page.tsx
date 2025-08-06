@@ -8,7 +8,7 @@ import FileInput from '@/components/form/input/FileInput';
 import { toast } from 'react-hot-toast';
 import LoadingScreen from '@/components/common/LoadingScreen';
 import { useLoading } from '@/context/LoadingContext';
-import FileGallery from '@/components/ui/images/documentsLinks';
+import FileGallery from '@/components/ui/images/DocumentsLinks';
 
 
 export default function AddGalleryPage() {
