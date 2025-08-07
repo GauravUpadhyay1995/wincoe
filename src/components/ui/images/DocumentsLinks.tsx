@@ -52,7 +52,7 @@ export default function FileGallery({
     try {
       await onDeleteFile(fileId);
       setExistingFiles(existingFiles.filter((f) => f.id !== fileId));
-      toast.success('File deleted successfully');
+      // toast.success('File deleted successfully');
       if (previewIndex !== null && existingFiles[previewIndex]?.id === fileId) {
         setPreviewIndex(null);
       }
@@ -66,18 +66,32 @@ export default function FileGallery({
       {/* File Grid */}
       <div className="flex flex-wrap gap-3">
         {existingFiles.map((file, idx) => {
-            console.log("fileurl=",file.url)
+          console.log("fileurl=", file.url)
           const type = getFileType(file.url);
           return (
             <div key={file.id} className="relative w-20 h-20 rounded-lg overflow-hidden group bg-gray-100 flex items-center justify-center text-center">
               {type === 'image' ? (
-                <Image
-                  src={file.url}
-                  alt={`File ${idx}`}
-                  fill
-                  className="object-cover rounded-md border border-gray-300 dark:border-gray-700 cursor-pointer"
-                  onClick={() => setPreviewIndex(idx)}
-                />
+                <div>
+                  <Image
+                    src={file.url}
+                    alt={`File ${idx}`}
+                    fill
+                    className="object-cover rounded-md border border-gray-300 dark:border-gray-700 cursor-pointer"
+                    onClick={() => setPreviewIndex(idx)}
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => handleDelete(file.id)}
+                    className="absolute top-1 right-1 bg-white rounded-full p-1 shadow opacity-0 group-hover:opacity-100 transition"
+                    title="Delete"
+                  >
+                    <svg xmlns="http://www.w3.org/2000/svg" width={12} height={12} fill="none" viewBox="0 0 24 24" stroke="currentColor" className="text-red-500">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
               ) : (
                 <div
                   className="w-full h-full flex items-center justify-center cursor-pointer text-orange-600"
@@ -90,7 +104,7 @@ export default function FileGallery({
                 </div>
               )}
 
-              
+
             </div>
           );
         })}
@@ -106,9 +120,9 @@ export default function FileGallery({
             className="relative w-[80vw] h-[70vh] max-w-2xl mx-auto bg-white p-4 rounded-lg"
             onClick={(e) => e.stopPropagation()}
           >
- 
 
-         
+
+
 
             {/* Render File */}
             {getFileType(existingFiles[previewIndex].url) === 'image' ? (

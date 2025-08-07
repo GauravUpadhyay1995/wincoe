@@ -11,8 +11,8 @@ export const GET =  asyncHandler(async (req: NextRequest, { params }: { params: 
 
     // Fetch gallery with populated user references and lean projection
     const gallery = await Gallery.findById(galleryId)
-      .populate('createdBy', 'name ') // Only include name and email of creator
-      .populate('updatedBy', 'name ') // Only include name and email of updater
+      // .populate('createdBy', 'name ') // Only include name and email of creator
+      // .populate('updatedBy', 'name ') // Only include name and email of updater
       .lean() // Convert to plain JS object
       .select('-__v') // Exclude version key and updatedAt
       .exec();

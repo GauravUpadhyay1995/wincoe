@@ -23,6 +23,7 @@ export default function AddTrlPage() {
   const [description, setDescription] = useState('');
   const [banner, setBanner] = useState<File | null>(null);
   const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [editorKey, setEditorKey] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -52,6 +53,19 @@ export default function AddTrlPage() {
           setIsLoading(false);
         }
       })();
+    }
+  }, [id]);
+  useEffect(() => {
+    if (!id) {
+      // reset form fields when there's no ID
+      setTitle('');
+      setDuration('');
+      setAmount('');
+      setRequirement( '');
+      setTag('');
+      setDescription('');
+      setBannerUrl('');
+      setEditorKey(prev => prev + 1);
     }
   }, [id]);
 
@@ -198,6 +212,7 @@ export default function AddTrlPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
           <SummernoteEditor
+            key={editorKey}
             value={description}
             onChange={setDescription}
             height={300}

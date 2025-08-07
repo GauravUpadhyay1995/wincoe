@@ -76,7 +76,7 @@ export const PATCH = verifyAdmin(
     const updatedDoc = await ImportantDocument.findByIdAndUpdate(documentId, value, {
       new: true,
     })
-      .populate('createdBy updatedBy', 'name') // ✅ populate names
+      // .populate('createdBy updatedBy', 'name') // ✅ populate names
       .lean();
 
     return NextResponse.json({

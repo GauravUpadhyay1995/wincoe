@@ -19,7 +19,7 @@ export default function AddGalleryPage() {
 
   const [title, setTitle] = useState('');
   const [images, setImages] = useState<File[]>([]);
-  const [existingImages, setExistingImages] = useState<string[]>([]);
+  const [existingImages, setExistingImages] = useState<{ url: string, id: string }[]>([]);
   const [videos, setVideos] = useState([
     { url: '', title: '', description: '' },
   ]);
@@ -38,7 +38,10 @@ export default function AddGalleryPage() {
           if (result.success) {
             const data = result.data;
             setTitle(data.title || '');
-            setExistingImages(data.images?.map((img: any) => img.url) || []);
+            setExistingImages(data.images?.map((img: any) => ({
+              url: img.url,
+              id: img._id // assuming your API returns an id for each document
+            })) || []);
             setVideos(data.video_url || []);
           } else {
             toast.error('Failed to fetch gallery data');
@@ -51,7 +54,15 @@ export default function AddGalleryPage() {
       })();
     }
   }, [id]);
-
+  useEffect(() => {
+    if (!id) {
+      // reset form fields when there's no ID
+      setTitle('');
+      setTitle('');
+      setExistingImages([]);
+      setVideos([]);
+    }
+  }, [id]);
   const handleVideoChange = (index: number, field: 'url' | 'title' | 'description', value: string) => {
     const updated = [...videos];
     updated[index][field] = value;
@@ -97,16 +108,40 @@ export default function AddGalleryPage() {
         return id ? 'Gallery updated successfully!' : 'Gallery created successfully!';
       },
       error: (err) => err.message || 'Something went wrong',
+    }, {
+      // Add this options object to customize position and styling
+      position: 'top-center',
+      style: {
+        minWidth: '250px',
+        transform: 'translateX(0) translateY(0)',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+      },
+      className: 'toast-center',
     });
   };
 
-  const handleImageDelete = async (imgUrl: string) => {
-    const res = await fetch(`/api/v1/admin/gallery/image/${id}?url=${encodeURIComponent(imgUrl)}`, {
-      method: 'DELETE',
-      credentials: 'include',
-    });
-    const result = await res.json();
-    if (!result.success) throw new Error(result.message);
+  const handleImageDelete = async (fileId: string) => {
+    if (!id) {
+      toast.error('Gallery ID is missing');
+      return;
+    }
+
+    try {
+      setIsLoading(true);
+      const res = await fetch(`/api/v1/admin/gallery/update/${id}/image/${fileId}`, {
+        method: 'DELETE',
+        credentials: 'include',
+      });
+      const result = await res.json();
+      if (!result.success) throw new Error(result.message);
+      setIsLoading(false);
+      return result;
+    } catch (error: any) {
+      setIsLoading(false);
+      throw new Error(error.message || 'Failed to delete image');
+    }
   };
 
 

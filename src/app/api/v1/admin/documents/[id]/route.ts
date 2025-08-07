@@ -20,7 +20,7 @@ export const GET =   asyncHandler(async (req: NextRequest, { params }: { params:
     }
 
     const document = await ImportantDocument.findById(documentId)
-      .populate('createdBy updatedBy', 'name') // ✅ populates user names
+      // .populate('createdBy updatedBy', 'name') // ✅ populates user names
       .select('-__v -updatedAt -createdAt')
       .lean()
       .exec();

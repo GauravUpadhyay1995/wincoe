@@ -22,6 +22,7 @@ export default function AddGalleryPage() {
   const [existingImages, setExistingImages] = useState<{ url: string, id: string }[]>([]);
   const [publishDate, setPublishDate] = useState('');
 
+  const [editorKey, setEditorKey] = useState(0);
 
   const [description, setDescription] = useState('');
 
@@ -33,6 +34,11 @@ export default function AddGalleryPage() {
           const res = await fetch(`/api/v1/admin/documents/${id}`, {
             method: 'GET',
             credentials: 'include',
+            headers: {
+              'Cache-Control': 'no-cache, no-store, must-revalidate',
+              'Pragma': 'no-cache',
+              'Expires': '0'
+            }
           });
           const result = await res.json();
           if (result.success) {
@@ -45,10 +51,8 @@ export default function AddGalleryPage() {
               url: img.url,
               id: img._id // assuming your API returns an id for each document
             })) || []);
-          //   data.documents?.map((img: any) => (
-          //     console.log("existingImages",img._id)
-          //  ))
-            
+
+
 
           } else {
             toast.error('Failed to fetch gallery data');
@@ -61,8 +65,17 @@ export default function AddGalleryPage() {
       })();
     }
   }, [id]);
-
-  console.log("publishDate=", publishDate)
+  useEffect(() => {
+    if (!id) {
+      // reset form fields when there's no ID
+      setTitle('');
+      setDescription('');
+      setPublishDate('');
+      setExistingImages([]);
+      setImages([]);
+      setEditorKey(prev => prev + 1);
+    }
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -91,13 +104,12 @@ export default function AddGalleryPage() {
     toast.promise(promise, {
       loading: id ? 'Updating ...' : 'Creating ...',
       success: () => {
-         router.push('/admin/links-docs');
+        router.push('/admin/links-docs');
         return id ? 'Updated successfully!' : 'Created successfully!';
       },
       error: (err) => err.message || 'Something went wrong',
     });
   };
-
   const handleImageDelete = async (fileId: string) => {
     if (!id) {
       toast.error('Document ID is missing');
@@ -105,17 +117,25 @@ export default function AddGalleryPage() {
     }
 
     try {
+      setIsLoading(true); // Add loading state
       const res = await fetch(`/api/v1/admin/documents/update/${id}/image/${fileId}`, {
         method: 'DELETE',
         credentials: 'include',
       });
       const result = await res.json();
       if (!result.success) throw new Error(result.message);
-      return result;
+
+      // Update the existingImages state by filtering out the deleted image
+      setExistingImages(prevImages => prevImages.filter(img => img.id !== fileId));
+
+      toast.success('File deleted successfully');
     } catch (error: any) {
-      throw new Error(error.message || 'Failed to delete image');
+      toast.error(error.message || 'Failed to delete image');
+    } finally {
+      setIsLoading(false); // Remove loading state
     }
   };
+
 
   if (isLoading) {
     return (
@@ -183,6 +203,7 @@ export default function AddGalleryPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
           <SummernoteEditor
+            key={editorKey}
             value={description}
             onChange={setDescription}
             height={300}

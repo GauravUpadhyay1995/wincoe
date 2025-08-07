@@ -108,15 +108,16 @@ const UpcomingEvent = ({
 
 
                     {/* Countdown Timer */}
+                    {/* Countdown Timer */}
                     <div className="mb-6">
                         <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">
                             EVENT STARTS IN:
                         </h4>
-                        <div className="flex space-x-2">
+                        <div className="flex flex-wrap sm:flex-nowrap gap-2">
                             {Object.entries(timeLeft).map(([unit, value]) => (
                                 <div
                                     key={unit}
-                                    className="flex flex-col items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-2 min-w-[60px] shadow-md shadow-orange-300 perspective-[600px]"
+                                    className="flex flex-col items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] shadow-md shadow-orange-300 perspective-[600px] flex-1 sm:flex-none"
                                 >
                                     <AnimatePresence mode="wait" initial={false}>
                                         <motion.span
@@ -125,12 +126,12 @@ const UpcomingEvent = ({
                                             animate={{ rotateX: 0, opacity: 1 }}
                                             exit={{ rotateX: -90, opacity: 0 }}
                                             transition={{ duration: 0.5 }}
-                                            className="text-2xl font-bold text-gray-900 dark:text-white block"
+                                            className="text-xl sm:text-2xl font-bold text-gray-900 dark:text-white block"
                                         >
                                             {formatTime(value)}
                                         </motion.span>
                                     </AnimatePresence>
-                                    <span className="text-xs text-gray-500 dark:text-gray-400 uppercase">
+                                    <span className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 uppercase">
                                         {unit}
                                     </span>
                                 </div>
@@ -146,7 +147,7 @@ const UpcomingEvent = ({
                     >
                         <button className="relative overflow-hidden group bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full font-medium"
                             onClick={() => router.push(`/events/${eventID}`)}
-                            >
+                        >
                             <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-full transition-transform duration-500 ease-in-out rotate-12 blur-sm" />
                             <span className="relative z-10">{ctaText}</span>
                         </button>

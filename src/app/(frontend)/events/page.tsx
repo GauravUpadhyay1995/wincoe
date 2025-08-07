@@ -97,7 +97,7 @@ export default function EventsSegrigation({ customLimit = 0 }: { customLimit?: n
               startDate={event.startDate}
               endDate={event.endDate}
               description={event.description}
-              image={event.images[0]?.url}
+              image={event.images[0]?.url||"/images/gallery/default.jpg"}
               delay={i * 0.1}
               eventID={event._id}
             />

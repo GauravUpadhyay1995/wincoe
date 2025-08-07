@@ -26,6 +26,7 @@ export default function AddNewsPage() {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [image, setImage] = useState<File | null>(null);
+  const [editorKey, setEditorKey] = useState(0);
 
 
   useEffect(() => {
@@ -57,7 +58,17 @@ export default function AddNewsPage() {
     }
   }, [id]);
 
-
+  useEffect(() => {
+    if (!id) {
+      // reset form fields when there's no ID
+      setTitle('');
+      setDescription('');
+      setTitle('');
+      setCategoryName('');
+      setDescription('');
+      setEditorKey(prev => prev + 1);
+    }
+  }, [id]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -156,7 +167,9 @@ export default function AddNewsPage() {
           <label className="block text-sm font-medium text-gray-700 dark:text-white mb-1">
             Description
           </label>
+          
           <SummernoteEditor
+            key={editorKey}
             value={description}
             onChange={setDescription}
             height={300}
@@ -164,7 +177,7 @@ export default function AddNewsPage() {
           />
 
         </div>
-     
+
 
         <div className="flex justify-end items-center mt-6 gap-3 w-full flex-wrap">
           {/* Back button (right) */}
