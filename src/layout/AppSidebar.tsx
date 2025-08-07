@@ -67,7 +67,7 @@ const AppSidebar: React.FC = () => {
       path: "/admin/events",
       subItems: [
         { name: "All Events", path: "/admin/events", pro: false },
-        { name: "Add Events", path: "/admin/teams/add", pro: false },
+        { name: "Add Events", path: "/admin/events/add", pro: false },
       ],
     },
     {
