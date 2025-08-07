@@ -76,4 +76,4 @@ jobs:
             pm2 start npm --name "WinCOE" -- run start
             pm2 save
 
-            echo "✅ Deployment complete"
+            echo "✅ Deployment complete "
