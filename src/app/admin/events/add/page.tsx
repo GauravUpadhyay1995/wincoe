@@ -24,6 +24,7 @@ export default function AddEventPage() {
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
   const [venue, setVenue] = useState('');
+  const [editorKey, setEditorKey] = useState(0);
 
   useEffect(() => {
     if (id) {
@@ -61,7 +62,17 @@ export default function AddEventPage() {
     }
   }, [id]);
 
-
+  useEffect(() => {
+    if (!id) {
+      setTitle('');
+      setExistingImages([]);
+      setStartDate('');
+      setEndDate('');
+      setVenue('');
+      setDescription('');
+      setEditorKey(prev => prev + 1);
+    }
+  }, [id]);
 
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -96,7 +107,7 @@ export default function AddEventPage() {
     toast.promise(promise, {
       loading: id ? 'Updating event...' : 'Creating event...',
       success: () => {
-        setImages([]); router.push('/admin/events'); 
+        setImages([]); router.push('/admin/events');
         return id ? 'Event updated successfully!' : 'Event created successfully!';
       },
       error: (err) => err.message || 'Something went wrong',
@@ -122,7 +133,7 @@ export default function AddEventPage() {
     }
 
     try {
-        setIsLoading(true);
+      setIsLoading(true);
       const res = await fetch(`/api/v1/admin/events/update/${id}/image/${fileId}`, {
         method: 'DELETE',
         credentials: 'include',
@@ -131,10 +142,10 @@ export default function AddEventPage() {
       if (!result.success) throw new Error(result.message);
       setImages([]);
 
-        setIsLoading(false);
+      setIsLoading(false);
       return result;
     } catch (error: any) {
-        setIsLoading(false);
+      setIsLoading(false);
       throw new Error(error.message || 'Failed to delete image');
     }
   };
@@ -236,6 +247,8 @@ export default function AddEventPage() {
         <div>
           <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Description</label>
           <SummernoteEditor
+            key={editorKey}
+
             value={description}
             onChange={setDescription}
             height={300}
