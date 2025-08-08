@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const MONGODB_URI = process.env.MONGODB_URI as string;
 const MODE=process.env.NEXT_PUBLIC_ENVIROMENT as string;
-const DATABSENAME = MODE=="production"?'db_wincoe':'db_wincoe_local';
+const DATABSENAME = process.env.MONGODB_DB;
 if (!MONGODB_URI) {
   throw new Error('❌ MONGODB_URI not defined in .env');
 }

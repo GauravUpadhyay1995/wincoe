@@ -80,8 +80,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setIsAuthenticatedAdmin(false);
     clearCookies();
     if (typeof window !== 'undefined' && window.location.pathname.includes('/admin')) {
-      console.log('>>>>>>>>');
-      router.replace('/login');
+      // console.log('>>>>>>>>');
+      router.push('/login');
     }
   }, [router, clearCookies]);
 

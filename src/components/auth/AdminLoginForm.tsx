@@ -41,10 +41,10 @@ export default function AdminLoginForm() {
       });
 
       const responce = await response.json();
-      // console.log('Response from admin login:', response.ok, responce);
-      if (!response.ok) {
-        throw new Error(responce.message || 'Failed to login1');
-      }
+      // console.log('Response from admin login:', responce);
+      // if (!response.ok) {
+      //   throw new Error(responce.message || 'Failed to login1');
+      // }
 
       // console.log('>>>>>>>>>>>>', responce);
 
@@ -201,24 +201,24 @@ export default function AdminLoginForm() {
             >
               {/* You can replace this with an actual admin illustration */}
               <div className="flex-shrink-0 z-20">
-            <Link
-              href="/"
-              className="block p-2 rounded-lg transition-all duration-300 transform"
-              aria-label="Go to Home page"
-              
-            >
-              <div className="flex items-center gap-2 sm:gap-3">
-                <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={100} height={0} priority />
-                <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={120} height={0} priority />
-                <Image src="/images/logo/Wadhwani-Foundation.webp" alt="WIN CoE Logo" width={100} height={0} priority />
+                <Link
+                  href="/"
+                  className="block p-2 rounded-lg transition-all duration-300 transform"
+                  aria-label="Go to Home page"
+
+                >
+                  <div className="flex items-center gap-2 sm:gap-3">
+                    <Image src="/images/logo/wincoe.svg" alt="WIN CoE Logo" width={100} height={0} priority />
+                    <Image src="/images/logo/IIT-DELHI.svg" alt="WIN CoE Logo" width={120} height={0} priority />
+                    <Image src="/images/logo/Wadhwani-Foundation.webp" alt="WIN CoE Logo" width={100} height={0} priority />
+                  </div>
+                </Link>
               </div>
-            </Link>
-          </div>
               <h2 className="font-bold text-3xl sm:text-4xl mb-4 leading-tight">
                 Admin Dashboard Access
               </h2>
               <p className="text-purple-100 text-lg mb-8 opacity-90">
-                 Welcome to the admin dashboard. Please login to access the features.
+                Welcome to the admin dashboard. Please login to access the features.
               </p>
               {/* <Button
               variant="primary"
