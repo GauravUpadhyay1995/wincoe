@@ -2,7 +2,8 @@ name: Deploy Frontend to EC2
 
 on:
   push:
-    branches: [main]   # ✅ Correct branch name
+    branches:
+      - main
 
 jobs:
   deploy:
@@ -10,25 +11,25 @@ jobs:
     environment: Production
 
     steps:
-      - name: Checkout Code
+      - name: ⬇ Checkout Code
         uses: actions/checkout@v3
 
-      - name: Setup Node.js
+      - name: ⚙ Setup Node.js
         uses: actions/setup-node@v3
         with:
-          node-version: "18"
-          cache: "npm"
+          node-version: '18'
+          cache: 'npm'
 
-      - name: Install Dependencies
+      - name: 📦 Install Dependencies
         run: npm ci
 
-      - name: Run Linting
+      - name: 🧹 Run Lint (optional)
         run: npm run lint
 
-      - name: Build Application (Optional - for CI validation only)
+      - name: 🏗 Build (optional - for CI validation)
         run: npm run build
 
-      - name: Validate SSH Secrets
+      - name: 🔐 Validate SSH Secrets
         run: |
           if [ -z "${{ secrets.EC2_HOST }}" ]; then
             echo "::error::EC2_HOST secret is not set"
@@ -43,7 +44,7 @@ jobs:
             exit 1
           fi
 
-      - name: Deploy to EC2
+      - name: 🚀 Deploy to EC2
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.EC2_HOST }}
@@ -52,24 +53,27 @@ jobs:
           script: |
             echo "🔐 Setting permissions"
             sudo git config --global --add safe.directory /var/www/html/wincoe
-            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /var/www/html/wincoe
+            sudo chown -R $USER:$USER /var/www/html/wincoe
 
-            echo "📦 Pulling latest code"
+            echo "📂 Switching to project directory"
             cd /var/www/html/wincoe
-            git pull origin main   # ✅ use main here
+
+            echo "📥 Pulling latest code from main"
+            git reset --hard
+            git pull origin main
 
             echo "🧹 Cleaning previous builds and caches"
             rm -rf node_modules .next .cache
 
-            echo "📥 Installing dependencies"
+            echo "📦 Installing dependencies"
             npm ci
 
-            echo "🔨 Building the Next.js application"
+            echo "🔨 Building the Next.js app"
             npm run build
 
-            echo "🚀 Restarting WinCOE with PM2"
+            echo "🔁 Restarting PM2 process"
             pm2 delete WinCOE || true
             pm2 start npm --name "WinCOE" -- run start
             pm2 save
 
-            echo "✅ WinCOE deployment completed"
+            echo "✅ Deployment complete "

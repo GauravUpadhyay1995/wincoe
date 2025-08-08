@@ -17,11 +17,32 @@ export default function ImportantDocuments() {
         `${process.env.NEXT_PUBLIC_API_URL}/documents/list?from=frontend`,
         fetcher
     );
+
     function isNewlyPublished(publishDate: string): boolean {
         const now = new Date();
         const published = new Date(publishDate);
         const diffMs = Math.abs(now.getTime() - published.getTime());
-        return diffMs <= 24 * 60 * 60 * 1000; // 30 minutes in milliseconds
+        return diffMs <= 24 * 60 * 60 * 1000;
+    }
+
+    function isRecentlyUpdated(updateDate: string): boolean {
+        const now = new Date();
+        const updated = new Date(updateDate);
+        const diffMs = Math.abs(now.getTime() - updated.getTime());
+        return diffMs <= 7 * 24 * 60 * 60 * 1000; // Within 7 days
+    }
+
+    function formatTimeAgo(dateString: string): string {
+        const now = new Date();
+        const date = new Date(dateString);
+        const diffMs = now.getTime() - date.getTime();
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+
+        if (diffHours < 24) {
+            return `${diffHours}H AGO`;
+        }
+        const diffDays = Math.floor(diffHours / 24);
+        return `${diffDays}D AGO`;
     }
 
     useEffect(() => {
@@ -92,10 +113,10 @@ export default function ImportantDocuments() {
     if (!data?.data?.docs?.length) return <EmptyState />;
 
     return (
-        <section className="py-10" ref={ref}>
-            <div className="container mx-auto px-4 text-center">
+        <section className="py-10 px-4 sm:px-6" ref={ref}>
+            <div className="container mx-auto text-center">
                 <motion.h2
-                    className="text-4xl font-bold mb-10 text-orange-600 flex items-center justify-center gap-4 text-center"
+                    className="text-3xl sm:text-4xl font-bold mb-8 sm:mb-10 text-orange-600 flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4"
                     initial={{ opacity: 0, y: -30 }}
                     animate={controls}
                     variants={{
@@ -111,8 +132,7 @@ export default function ImportantDocuments() {
                         xmlns="http://www.w3.org/2000/svg"
                         fill="#ec820aff"
                         viewBox="0 0 50 50"
-                        width="50px"
-                        height="50px"
+                        className="w-8 h-8 sm:w-10 sm:h-10"
                         initial={{ scale: 0 }}
                         animate={controls}
                         variants={{
@@ -125,7 +145,7 @@ export default function ImportantDocuments() {
                     >
                         <path d="M 30.398438 2 L 7 2 L 7 48 L 43 48 L 43 14.601563 Z M 15 28 L 31 28 L 31 30 L 15 30 Z M 35 36 L 15 36 L 15 34 L 35 34 Z M 35 24 L 15 24 L 15 22 L 35 22 Z M 30 15 L 30 4.398438 L 40.601563 15 Z" />
                     </motion.svg>
-                    Links & Documents
+                    Links - Documents
                 </motion.h2>
 
                 <motion.div
@@ -136,64 +156,77 @@ export default function ImportantDocuments() {
                     viewport={{ amount: 0.3 }}
                 >
                     {data.data.docs.map((group: any, groupIndex: number) => (
-                        <div key={group._id}>
-                            <motion.div
-                                className="relative mb-4 h-8"
-                                initial={{ opacity: 0, y: -10 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: groupIndex * 0.1 }}
-                            >
-                                {/* Centered Title */}
-                                <span className="absolute left-1/2 -translate-x-1/2 text-2xl font-bold text-[#ec4a0a] flex items-center gap-2">
-                                    {group.title}
-
+                        <div key={group._id} className="mb-12">
+                            {/* Title and Metadata Section */}
+                            <div className="flex flex-col items-center mb-6">
+                                <div className="flex items-center gap-2 mb-2">
+                                    <h3 className="text-xl sm:text-2xl font-bold text-[#ec4a0a] text-center">
+                                        {group.title}
+                                    </h3>
                                     {isNewlyPublished(group.publishDate) && (
                                         <motion.img
                                             src="/images/new-badge.gif"
                                             alt="New Badge"
-                                            className="w-12 object-contain rounded-xl"
+                                            className="w-6 h-6 sm:w-8 sm:h-8"
                                             initial={{ opacity: 1 }}
-                                            animate={{ opacity: [1, 0, 1] }} // Blink by changing opacity
+                                            animate={{ opacity: [1, 0, 1] }}
                                             transition={{
                                                 duration: 1,
                                                 repeat: Infinity,
                                                 repeatType: 'loop'
                                             }}
                                         />
-
                                     )}
-                                </span>
+                                </div>
 
-                                {/* Right-aligned Publish Date with Icon */}
-                                <span className="mt-2 absolute right-0 flex items-center gap-1 text-sm  text-[#ec4a0a] ">
-                                    <MdDateRange className="w-4" />
-                                    {new Date(group.publishDate).toLocaleDateString('en-IN', {
-                                        year: 'numeric',
-                                        month: 'short',
-                                        day: 'numeric'
-                                    })}
-                                </span>
-                            </motion.div>
+                                <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                                    <div className="flex items-center gap-1">
+                                        <MdDateRange className="w-4 h-4" />
+                                        <span>
+                                            {new Date(group.publishDate).toLocaleDateString('en-IN', {
+                                                day: 'numeric',
+                                                month: 'short',
+                                                year: 'numeric'
+                                            })}
+                                        </span>
+                                    </div>
 
+                                    {group.updatedAt && isRecentlyUpdated(group.updatedAt) && (
+                                        <span className="ml-2 px-2 py-1 bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full text-xs font-medium">
+                                            UPDATED {formatTimeAgo(group.updatedAt)}
+                                        </span>
+                                    )}
+                                </div>
+                            </div>
 
-                            <p
-                                className="mb-4"
-                                dangerouslySetInnerHTML={{ __html: group.description }}
-                            ></p>
+                            {/* Description Section */}
+                            {group.description && (
+                                <div className="mb-8 px-4 sm:px-0">
+                                    <div
+                                        className="text-sm sm:text-base text-gray-700 dark:text-gray-300 leading-relaxed text-center max-w-3xl mx-auto"
+                                        dangerouslySetInnerHTML={{
+                                            __html: group.description
+                                                // Ensure Summernote's HTML has proper spacing between paragraphs
+                                                .replace(/<p>/g, '<p class="mb-4">')
+                                                .replace(/<br>/g, '<br><br>')
+                                        }}
+                                    />
+                                </div>
+                            )}
 
-                            
-                            <div className="grid sm:grid-cols-6 md:grid-cols-3 lg:grid-cols-6 gap-8">
+                            {/* Documents Grid */}
+                            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4 sm:gap-6">
                                 {group.documents.map((doc: any, index: number) => (
                                     <motion.div
                                         key={doc._id}
-                                        className="bg-gradient-to-br from-orange-50 to-cyan-50 border border-gray-100 dark:border-gray-700 rounded-xl p-6 shadow-md hover:shadow-lg cursor-pointer group relative overflow-hidden hover:border-4 hover:border-orange-600"
+                                        className="bg-gradient-to-br from-orange-50 to-cyan-50 border border-gray-100 dark:border-gray-700 rounded-lg sm:rounded-xl p-4 sm:p-6 shadow-sm sm:shadow-md hover:shadow-lg cursor-pointer group relative overflow-hidden hover:border-2 sm:hover:border-4 hover:border-orange-600"
                                         variants={cardVariants}
                                         whileHover="hover"
                                         whileTap={{ scale: 0.98 }}
                                     >
                                         <AnimatePresence>
                                             <motion.div
-                                                className="absolute -top-10 -right-10 w-24 h-24 rounded-full bg-orange-100 dark:bg-orange-900 opacity-10 group-hover:opacity-20"
+                                                className="absolute -top-8 -right-8 sm:-top-10 sm:-right-10 w-16 h-16 sm:w-24 sm:h-24 rounded-full bg-orange-100 dark:bg-orange-900 opacity-10 group-hover:opacity-20"
                                                 animate={{ rotate: 360 }}
                                                 transition={{
                                                     repeat: Infinity,
@@ -205,7 +238,7 @@ export default function ImportantDocuments() {
                                         </AnimatePresence>
 
                                         <motion.div
-                                            className="flex items-center justify-center mb-4"
+                                            className="flex items-center justify-center mb-2 sm:mb-4"
                                             initial={{ scale: 0 }}
                                             animate={{ scale: 1 }}
                                             transition={{
@@ -222,7 +255,7 @@ export default function ImportantDocuments() {
                                             download
                                             target="_blank"
                                             rel="noopener noreferrer"
-                                            className="inline-flex items-center gap-2 text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-300 text-sm font-medium transition-colors"
+                                            className="inline-flex items-center gap-1 sm:gap-2 text-orange-600 dark:text-orange-400 hover:text-orange-800 dark:hover:text-orange-300 text-xs sm:text-sm font-medium transition-colors"
                                             initial={{ opacity: 0, y: 10 }}
                                             animate={{ opacity: 1, y: 0 }}
                                             transition={{ delay: 0.5 + index * 0.1 }}
@@ -235,7 +268,7 @@ export default function ImportantDocuments() {
                                                     ease: 'easeInOut'
                                                 }}
                                             >
-                                                <MdOutlineDownload className="w-4 h-4" />
+                                                <MdOutlineDownload className="w-3 h-3 sm:w-4 sm:h-4" />
                                             </motion.span>
                                             Download
                                         </motion.a>
@@ -249,6 +282,8 @@ export default function ImportantDocuments() {
         </section>
     );
 }
+
+// LoadingState, ErrorState, and EmptyState components remain the same as previous version
 
 function LoadingState() {
     return (
