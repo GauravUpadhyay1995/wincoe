@@ -15,8 +15,7 @@ import {
   FiX,
 } from "react-icons/fi";
 import useSWR from 'swr';
-import Header from '@/components/home/Header';
-import Footer from '@/components/home/Footer';
+
 
 type TeamMember = {
   _id: string;
