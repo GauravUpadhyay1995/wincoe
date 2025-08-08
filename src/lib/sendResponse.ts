@@ -15,7 +15,7 @@ type ResponseBody<T> = {
   token?: string;
 };
 
-export const sendResponse = <T>(options: ResponseOptions<T>, p0: { status: number; }) => {
+export const sendResponse = <T>(options: ResponseOptions<T>) => {
   const {
     success = true,
     statusCode = 200,
