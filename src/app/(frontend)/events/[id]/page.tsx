@@ -21,7 +21,7 @@ export default function EventDetailsPage() {
             }))
             : [{ bgImage: "/images/gallery/default.jpg" }];
 
-    console.log(IMAGE)
+    // console.log(IMAGE)
 
     if (isLoading) {
         return (
