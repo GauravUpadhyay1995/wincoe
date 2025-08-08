@@ -144,7 +144,7 @@ const regularMembers = teamMembers
 
   return (
     <div className="min-h-screen bg-gradient-to-r from-orange-50 to-cyan-50">
-      <Header />
+  
       <main className="overflow-hidden">
         <section className="py-24 bg-gradient-to-b from-gray-50 to-white dark:from-gray-800 dark:to-gray-900">
           <div className="container mx-auto px-4 sm:px-6 lg:px-8 max-w-7xl">
@@ -175,6 +175,35 @@ const regularMembers = teamMembers
                   viewport={{ once: true, margin: "-100px" }}
                   variants={containerVariants}
                 >
+                   {/* Regular Team Members Section */}
+                  {regularMembers.length > 0 && (
+                    <>
+                      <motion.h3
+                        className="text-xl md:text-3xl font-bold text-center  text-gray-900 dark:text-white mb-6"
+                        initial="hidden"
+                        whileInView="visible"
+                        viewport={{ once: true }}
+                        variants={titleVariants}
+                      >
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Core Team</span>
+                      </motion.h3>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        {regularMembers.map((member: TeamMember, i: number) => (
+                          <TeamMemberCard
+                            key={member._id}
+                            member={member}
+                            index={i}
+                            variants={{
+                              card: cardVariants,
+                              image: imageVariants
+                            }}
+                            onClick={handleMemberClick}
+                          />
+                        ))}
+                      </div>
+                    </>
+                  )}
                   {/* Steering Committee Section */}
                   {steeringMembers.length > 0 && (
                     <>
@@ -206,35 +235,7 @@ const regularMembers = teamMembers
                     </>
                   )}
 
-                  {/* Regular Team Members Section */}
-                  {regularMembers.length > 0 && (
-                    <>
-                      <motion.h3
-                        className="text-xl md:text-3xl font-bold text-center  text-gray-900 dark:text-white mb-6"
-                        initial="hidden"
-                        whileInView="visible"
-                        viewport={{ once: true }}
-                        variants={titleVariants}
-                      >
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-orange-500 to-pink-500">Core Team</span>
-                      </motion.h3>
-
-                      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        {regularMembers.map((member: TeamMember, i: number) => (
-                          <TeamMemberCard
-                            key={member._id}
-                            member={member}
-                            index={i}
-                            variants={{
-                              card: cardVariants,
-                              image: imageVariants
-                            }}
-                            onClick={handleMemberClick}
-                          />
-                        ))}
-                      </div>
-                    </>
-                  )}
+                 
                 </motion.div>
               </div>
             </div>
@@ -248,7 +249,7 @@ const regularMembers = teamMembers
         variants={{ modal: modalVariants, backdrop: backdropVariants }}
       />
 
-      <Footer />
+     
     </div>
   );
 }

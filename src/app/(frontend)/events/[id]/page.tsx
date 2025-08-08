@@ -14,10 +14,14 @@ export default function EventDetailsPage() {
     const { id } = useParams();
     const { data, error, isLoading } = useSWR(`${process.env.NEXT_PUBLIC_API_URL}/events/${id}`, fetcher);
     const event = data?.data;
+    let IMAGE: { bgImage: string }[] =
+        event?.images?.length
+            ? event.images.map((img: any) => ({
+                bgImage: img.url
+            }))
+            : [{ bgImage: "/images/gallery/default.jpg" }];
 
-    const IMAGE: { images: string }[] = event?.images?.map(img => ({
-        bgImage: img.url
-    })) || [];
+    console.log(IMAGE)
 
     if (isLoading) {
         return (
@@ -61,6 +65,7 @@ export default function EventDetailsPage() {
                 <FiCalendar />
                 <span>
                     {new Date(event.startDate).toLocaleDateString('en-US', {
+                        timeZone: 'UTC',
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric',
@@ -69,6 +74,7 @@ export default function EventDetailsPage() {
                     })}
                     –
                     {new Date(event.endDate).toLocaleDateString('en-US', {
+                        timeZone: 'UTC',
                         month: 'long',
                         day: 'numeric',
                         year: 'numeric',
