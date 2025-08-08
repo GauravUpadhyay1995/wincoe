@@ -2,10 +2,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { connectToDB } from '@/config/mongo';
 import { ImportantDocument } from '@/models/ImportantDocument';
-import { withAuth } from '@/lib/withAuth';
+// import { withAuth } from '@/lib/withAuth';
 import { asyncHandler } from '@/lib/asyncHandler';
 import mongoose from 'mongoose';
-import { User } from '@/models/User';
+// import { User } from '@/models/User';
 
 export const GET =   asyncHandler(async (req: NextRequest, { params }: { params: { id: string } }) => {
     await connectToDB();
