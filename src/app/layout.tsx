@@ -18,9 +18,10 @@ export const metadata: Metadata = {
   title: 'The Wadhwani Innovation Network | Centre of Excellence (WIN CoE)',
   description: 'The Wadhwani Innovation Network',
   icons: {
-    icon: "/favicon.ico", // This sets your favicon!
+    icon: "/favicon.ico",
   },
 };
+
 
 export default function RootLayout({
   children,

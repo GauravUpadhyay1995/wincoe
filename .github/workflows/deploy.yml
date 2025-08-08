@@ -2,7 +2,7 @@ name: Deploy Frontend to EC2
 
 on:
   push:
-    branches: [master]   # ✅ Correct branch name
+    branches: [main]   # ✅ Correct branch name
 
 jobs:
   deploy:
@@ -51,12 +51,12 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           script: |
             echo "🔐 Setting permissions"
-            sudo git config --global --add safe.directory /var/www/html/frontend
-            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /var/www/html/frontend
+            sudo git config --global --add safe.directory /var/www/html/wincoe
+            sudo chown -R ${{ secrets.EC2_USERNAME }}:${{ secrets.EC2_USERNAME }} /var/www/html/wincoe
 
             echo "📦 Pulling latest code"
-            cd /var/www/html/frontend
-            git pull origin master   # ✅ use master here
+            cd /var/www/html/wincoe
+            git pull origin main   # ✅ use main here
 
             echo "🧹 Cleaning previous builds and caches"
             rm -rf node_modules .next .cache
@@ -67,9 +67,9 @@ jobs:
             echo "🔨 Building the Next.js application"
             npm run build
 
-            echo "🚀 Restarting frontend with PM2"
-            pm2 delete frontend || true
-            pm2 start npm --name "frontend" -- run start
+            echo "🚀 Restarting WinCOE with PM2"
+            pm2 delete WinCOE || true
+            pm2 start npm --name "WinCOE" -- run start
             pm2 save
 
-            echo "✅ Frontend deployment completed"
+            echo "✅ WinCOE deployment completed"
