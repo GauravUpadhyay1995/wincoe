@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useInView } from 'react-intersection-observer';
 import Image from 'next/image';
-import Link from 'next/link';
 
 const UpcomingEvent = ({
     title,
@@ -23,6 +22,7 @@ const UpcomingEvent = ({
         minutes: 0,
         seconds: 0
     });
+
     const router = useRouter();
     const [imageRef, imageInView] = useInView({ threshold: 0.3, triggerOnce: false });
     const [contentRef, contentInView] = useInView({ threshold: 0.3, triggerOnce: false });
@@ -30,6 +30,7 @@ const UpcomingEvent = ({
     const imageControls = useAnimation();
     const contentControls = useAnimation();
 
+    // Countdown calculation (UTC based since getTime() is UTC internally)
     useEffect(() => {
         const updateTimer = () => {
             const now = new Date().getTime();
@@ -43,6 +44,8 @@ const UpcomingEvent = ({
                     minutes: Math.floor((diff / 1000 / 60) % 60),
                     seconds: Math.floor((diff / 1000) % 60),
                 });
+            } else {
+                setTimeLeft({ days: 0, hours: 0, minutes: 0, seconds: 0 });
             }
         };
 
@@ -51,6 +54,7 @@ const UpcomingEvent = ({
         return () => clearInterval(interval);
     }, [startDate]);
 
+    // Animation triggers
     useEffect(() => {
         if (imageInView) imageControls.start('visible');
         else imageControls.start('hidden');
@@ -61,23 +65,11 @@ const UpcomingEvent = ({
         else contentControls.start('hidden');
     }, [contentInView, contentControls]);
 
-    const formatTime = (val) => (val < 10 ? `0${val}` : val);
+    const formatTime = (val: number) => (val < 10 ? `0${val}` : val);
 
     return (
         <div className="px-4 md:px-0 max-w-7xl mx-auto">
-            {/* Top Header with View All */}
-            {/* <div className="flex items-center justify-end mb-4">
-
-                <Link
-                    href="/events"
-                    className="text-sm font-medium text-orange-600 hover:text-orange-800 transition-colors"
-                >
-                    View All →
-                </Link>
-            </div> */}
-
             <div className="flex flex-col md:flex-row gap-4 bg-gradient-to-r from-orange-50 to-cyan-50 rounded-2xl p-4">
-
 
                 {/* Content Section */}
                 <motion.div
@@ -106,8 +98,6 @@ const UpcomingEvent = ({
                         {description.length > 180 ? description.slice(0, 180) + '...' : description}
                     </motion.p>
 
-
-                    {/* Countdown Timer */}
                     {/* Countdown Timer */}
                     <div className="mb-6">
                         <h4 className="text-sm font-semibold text-gray-500 dark:text-gray-400 mb-2">
@@ -117,7 +107,7 @@ const UpcomingEvent = ({
                             {Object.entries(timeLeft).map(([unit, value]) => (
                                 <div
                                     key={unit}
-                                    className="flex flex-col items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] shadow-md shadow-orange-300 perspective-[600px] flex-1 sm:flex-none"
+                                    className="flex flex-col items-center bg-gray-100 dark:bg-gray-700 rounded-lg p-2 sm:p-3 min-w-[60px] sm:min-w-[70px] shadow-md shadow-orange-300 flex-1 sm:flex-none"
                                 >
                                     <AnimatePresence mode="wait" initial={false}>
                                         <motion.span
@@ -145,14 +135,15 @@ const UpcomingEvent = ({
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: 0.4, duration: 0.5 }}
                     >
-                        <button className="relative overflow-hidden group bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full font-medium"
+                        <button
+                            className="relative overflow-hidden group bg-gradient-to-r from-orange-400 to-orange-600 text-white px-6 py-3 rounded-full font-medium"
                             onClick={() => router.push(`/events/${eventID}`)}
                         >
-                            <span className="absolute inset-0 translate-x-[-100%] group-hover:translate-x-full transition-transform duration-500 ease-in-out rotate-12 blur-sm" />
                             <span className="relative z-10">{ctaText}</span>
                         </button>
                     </motion.div>
                 </motion.div>
+
                 {/* Image Section */}
                 <motion.div
                     ref={imageRef}
@@ -187,9 +178,12 @@ const UpcomingEvent = ({
                         transition={{ delay: 0.6, duration: 0.5 }}
                     >
                         {new Date(startDate).toLocaleDateString('en-US', {
+                            timeZone: 'UTC',
                             month: 'long',
                             day: 'numeric',
                             year: 'numeric',
+                             hour: '2-digit',
+                        minute: '2-digit'
                         })}
                     </motion.div>
                 </motion.div>
