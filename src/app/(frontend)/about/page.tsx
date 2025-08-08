@@ -281,9 +281,9 @@ export default function About() {
             variants={staggerContainer}
           >
             {[
-              { number: "10+", label: "Research Projects", color: "from-orange-500 to-orange-600" },
-              { number: "50+", label: "Collaborators", color: "from-cyan-500 to-cyan-600" },
-              { number: "5+", label: "Patents Filed", color: "from-indigo-500 to-indigo-600" }
+              { number: "30+", label: "Proposals", color: "from-orange-500 to-orange-600" },
+              // { number: "30+", label: "Collaborators", color: "from-cyan-500 to-cyan-600" },
+              // { number: "5+", label: "Patents Filed", color: "from-indigo-500 to-indigo-600" }
             ].map((stat, index) => (
               <motion.div
                 key={index}
