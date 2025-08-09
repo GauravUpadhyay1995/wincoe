@@ -59,7 +59,7 @@ jobs:
           fi
 
       - name: 🚀 Deploy to EC2
-        uses: appleboy/ssh-action@master
+        uses: appleboy/ssh-action@v0.1.10
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USERNAME }}
@@ -73,21 +73,35 @@ jobs:
             cd /var/www/html/wincoe
 
             echo "📥 Pulling latest code from main"
-            git reset --hard
-            git pull origin main
+            git fetch origin main
+            GIT_OUTPUT=$(git pull origin main)
+            echo "$GIT_OUTPUT"
 
-            echo "🧹 Cleaning previous builds and caches"
-            rm -rf node_modules .next .cache
+            NEEDS_BUILD=false
 
-            echo "📦 Installing dependencies"
-            npm ci
+            if echo "$GIT_OUTPUT" | grep -q -v 'Already up to date.'; then
+              echo "📦 Code changes detected. Cleaning and rebuilding..."
+              rm -rf node_modules .next .cache
+              npm ci
+              npm run build
+              NEEDS_BUILD=true
+            fi
 
-            echo "🔨 Building the Next.js app"
-            npm run build
+            if [ ! -f ".next/BUILD_ID" ]; then
+              echo "⚠️ .next/BUILD_ID missing. Forcing rebuild..."
+              rm -rf node_modules .next .cache
+              npm ci
+              npm run build
+              NEEDS_BUILD=true
+            fi
 
-            echo "🔁 Restarting PM2 process"
-            pm2 delete WinCOE || true
-            pm2 start npm --name "WinCOE" -- run start
-            pm2 save
-
-            echo "✅ Deployment complete"
+            if [ -f ".next/BUILD_ID" ]; then
+              echo "🔁 Restarting PM2 process"
+              pm2 delete WinCOE || true
+              pm2 start npm --name "WinCOE" -- run start
+              pm2 save
+              echo "✅ Deployment complete"
+            else
+              echo "❌ Build failed or missing. PM2 not restarted."
+              exit 1
+            fi
