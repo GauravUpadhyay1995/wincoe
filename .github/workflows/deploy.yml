@@ -26,8 +26,22 @@ jobs:
       - name: 🧹 Run Lint (optional)
         run: npm run lint
 
-      - name: 🏗 Build (optional - for CI validation)
+      - name: 🏗 Build with ENV Vars
         run: npm run build
+        env:
+          MONGODB_URI: ${{ secrets.MONGODB_URI }}
+          MONGODB_DB: ${{ secrets.MONGODB_DB }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
+          NEXT_PUBLIC_AWS_ACCESS_KEY_ID: ${{ secrets.NEXT_PUBLIC_AWS_ACCESS_KEY_ID }}
+          NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY: ${{ secrets.NEXT_PUBLIC_AWS_SECRET_ACCESS_KEY }}
+          NEXT_PUBLIC_AWS_REGION: ${{ secrets.NEXT_PUBLIC_AWS_REGION }}
+          NEXT_PUBLIC_AWS_BUCKET_NAME: ${{ secrets.NEXT_PUBLIC_AWS_BUCKET_NAME }}
+          NEXT_PUBLIC_ENVIROMENT: ${{ secrets.NEXT_PUBLIC_ENVIROMENT }}
+          NEXT_PUBLIC_COMPANY_NAME: ${{ secrets.NEXT_PUBLIC_COMPANY_NAME }}
+          NEXT_PUBLIC_COMPANY_EMAIL: ${{ secrets.NEXT_PUBLIC_COMPANY_EMAIL }}
+          NEXT_PUBLIC_COMPANY_MOBILE_HELPLINE: ${{ secrets.NEXT_PUBLIC_COMPANY_MOBILE_HELPLINE }}
+          NEXT_PUBLIC_COMPANY_MOBILE_WHATSAPP: ${{ secrets.NEXT_PUBLIC_COMPANY_MOBILE_WHATSAPP }}
 
       - name: 🔐 Validate SSH Secrets
         run: |
@@ -76,4 +90,4 @@ jobs:
             pm2 start npm --name "WinCOE" -- run start
             pm2 save
 
-            echo "✅ Deployment complete "
+            echo "✅ Deployment complete"
