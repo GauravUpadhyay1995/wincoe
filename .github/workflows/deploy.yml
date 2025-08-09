@@ -74,7 +74,8 @@ jobs:
 
             echo "📥 Pulling latest code from main"
             git fetch origin main
-            GIT_OUTPUT=$(git pull origin main)
+            git reset --hard origin/main
+            GIT_OUTPUT="Code updated from origin/main"
             echo "$GIT_OUTPUT"
 
             NEEDS_BUILD=false
