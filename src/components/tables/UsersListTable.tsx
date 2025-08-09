@@ -245,7 +245,7 @@ export default function UsersListTable({ initialData }: Props) {
 
     const tabs = [
         { id: 'basicDetails', label: 'Basic Details' },
-        { id: 'permissions', label: 'Permissions' },
+        // { id: 'permissions', label: 'Permissions' },
     ];
 
     const basePageSizes = [10, 25, 50, 100, 500];
